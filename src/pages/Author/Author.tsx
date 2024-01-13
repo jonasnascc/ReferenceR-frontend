@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from "react";
-import { AuthorInfo } from "./components/AuthorInfo";
 import { Box, Container } from "@mui/material";
 import { AuthorBar } from "./components/AuthorBar";
 import { AlbumsCarousel } from "./components/AlbumsCarousel";
-import { PhotosTable } from "./components/PhotosTable";
+import axios from "../../api/axios";
 
 export const Author = () => {
     const [albums, setAlbums] = useState<any[]>([])
@@ -14,10 +13,13 @@ export const Author = () => {
     const provider = urlParams.get("provider") ?? "";        
    
     useEffect(()=>{
-        fetch(`http://localhost:8080/api/author/${authorName}/albums?provider=${provider}`)
-        .then((response) => response.json())
-        .then((data) => setAlbums(data))
-        .then(() => console.log(albums));
+        
+        axios.get(`author/${authorName}/albums?provider=${provider}`, {
+            sendToken : true
+        })
+            .then((response) => setAlbums(response.data))
+            .catch((err) => console.log(err));
+        
     }, [])
 
     const handleSelectAlbum = (albumCode : string) => {

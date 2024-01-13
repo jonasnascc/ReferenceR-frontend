@@ -2,8 +2,12 @@ import { Box, Grid, Stack, TextField, Typography } from "@mui/material";
 import React, { useState } from "react";
 import styled from "styled-components";
 import { SearchBar } from "./SearchBar";
+import { Navigate, useNavigate } from "react-router-dom";
+import { RequireAuth } from "../../context/Auth/RequireAuth";
 
 export const NavBar = () => {
+    const navigate = useNavigate();
+
     const [searchValue, setSearchValue] = useState("");
 
     const handleSearch = (value : string) => {
@@ -11,10 +15,9 @@ export const NavBar = () => {
         console.log(searchValue);
     }
 
-    const handleLogoClick = () => {
-        
+    const handleLoginClick = () => {
+        navigate("/login");
     }
-    
     return (
         <NavBarContainer>
             <Grid container>
@@ -27,9 +30,11 @@ export const NavBar = () => {
                     <SearchBar handleSearch={handleSearch}/>
                 </Grid>
                 <Grid item xs={3}>
-                    <LoginButtonContainer>
-                        <LoginButton>Entrar</LoginButton>
-                    </LoginButtonContainer>
+                    <RequireAuth>
+                        <LoginButtonContainer>
+                            <LoginButton onClick={handleLoginClick}>Entrar</LoginButton>
+                        </LoginButtonContainer>
+                    </RequireAuth>
                 </Grid>
             </Grid>
         </NavBarContainer>
@@ -38,8 +43,10 @@ export const NavBar = () => {
 
 const NavBarContainer = styled(Box)`
     display : flex;
+    position: fixed;
     background-color: #263866;
     height: 70px;
+    width: 100%;
     margin: 0px;
     padding: 0px;
     align-items : center;
@@ -61,6 +68,7 @@ const LoginButtonContainer = styled.div`
     display : flex;
     align-items : center;
     justify-content : center;
+
 `
 
 const LoginButton = styled.button`
@@ -72,4 +80,5 @@ const LoginButton = styled.button`
     border : none;
     font-family : "Inknut Antiqua";
     font-size : 18px;
+    cursor : pointer;
 `

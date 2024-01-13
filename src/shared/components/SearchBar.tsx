@@ -43,7 +43,7 @@ const Selector = styled.select`
     font-size : 12px;
     border : none;
     background : none;
-        
+    cursor: pointer;
 `
 
 const SearchForm = styled.form`
@@ -71,5 +71,6 @@ const SearchButton = styled.button`
     font-family : inherit;
     border : none;
     margin : 20px;
+    cursor : pointer;
 `
 
