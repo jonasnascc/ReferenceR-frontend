@@ -22,7 +22,6 @@ export const SearchBar = () =>{
             searchAuthor(searchValue);
         if(selectProvider !== null) 
             selectProvider(providerValue)
-        console.log(searchValue, providerValue)
     }
     return(
         <Container>
