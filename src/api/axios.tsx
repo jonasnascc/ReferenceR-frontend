@@ -7,14 +7,13 @@ declare module 'axios' {
   }
 
 const axiosInstance =  axios.create({
-    baseURL : "http://localhost:8080/api"
+    baseURL : process.env.REACT_APP_API
 })
 
 axiosInstance.interceptors.request.use(config => {
     if(config.sendToken){
         const token = localStorage.getItem("token");
         config.headers.Authorization = token;
-        console.log(config);
     }
     return config;
 })

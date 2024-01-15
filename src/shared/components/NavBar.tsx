@@ -1,23 +1,24 @@
 import { Box, Grid, Stack, TextField, Typography } from "@mui/material";
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import styled from "styled-components";
 import { SearchBar } from "./SearchBar";
 import { Navigate, useNavigate } from "react-router-dom";
 import { RequireAuth } from "../../context/Auth/RequireAuth";
+import { RequireNoAuth } from "../../context/Auth/RequireNoAuth";
+import { AuthContext } from "../../context/Auth/AuthContext";
 
 export const NavBar = () => {
+    const auth = useContext(AuthContext);
     const navigate = useNavigate();
-
-    const [searchValue, setSearchValue] = useState("");
-
-    const handleSearch = (value : string) => {
-        setSearchValue(value);
-        console.log(searchValue);
-    }
 
     const handleLoginClick = () => {
         navigate("/login");
     }
+
+    const handleLogout = () => {
+        auth.signout();
+    }
+
     return (
         <NavBarContainer>
             <Grid container>
@@ -27,12 +28,17 @@ export const NavBar = () => {
                     </LogoBox>
                 </Grid>
                 <Grid item xs={6}>
-                    <SearchBar handleSearch={handleSearch}/>
+                    <SearchBar/>
                 </Grid>
                 <Grid item xs={3}>
-                    <RequireAuth>
+                    <RequireNoAuth>
                         <LoginButtonContainer>
                             <LoginButton onClick={handleLoginClick}>Entrar</LoginButton>
+                        </LoginButtonContainer>
+                    </RequireNoAuth>
+                    <RequireAuth>
+                        <LoginButtonContainer>
+                            <LogoutButton onClick={handleLogout}>Sair</LogoutButton>
                         </LoginButtonContainer>
                     </RequireAuth>
                 </Grid>
@@ -50,6 +56,7 @@ const NavBarContainer = styled(Box)`
     margin: 0px;
     padding: 0px;
     align-items : center;
+    z-index : 100;
 `
 
 const LogoText = styled.a`
@@ -81,4 +88,8 @@ const LoginButton = styled.button`
     font-family : "Inknut Antiqua";
     font-size : 18px;
     cursor : pointer;
+`
+
+const LogoutButton = styled(LoginButton)`
+    background-color : #c32828;
 `

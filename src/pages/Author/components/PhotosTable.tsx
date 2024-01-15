@@ -1,37 +1,44 @@
 import { ImageList, ImageListItem } from "@mui/material";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
+import axios from "../../../api/axios";
+import { Deviation } from "../../../types/photo";
+import { ThumbnailContainer } from "./ThumbnailContainer";
+import { SearchContext } from "../../../context/Search/SearchContext";
+import { Album } from "../../../types/album";
 
 type PhotosTableProps = {
-    album : any;
+    album : Album;
 }
 
 export const PhotosTable = ({album} : PhotosTableProps) => {
-    const [data, setData] = useState<any[]>([])
+    const {author, provider} = useContext(SearchContext);
+    const [data, setData] = useState<Deviation[]>([])
 
     useEffect(()=>{
-        fetch("http://localhost:8080/api/author/thomasphotoworks/albums/73420746/photos?provider=deviantart&page=1&limit=60", {
-            body: JSON.stringify({username:"yonnasz", password:"joninhas2210"}),
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-              },
-        })
-        .then((response) => response.json())
-        .then((data) => setData(data))
+        const mounted = true;
+
+        const fetchPhotos = async () => {
+            await axios.get(`author/${author}/albums/${album.code.replace(`deviantart-${author}`, "all").replace("deviantart-", "")}/photos?provider=${provider}&page=1&limit=60`, {
+                sendToken : true
+            })
+                .then((response) => setData(response.data))
+                .catch((err) => console.log(err));
+        }
+
+        if(mounted && author !== null && provider !== null)
+            fetchPhotos();
     }, [album])
 
+
     return(
-        <ImageList sx={{ width: "100%", height: 450 }} cols={3} rowHeight={164}>
-            {data.map((item) => (
-                <ImageListItem key={item.img}>
-                <img
-                    srcSet={`${item.img}?w=164&h=164&fit=crop&auto=format&dpr=2 2x`}
-                    src={`${item.img}?w=164&h=164&fit=crop&auto=format`}
-                    alt={item.title}
-                    loading="lazy"
-                />
-                </ImageListItem>
-            ))}
+        <ImageList cols={5} sx={{ width: "100%", height: "100%", overflow:"hidden" }} variant="quilted" gap={10}> 
+            {data.map((deviation) => {
+                return (
+                    <ImageListItem key={deviation.id}>
+                        <ThumbnailContainer url={deviation.url} title={deviation.title}/>
+                    </ImageListItem>
+                )
+            })}
         </ImageList>
     )
 }

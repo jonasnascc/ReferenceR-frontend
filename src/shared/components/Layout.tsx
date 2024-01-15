@@ -5,12 +5,6 @@ import styled from "styled-components";
 import { AuthContext } from "../../context/Auth/AuthContext";
 
 export const Layout = () => {
-    const auth = useContext(AuthContext);
-
-    useEffect(() => {
-        console.log(auth)
-    }, [])
-
     return (
         <>
             <NavBar/>

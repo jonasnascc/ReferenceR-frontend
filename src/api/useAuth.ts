@@ -1,17 +1,18 @@
-import axios from "axios";
+import api from "./axios";
 
-const api =  axios.create({
-    baseURL : process.env.REACT_APP_API
-})
-
-export const useApi = () => ({
+export const useAuth = () => ({
     validateToken : async (token:string) => {
-        const response = await api.get("users/token/validate", {
+        let response : any = null;
+        await api.get("users/token/validate", {
             headers: {
                 Authorization : `Bearer ${token}`
             }
-        });
-        return response.data;
+        }).then((resp) => response = resp)
+        .catch((err) => console.log(err));
+
+        if(response != null)
+            return response.data;
+        return null;
     },
     signin : async  (login:string, password:string) => {
         const response = await api.post("users/login", {login, password});

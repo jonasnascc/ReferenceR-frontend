@@ -1,39 +1,45 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Box, Container } from "@mui/material";
 import { AuthorBar } from "./components/AuthorBar";
 import { AlbumsCarousel } from "./components/AlbumsCarousel";
 import axios from "../../api/axios";
+import { PhotosTable } from "./components/PhotosTable";
+import { SearchContext } from "../../context/Search/SearchContext";
+import { Album } from "../../types/album";
 
 export const Author = () => {
-    const [albums, setAlbums] = useState<any[]>([])
-    const [selectedAlbum, setSelectedAlbum] = useState<any>(null);
-    const urlParams = new URLSearchParams(window.location.search);
+    const {author, provider} = useContext(SearchContext);
 
-    const authorName = urlParams.get("author") ?? "";     
-    const provider = urlParams.get("provider") ?? "";        
+    const [albums, setAlbums] = useState<Album[]>([])
+    const [selectedAlbum, setSelectedAlbum] = useState<Album|null>(null);
    
     useEffect(()=>{
-        
-        axios.get(`author/${authorName}/albums?provider=${provider}`, {
+        axios.get(`author/${author}/albums?provider=${provider}`, {
             sendToken : true
         })
             .then((response) => setAlbums(response.data))
             .catch((err) => console.log(err));
-        
     }, [])
 
     const handleSelectAlbum = (albumCode : string) => {
-        const album = albums.filter(alb => alb.code === albumCode);
-        
+        const album : Album[] = albums.filter(alb => alb.code === albumCode);
+        setSelectedAlbum(album[0]);
     }
 
     return (
-        <Box>
-            <AuthorBar albums={albums ?? []} author={authorName} provider={provider} />
-            <Container>
-                <AlbumsCarousel albums={albums} onSelect={handleSelectAlbum}/>
-            </Container>
-            {/* <PhotosTable album={selectedAlbum}/> */}
-        </Box>
+        <>
+        {
+            author!==null&&provider!==null&&(
+                <Box>
+                    <AuthorBar albums={albums ?? []} author={author} provider={provider} />
+                    <Container>
+                        <AlbumsCarousel albums={albums} onSelect={handleSelectAlbum}/>
+                    </Container>
+                    {(selectedAlbum !== null) && <PhotosTable album={selectedAlbum}/>}
+                </Box>
+            )
+        }
+        </>
+
     )
 }

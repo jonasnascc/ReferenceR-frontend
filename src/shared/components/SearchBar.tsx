@@ -1,23 +1,34 @@
 import { Box } from "@mui/material";
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import styled from "styled-components";
+import { SearchContext } from "../../context/Search/SearchContext";
 
-export const SearchBar = ({handleSearch} : {handleSearch : (value : string) => void}) =>{
+export const SearchBar = () =>{
+    const {searchAuthor, selectProvider} = useContext(SearchContext);
+
     const [searchValue, setSearchValue] = useState("");
+    const [providerValue, setProviderValue] = useState("deviantart");
 
     const handleSearchValueChange = (event : any) => {
         setSearchValue(event.target.value.replace(" ", ""));
     }
 
-    const handleSearchButtonClick = (event : any) => {
-        handleSearch(searchValue)
+    const handleProviderSelectorClick = (event : any) => {
+        setProviderValue(event.target.value);
     }
 
+    const handleSearchButtonClick = (event : any) => {
+        if(searchAuthor !== null) 
+            searchAuthor(searchValue);
+        if(selectProvider !== null) 
+            selectProvider(providerValue)
+        console.log(searchValue, providerValue)
+    }
     return(
         <Container>
             <SearchForm action="/author" method="GET">
                 <Selector name="provider" defaultValue="deviantart">
-                    <option value="deviantart" id="deviantart">DeviantArt</option>
+                    <option value="deviantart" id="deviantart" onClick={handleProviderSelectorClick} defaultValue={"deviantart"}>DeviantArt</option>
                 </Selector>
                 <Input type="text" id="author" name="author" value={searchValue} onChange={handleSearchValueChange}/>
                 <SearchButton type="submit" onClick={handleSearchButtonClick}>Ir</SearchButton>
