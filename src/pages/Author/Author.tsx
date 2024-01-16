@@ -6,6 +6,7 @@ import axios from "../../api/axios";
 import { PhotosTable } from "./components/PhotosTable";
 import { SearchContext } from "../../context/Search/SearchContext";
 import { Album } from "../../types/album";
+import styled from "styled-components";
 
 export const Author = () => {
     const {author, provider} = useContext(SearchContext);

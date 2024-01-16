@@ -44,7 +44,6 @@ export const AuthProvider = ({children} : {children : JSX.Element}) => {
     const validateToken = async (token : string) => {
         const userReq = await api.validateToken(token)
         if(userReq){
-            console.log(userReq)
             setUser({id: userReq.id, name: userReq.name, role: userReq.role});
             return true;
         }

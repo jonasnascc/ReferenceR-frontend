@@ -1,6 +1,7 @@
 
 import { useState } from 'react';
 import styled from 'styled-components';
+import { ExpandedImage } from './ExpandedImage';
 
 type ThumbnailContainerProps = {
     url : string,
@@ -15,7 +16,7 @@ export const ThumbnailContainer = ({url, title} : ThumbnailContainerProps) => {
       };
       
     const handleOpen = () => {
-    setOpen(true);
+        setOpen(true);
     };
     
     return (
@@ -29,6 +30,7 @@ export const ThumbnailContainer = ({url, title} : ThumbnailContainerProps) => {
                     onClick={handleOpen}
                 />
             </ThumbContainer>
+            <ExpandedImage url={url} title={title} open={open} handleClose={handleClose}/>
         </CentralizedDiv>
 
     )
@@ -45,6 +47,12 @@ const ThumbContainer = styled.div`
     height: auto;
     max-height : 800px;
     overflow: hidden;
+
+    
+    &:hover {
+        cursor : pointer;
+    }
+
 `
 
 
