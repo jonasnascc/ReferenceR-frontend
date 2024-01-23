@@ -6,5 +6,6 @@ export type Deviation = {
     type: string,
     matureLevel: string,
     deviationPage: string,
-    license: string
+    license: string,
+    selected ?: boolean
 }

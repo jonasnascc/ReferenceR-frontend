@@ -20,38 +20,44 @@ export const NavBar = () => {
     }
 
     return (
-        <NavBarContainer>
-            <Grid container>
-                <Grid item xs={3}>
-                    <LogoBox>
-                        <LogoText href="/">ReferenceR</LogoText>
-                    </LogoBox>
+        <NavbarKeeper>
+            <NavBarContainer>
+                <Grid container>
+                    <Grid item xs={3}>
+                        <LogoBox>
+                            <LogoText href="/">ReferenceR</LogoText>
+                        </LogoBox>
+                    </Grid>
+                    <Grid item xs={6}>
+                        <SearchBar/>
+                    </Grid>
+                    <Grid item xs={3}>
+                        <RequireNoAuth>
+                            <LoginButtonContainer>
+                                <LoginButton onClick={handleLoginClick}>Entrar</LoginButton>
+                            </LoginButtonContainer>
+                        </RequireNoAuth>
+                        <RequireAuth>
+                            <LoginButtonContainer>
+                                <LogoutButton onClick={handleLogout}>Sair</LogoutButton>
+                            </LoginButtonContainer>
+                        </RequireAuth>
+                    </Grid>
                 </Grid>
-                <Grid item xs={6}>
-                    <SearchBar/>
-                </Grid>
-                <Grid item xs={3}>
-                    <RequireNoAuth>
-                        <LoginButtonContainer>
-                            <LoginButton onClick={handleLoginClick}>Entrar</LoginButton>
-                        </LoginButtonContainer>
-                    </RequireNoAuth>
-                    <RequireAuth>
-                        <LoginButtonContainer>
-                            <LogoutButton onClick={handleLogout}>Sair</LogoutButton>
-                        </LoginButtonContainer>
-                    </RequireAuth>
-                </Grid>
-            </Grid>
-        </NavBarContainer>
+            </NavBarContainer>
+        </NavbarKeeper>
     )
 }
+
+const NavbarKeeper = styled.div`
+    height: 70px;
+`
 
 const NavBarContainer = styled(Box)`
     display : flex;
     position: fixed;
     background-color: #263866;
-    height: 70px;
+    height: inherit;
     width: 100%;
     margin: 0px;
     padding: 0px;

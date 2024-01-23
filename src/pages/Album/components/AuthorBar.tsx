@@ -5,10 +5,10 @@ import styled from "styled-components";
 type AuthorBarProps = {
     author:string,
     provider:string,
-    albums : any[]
+    albumsSize : number
 }
 
-export const AuthorBar = ({albums, author, provider} : AuthorBarProps) => {
+export const AuthorBar = ({albumsSize, author, provider} : AuthorBarProps) => {
     return(
         <BarContainer>
             <Grid container>
@@ -17,14 +17,16 @@ export const AuthorBar = ({albums, author, provider} : AuthorBarProps) => {
                         <Avatar sx={{width: "73px", height: "73px", backgroundColor:"#263866"}}/>
                     </AuthorAvatar>
                 </Grid>
-                <Grid item xs={11}>
+                <Grid item xs={9}>
                     <AuthorLabel>
                         <Stack>
                             <AuthorName>{author}</AuthorName>
-                            <AlbumsSize>{`${albums.length} álbuns`}</AlbumsSize>
+                            <AlbumsSize>{`${albumsSize} álbuns`}</AlbumsSize>
                         </Stack>
-                        
                     </AuthorLabel>
+                </Grid>
+                <Grid item xs={2}>
+
                 </Grid>
             </Grid>
             
@@ -65,3 +67,4 @@ const AuthorAvatar = styled.div`
     align-items : center;
     height : 100%;
 `
+

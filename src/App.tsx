@@ -1,8 +1,8 @@
 import { Route, Routes } from 'react-router-dom';
 import { Layout } from './shared/components/Layout';
-import { Author } from './pages/Author/Author';
 import { LoginPage } from './pages/Login/LoginPage';
 import { RequireNoAuth } from './context/Auth/RequireNoAuth';
+import { AlbumPage } from './pages/Album/AlbumPage';
 
 
 function App() {
@@ -10,7 +10,7 @@ function App() {
       <div className="App">
         <Routes>
           <Route path='/' element={<Layout/>}>
-            <Route path="/author" element={<Author/>}/>
+            <Route path="/author" element={<AlbumPage/>}/>
             <Route path="/login" element={<RequireNoAuth><LoginPage/></RequireNoAuth>}/>
           </Route>
         </Routes>

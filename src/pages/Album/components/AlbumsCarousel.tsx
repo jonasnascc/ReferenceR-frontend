@@ -6,7 +6,7 @@ import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import VisibilityOffOutlinedIcon from '@mui/icons-material/VisibilityOffOutlined';
 import { Tooltip, Typography } from "@mui/material";
 
-const MOVE_CONSTANT = 250;
+const MOVE_CONSTANT = 300;
 
 type AlbumsCarouselProps = {
     albums : any[];
@@ -16,13 +16,19 @@ type AlbumsCarouselProps = {
 export const AlbumsCarousel = ({albums, onSelect} : AlbumsCarouselProps) =>{
     const [position, setPosition] = useState({left: 0})
 
+    
+    const minLeft = ~~((MOVE_CONSTANT * albums.length)  / 4.5);
+
     const moveLeft = () => {
         if(position.left < 0)
             setPosition({left: position.left + MOVE_CONSTANT})
     }
 
     const moveRight = () => {
-         setPosition({left: position.left - MOVE_CONSTANT})
+        if(position.left + minLeft >= 0)
+            setPosition({left: position.left - MOVE_CONSTANT})
+            console.log({length: albums.length, minLeft: minLeft, constant: MOVE_CONSTANT, left: position.left - MOVE_CONSTANT, size_times_constant : (albums.length * MOVE_CONSTANT)})
+
     }
 
     const handleSelectAlbum = () => {
@@ -45,10 +51,10 @@ export const AlbumsCarousel = ({albums, onSelect} : AlbumsCarouselProps) =>{
             </ArrowButtonContainer>
 
             <CarouselList>
-                
+                <ListContainer style={{...position, position:"relative"}}>
                 {albums.map(album => {
                     return (
-                        <li key={album.code} style={{...position, position:"relative"}}>
+                        <li key={album.code}>
                             <Tooltip title={album.name} arrow>
                                 <AlbumThumb onClick={() => onSelect(album.code)}>
                                     {
@@ -67,10 +73,17 @@ export const AlbumsCarousel = ({albums, onSelect} : AlbumsCarouselProps) =>{
                         </li>
                     )
                 })}
+                </ListContainer>
             </CarouselList>
         </AlbumsBlock>
     );
 }
+
+const ListContainer = styled.div`
+    transition : left 0.1s linear;
+    display: flex;
+`
+
 const VisibilityOffIcon = styled(VisibilityOffOutlinedIcon)`
     color: black;
 `
