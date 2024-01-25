@@ -1,13 +1,15 @@
-import { Box, Container } from "@mui/material";
+import { Box, Container, Grid } from "@mui/material";
 import axios from "../../api/axios";
 import React, { useContext, useEffect, useState } from "react";
 import { SearchContext } from "../../context/Search/SearchContext";
 import { Album } from "../../types/album";
 import { AlbumsCarousel } from "./components/AlbumsCarousel";
-import { NavigationBar } from "./components/NavigationBar";
-import { PhotosTable } from "./components/PhotosTable";
+import { NavigationBar } from "./components/NavigationBar/NavigationBar";
+import { PhotosTable } from "./components/PhotosTable/PhotosTable";
 import usePhotos from "../../shared/hooks/usePhotos";
 import { useAlbums } from "../../shared/hooks/useAlbums";
+import { LateralSection } from "./components/LateralSection/LateralSection";
+import styled from "styled-components";
 
 export const AlbumPage = () => {
     const {author, provider, ...search} = useContext(SearchContext);
@@ -17,13 +19,18 @@ export const AlbumPage = () => {
 
     const {handleAlbumSelect, selectedAlbum} = useAlbums(albums ?? [])
 
+    const [showPhotoDetails, setShowPhotoDetails] = useState(false);
+
     const {
             photos,
             page,
             lastPage,
             hasNext,
             changePage,
-            loading
+            loading,
+            selectedPhotos,
+            handleSelectPhoto,
+            clearSelectedPhotos
     } = usePhotos(author??"", selectedAlbum, provider??"", 60)
     
     useEffect(()=>{
@@ -38,30 +45,78 @@ export const AlbumPage = () => {
         setSelectMode(select);
     }
 
+    const handleDetails = () => {
+        setShowPhotoDetails(true);
+    }
+
+    const handleExitDetails = () => {
+        setShowPhotoDetails(false);
+        clearSelectedPhotos();
+    }
+
     return (
         <>
         {
             author!==null&&provider!==null&&(
-                <Box>
-                    <Container>
-                        <AlbumsCarousel albums={albums} onSelect={handleAlbumSelect}/>
-                    </Container>
-                    {(selectedAlbum !== null) && (
-                        <>
-                        <PhotosTable album={selectedAlbum} photos={photos} loading={loading} selectMode={selectMode}/>
+                <Content>
+                    <Grid container>
+                        <Grid container>
+                            {(selectedPhotos.length > 0 && showPhotoDetails && selectedAlbum !== null) && 
+                                    <Grid item  xs={6} sx={{position:"relative"}}>
+                                            <LateralSection 
+                                                show={showPhotoDetails} 
+                                                onExit={handleExitDetails}
+                                                selectedPhotos={selectedPhotos}
+                                            />
+                                    </Grid>
+                            }
+                            <Grid item xs={selectedPhotos.length > 0 && showPhotoDetails ? 6 : 12} > 
+                            <Content>
+                                <Container>
+                                    <AlbumsCarousel albums={albums} onSelect={handleAlbumSelect}/>
+                                </Container>
+                                {
+                                    selectedAlbum !== null && (
+                                        <PhotosTable 
+                                            album={selectedAlbum} 
+                                            photos={photos} 
+                                            loading={loading} 
+                                            selectMode={selectMode}
+                                            onSelectPhoto={handleSelectPhoto}
+                                            selectedPhotos={selectedPhotos}
+                                            viewMode = {selectedPhotos.length > 0 && showPhotoDetails}
+                                        />
+                                    )
+                                }
+                            </Content>
+                                
+                                
+                            </Grid>
+                        </Grid>
                         <NavigationBar 
                             page={page} 
                             handlePageChange={changePage} 
                             pageLimit={lastPage}
                             onSelect={handleSelect}
+                            onDetails={handleDetails}
                         />
-                        </>
-                    )}
+                    </Grid>
                     
-                </Box>
+                    
+                </Content>
             )
         }
         </>
 
     )
 }
+const Content = styled.div`
+    position : relative;
+    width:100%;
+    height: calc(100vh - 160px);
+    overflow: auto;
+`
+const BodyGrid = styled.div`
+    height: 100vh;
+    width : 100vw;
+`

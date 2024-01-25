@@ -10,35 +10,42 @@ type AuthorBarProps = {
 
 export const AuthorBar = ({albumsSize, author, provider} : AuthorBarProps) => {
     return(
-        <BarContainer>
-            <Grid container>
-                <Grid item xs={1}>
-                    <AuthorAvatar>
-                        <Avatar sx={{width: "73px", height: "73px", backgroundColor:"#263866"}}/>
-                    </AuthorAvatar>
-                </Grid>
-                <Grid item xs={9}>
-                    <AuthorLabel>
-                        <Stack>
-                            <AuthorName>{author}</AuthorName>
-                            <AlbumsSize>{`${albumsSize} álbuns`}</AlbumsSize>
-                        </Stack>
-                    </AuthorLabel>
-                </Grid>
-                <Grid item xs={2}>
+       <BarKeeper>
+            <BarContainer>
+                <Grid container>
+                    <Grid item xs={1}>
+                        <AuthorAvatar>
+                            <Avatar sx={{width: "73px", height: "73px", backgroundColor:"#263866"}}/>
+                        </AuthorAvatar>
+                    </Grid>
+                    <Grid item xs={9}>
+                        <AuthorLabel>
+                            <Stack>
+                                <AuthorName>{author}</AuthorName>
+                                <AlbumsSize>{`${albumsSize} álbuns`}</AlbumsSize>
+                            </Stack>
+                        </AuthorLabel>
+                    </Grid>
+                    <Grid item xs={2}>
 
+                    </Grid>
                 </Grid>
-            </Grid>
-            
-        </BarContainer>
+            </BarContainer>
+       </BarKeeper>
     )
 }
 
+const BarKeeper = styled.div`
+    height: 90px;
+`
+
 const BarContainer = styled.div`
+    position: fixed;
     display: flex;
     background-color : #C7CEE1;
     width : 100%;
-    height: 90px;
+    height: inherit;
+    z-index : 101;
 `
 
 const AuthorLabel = styled.div`

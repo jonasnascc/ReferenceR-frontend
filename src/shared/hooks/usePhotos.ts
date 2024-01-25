@@ -16,6 +16,8 @@ const usePhotos = (
     const [lastPage, setLastPage] = useState<number>(-1);
     const [hasNext, setHasNext] = useState<boolean>(true);
     const [loading, setLoading] = useState(false);
+    const [selectedPhotos, setSelectedPhotos]= useState<Deviation[]>([]);
+
     const search = useContext(SearchContext);
 
     useEffect(()=>{
@@ -33,6 +35,10 @@ const usePhotos = (
         fetchPhotos();
     }, [page])
 
+    useEffect(() => {
+        console.log(selectedPhotos)
+    }, [selectedPhotos])
+
     const fetchPhotos = async () => {
         if(album!==null){
             setLoading(true);
@@ -40,7 +46,7 @@ const usePhotos = (
                 sendToken : true
                 })
                 .then((response) => {
-                    setPhotos((response.data as Deviation[]).sort((a,b) => a.id - b.id));
+                    setPhotos((response.data as Deviation[]).sort((a,b) => b.id - a.id));
                 })
                 .catch((err) => console.log(err))
                 .finally(() => setLoading(false))
@@ -64,13 +70,29 @@ const usePhotos = (
         }
     }
 
+    const handleSelectPhoto = (photo : Deviation) => {
+        if(selectedPhotos.includes(photo)) {
+            setSelectedPhotos(selectedPhotos.filter(ph => ph.id !== photo.id));
+        } else {
+            // setSelectedPhotos([...selectedPhotos, photo]);
+        }
+        setSelectedPhotos([photo]);
+    }
+
+    const clearSelectedPhotos = () => {
+        setSelectedPhotos([]);
+    }
+
     return {
+        selectedPhotos,
         photos,
         page,
         lastPage,
         changePage,
         hasNext,
-        loading
+        loading,
+        handleSelectPhoto,
+        clearSelectedPhotos
     }
 }
 

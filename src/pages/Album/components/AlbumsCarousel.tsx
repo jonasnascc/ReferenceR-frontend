@@ -25,13 +25,9 @@ export const AlbumsCarousel = ({albums, onSelect} : AlbumsCarouselProps) =>{
     }
 
     const moveRight = () => {
-        if(position.left + minLeft >= 0)
+        // if(position.left + minLeft >= 0)
             setPosition({left: position.left - MOVE_CONSTANT})
-            console.log({length: albums.length, minLeft: minLeft, constant: MOVE_CONSTANT, left: position.left - MOVE_CONSTANT, size_times_constant : (albums.length * MOVE_CONSTANT)})
-
-    }
-
-    const handleSelectAlbum = () => {
+            // console.log({length: albums.length, minLeft: minLeft, constant: MOVE_CONSTANT, left: position.left - MOVE_CONSTANT, size_times_constant : (albums.length * MOVE_CONSTANT)})
 
     }
 

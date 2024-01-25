@@ -1,15 +1,16 @@
 import React, { useState } from "react";
 import styled from "styled-components";
+import { Tooltip } from "@mui/material";
 
 import LibraryAddCheckOutlinedIcon from '@mui/icons-material/LibraryAddCheckOutlined';
-import { Tooltip } from "@mui/material";
+
 
 export const SelectionMenu = ({onSelect} : {onSelect : (state:boolean) => void}) => {
     const [select, setSelect] = useState(false);
 
     let color : string = select ? "#0070ff" : "black";
 
-    const handleSelectClick = () => {
+    const handleSelect = () => {
         setSelect(!select);
         onSelect(!select);
     }
@@ -17,7 +18,7 @@ export const SelectionMenu = ({onSelect} : {onSelect : (state:boolean) => void})
     return(
         <SelectItemsContainer>
             <Tooltip title={select ? "DeSelect": "Select"} placement="top" >
-                <SelectItemsButton onClick={handleSelectClick}>
+                <SelectItemsButton onClick={handleSelect}>
                     <LibraryAddCheckOutlinedIcon fontSize="small" sx={{color:{color}}}/>
                 </SelectItemsButton>
             </Tooltip>

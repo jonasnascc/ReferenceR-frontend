@@ -1,7 +1,6 @@
 
 import { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import { ExpandedImage } from './ExpandedImage';
 import { Box } from '@mui/material';
 
 import CheckBoxOutlineBlankOutlinedIcon from '@mui/icons-material/CheckBoxOutlineBlankOutlined';
@@ -11,22 +10,28 @@ type ThumbnailContainerProps = {
     url : string,
     title : string,
     selectMode ?: boolean,
-    onSelect : () => any
+    onSelect ?: () => any,
+    selected ?: boolean
 }
 
-export const ThumbnailContainer = ({ url, title, selectMode=false, onSelect} : ThumbnailContainerProps) => {
+export const ThumbnailContainer = ({ url, title, selectMode=false, onSelect = () => {}, selected = false} : ThumbnailContainerProps) => {
     const [open, setOpen] = useState(false);
-    const [selected, setSelected] = useState(false);
+    const [selectedPhoto, setSelectedPhoto] = useState(false);
+
+    useEffect(() => {
+        if(selectedPhoto !== selected)
+            handleSelect();
+    }, [selected])
 
     useEffect(()=>{
-        if(!selectMode) setSelected(false);
+        if(!selectMode) setSelectedPhoto(false);
     }, [selectMode])
 
     const handleSelect = () => {
-        if(selectMode) {
-            setSelected(!selected);
+        // if(selectMode) {
+            setSelectedPhoto(!selectedPhoto);
             onSelect();
-        } 
+        // } 
     }
 
     const handleClose = () => {
@@ -41,11 +46,11 @@ export const ThumbnailContainer = ({ url, title, selectMode=false, onSelect} : T
         <CentralizedDiv>
             {selectMode && (
                 <SelectionBox>
-                    {selected ? (<CheckBoxIcon/>) : (<CheckBoxOutlineBlankOutlinedIcon/>)}
+                    {selectedPhoto ? (<CheckBoxIcon/>) : (<CheckBoxOutlineBlankOutlinedIcon/>)}
                 </SelectionBox>
             )}
-            <ThumbContainer onClick={handleSelect}>
-                <Box sx={{border : `${!selected ? "none" : "solid 3px #0070ff"}`, borderRadius: "10px"}}>
+            <ThumbContainer onClick={() => handleSelect()}>
+                <Box sx={{border : `${!selectedPhoto ? "none" : "solid 3px #0070ff"}`, borderRadius: "10px"}}>
                     <ThumbImage
                         src={`${url}`} 
                         alt={title} 
@@ -56,9 +61,9 @@ export const ThumbnailContainer = ({ url, title, selectMode=false, onSelect} : T
                 </Box>
             </ThumbContainer>
             {
-                selectMode ? (null) : (
-                    <ExpandedImage url={url} title={title} open={open} handleClose={handleClose}/>
-                )
+                // selectMode ? (null) : (
+                //     <ExpandedImage url={url} title={title} open={open} handleClose={handleClose}/>
+                // )
             }
         </CentralizedDiv>
 
@@ -77,11 +82,7 @@ const ThumbContainer = styled.div`
     height: auto;
     max-height : 800px;
     overflow: hidden;
-
-
 `
-
-
 const ThumbImage = styled.img`
     width: 100%;
     height: 100%;
