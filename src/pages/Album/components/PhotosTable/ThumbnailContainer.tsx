@@ -74,6 +74,7 @@ const CentralizedDiv = styled.div`
     display:flex;
     align-items:center;
     height:100%;
+    cursor: pointer;
 `
 
 const ThumbContainer = styled.div`

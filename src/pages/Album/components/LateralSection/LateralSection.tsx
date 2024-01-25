@@ -12,7 +12,7 @@ export const LateralSection = ({show = false, onExit, selectedPhotos} : {show ?:
                     <PhotoTitle>
                         {selectedPhotos[0].title}
                         <ExitButton onClick={() => onExit()}>
-                            <CloseIcon/>
+                            <CloseIcon sx={{height: "inherit"}}/>
                         </ExitButton>
                     </PhotoTitle>
                     <ImageContainer>
@@ -34,6 +34,7 @@ const ExitButton = styled.a`
 `
 
 const PhotoTitle = styled.div`
+    position: relative;
     padding : 10px 20px 10px 20px;
     text-align: center;
     margin-bottom: 20px;

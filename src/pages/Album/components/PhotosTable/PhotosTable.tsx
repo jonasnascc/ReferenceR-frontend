@@ -1,4 +1,4 @@
-import { ImageList, ImageListItem, LinearProgress } from "@mui/material";
+import { ImageList, ImageListItem, ImageListItemBar, LinearProgress } from "@mui/material";
 import { useEffect, useState } from "react";
 import { Deviation } from "../../../../types/photo";
 import { ThumbnailContainer } from "./ThumbnailContainer";
@@ -34,7 +34,7 @@ export const PhotosTable = ({album, photos, loading=false, selectMode=false, onS
             {loading? (
                 <LinearProgress/>
             ) : (
-                <ImageList cols={viewMode ? 3 : 6} sx={{width: "100%", height: "100%"}} variant="masonry" gap={15} > 
+                <ImageList cols={viewMode ? 3 : 6} sx={{width: "100%", height: "100%", overflow:"hidden"}} variant="quilted" gap={15} > 
                 {photos!==undefined && photos.map((deviation : Deviation) => {
                     return (
                         <ImageListItem key={deviation.id}>
@@ -46,6 +46,9 @@ export const PhotosTable = ({album, photos, loading=false, selectMode=false, onS
                                 onSelect={() => {
                                     handleSelect(deviation)
                                 }}
+                            />
+                            <ImageListItemBar
+                                title={deviation.title}
                             />
                         </ImageListItem>
                     )
