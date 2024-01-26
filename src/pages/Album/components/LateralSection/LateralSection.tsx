@@ -9,12 +9,10 @@ export const LateralSection = ({show = false, onExit, selectedPhotos} : {show ?:
 
     return (
         <SectionContainer>
-                    <PhotoTitle>
-                        {selectedPhotos[0].title}
-                        <ExitButton onClick={() => onExit()}>
-                            <CloseIcon sx={{height: "inherit"}}/>
-                        </ExitButton>
-                    </PhotoTitle>
+                    <ExitButton onClick={() => onExit()}>
+                        <CloseIcon sx={{height: "inherit"}}/>
+                    </ExitButton>
+                    
                     <ImageContainer>
                         <ImageContent src={selectedPhotos[0].url} alt={selectedPhotos[0].title}/>
                     </ImageContainer>
@@ -53,7 +51,7 @@ const ImageContainer = styled.div`
     position: relative;
     display: flex;
     justify-content:center;
-    height: 80%;
+    height: calc(80vh - 160px);
     padding: 10px;
 `
 

@@ -73,21 +73,24 @@ export const ThumbnailContainer = ({ url, title, selectMode=false, onSelect = ()
 const CentralizedDiv = styled.div`
     display:flex;
     align-items:center;
-    height:100%;
+    height:200px;
     cursor: pointer;
 `
 
 const ThumbContainer = styled.div`
     position: relative;
+    display:flex;
+    align-items : center;
+    justify-content: center;
+    position: relative;
     width: 100%;
-    height: auto;
-    max-height : 800px;
+    height: 200px;
     overflow: hidden;
 `
 const ThumbImage = styled.img`
     width: 100%;
     height: 100%;
-    object-fit : cover;
+    object-fit : scale-down;
 `
 
 const SelectionBox = styled.div`

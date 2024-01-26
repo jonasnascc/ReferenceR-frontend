@@ -30,11 +30,10 @@ export const PhotosTable = ({album, photos, loading=false, selectMode=false, onS
 
     return(
         <TableContainer>
-            <AlbumNameHeader>{album.name}</AlbumNameHeader>
             {loading? (
                 <LinearProgress/>
             ) : (
-                <ImageList cols={viewMode ? 3 : 6} sx={{width: "100%", height: "100%", overflow:"hidden"}} variant="quilted" gap={15} > 
+                <ImageList cols={4} rowHeight={200} sx={{width: "100%", height: "100%", marginBottom: "100px", overflow:"hidden"}} variant="quilted" gap={15} > 
                 {photos!==undefined && photos.map((deviation : Deviation) => {
                     return (
                         <ImageListItem key={deviation.id}>
@@ -61,8 +60,8 @@ export const PhotosTable = ({album, photos, loading=false, selectMode=false, onS
 }
 
 const TableContainer = styled.div`
-    margin-left: 10%;
-    margin-right : 10%;
+    margin-left: 10px;
+    margin-right : 10px;
 `
 
 
