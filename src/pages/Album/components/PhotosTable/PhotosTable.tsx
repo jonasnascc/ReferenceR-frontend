@@ -39,7 +39,7 @@ export const PhotosTable = ({album, photos, loading=false, selectMode=false, onS
                         <ImageListItem key={deviation.id}>
                             <ThumbnailContainer 
                                 selected={isPhotoSelected(deviation.id)}
-                                url={deviation.url} 
+                                url={deviation.thumbUrl ? deviation.thumbUrl : deviation.url} 
                                 title={deviation.title} 
                                 selectMode={selectMode} 
                                 onSelect={() => {

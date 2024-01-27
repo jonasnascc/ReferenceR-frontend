@@ -58,7 +58,7 @@ const usePhotos = (
     const fetchPhotos = async () => {
         if(album!==null){
             setLoading(true);
-            await axios.get(`author/${author}/albums/${album.code.replace(`deviantart-${author}`, "all").replace("deviantart-", "")}/photos?provider=${provider}&page=${page}&limit=${photosPerPage}`, {
+            await axios.get(`author/${author}/albums/${album.code.replace(`deviantart-${author}`, "all").replace("deviantart-", "")}/photos?provider=${provider}&page=${page}&limit=${photosPerPage}&maxThumbSize=200`, {
                 sendToken : true
                 })
                 .then((response) => {
