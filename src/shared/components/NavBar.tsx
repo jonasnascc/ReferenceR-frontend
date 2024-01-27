@@ -56,7 +56,7 @@ const NavbarKeeper = styled.div`
 const NavBarContainer = styled(Box)`
     display : flex;
     position: fixed;
-    background-color: #263866;
+    background-color: #4166C7;
     height: inherit;
     width: 100%;
     margin: 0px;

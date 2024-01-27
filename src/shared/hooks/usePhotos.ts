@@ -17,8 +17,24 @@ const usePhotos = (
     const [hasNext, setHasNext] = useState<boolean>(true);
     const [loading, setLoading] = useState(false);
     const [selectedPhotos, setSelectedPhotos]= useState<Deviation[]>([]);
+    const [currentPhoto, setCurrentPhoto]= useState<Deviation|null>(null);
 
     const search = useContext(SearchContext);
+
+    useEffect(() => {
+        const fetchTags = async () => {
+            if(selectedPhotos[0]) {
+                await axios.get(`deviations/tags?url=${selectedPhotos[0].deviationPage}`, {
+                    sendToken: true
+                }).then((resp) => setCurrentPhoto({...selectedPhotos[0], tags : resp.data}))
+                .catch((err) => console.log(err))
+            }
+        }
+
+        if(selectedPhotos.length > 0) {
+            fetchTags();
+        } else setCurrentPhoto(null);
+    }, [selectedPhotos])
 
     useEffect(()=>{
         changePage(1);
@@ -92,7 +108,8 @@ const usePhotos = (
         hasNext,
         loading,
         handleSelectPhoto,
-        clearSelectedPhotos
+        clearSelectedPhotos,
+        currentPhoto
     }
 }
 

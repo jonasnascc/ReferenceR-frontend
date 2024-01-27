@@ -15,7 +15,7 @@ export const AuthorBar = ({albumsSize, author, provider} : AuthorBarProps) => {
                 <Grid container>
                     <Grid item xs={1}>
                         <AuthorAvatar>
-                            <Avatar sx={{width: "73px", height: "73px", backgroundColor:"#263866"}}/>
+                            <Avatar sx={{width: "50px", height: "50px", backgroundColor:"#5B74B7"}}/>
                         </AuthorAvatar>
                     </Grid>
                     <Grid item xs={9}>
@@ -36,7 +36,7 @@ export const AuthorBar = ({albumsSize, author, provider} : AuthorBarProps) => {
 }
 
 const BarKeeper = styled.div`
-    height: 90px;
+    height: 70px;
 `
 
 const BarContainer = styled.div`
@@ -51,7 +51,7 @@ const BarContainer = styled.div`
 const AuthorLabel = styled.div`
     display : flex;
     align-items : center;
-    margin-left: 30px;
+    margin-left: 10px;
     height : 100%;
 `
 
@@ -59,7 +59,7 @@ const AuthorName = styled.p`
     padding: 0;
     margin: 0;
     font-family: "Inknut Antiqua";
-    font-size: 22px;
+    font-size: 20px;
 `
 
 const AlbumsSize = styled.p`

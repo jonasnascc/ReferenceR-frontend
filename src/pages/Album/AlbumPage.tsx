@@ -8,8 +8,9 @@ import { NavigationBar } from "./components/NavigationBar/NavigationBar";
 import { PhotosTable } from "./components/PhotosTable/PhotosTable";
 import usePhotos from "../../shared/hooks/usePhotos";
 import { useAlbums } from "../../shared/hooks/useAlbums";
-import { LateralSection } from "./components/LateralSection/LateralSection";
+import { LateralSection } from "./components/PhotoView/LateralSection";
 import styled from "styled-components";
+import { TagsBar } from "./components/PhotoView/TagsBar";
 
 export const AlbumPage = () => {
     const {author, provider, ...search} = useContext(SearchContext);
@@ -32,7 +33,8 @@ export const AlbumPage = () => {
             loading,
             selectedPhotos,
             handleSelectPhoto,
-            clearSelectedPhotos
+            clearSelectedPhotos,
+            currentPhoto
     } = usePhotos(author??"", selectedAlbum, provider??"", 60)
     
     useEffect(()=>{
@@ -71,14 +73,14 @@ export const AlbumPage = () => {
         {
             author!==null&&provider!==null&&(
                 <Content>
-                    <Grid container>
+                    <Grid container spacing={"5px"}>
                         <Grid item xs={12} sm={12} md={12} lg={viewMode ? 1 : 2}>
                             <AlbumsBar>
-                                <Section></Section>
+                                <Section $secondary={true}></Section>
                             </AlbumsBar>
                         </Grid>
                         {selectedAlbum!==null&&photos!==null&&<>
-                            <Grid item xs={12} sm={viewMode ? 4 : 12} md={viewMode ? 4 : 12} lg={viewMode ? 5 : 10}>
+                            <Grid item xs={12} sm={viewMode ? 4 : 12} md={viewMode ? 5 : 12} lg={viewMode ? 5 : 10}>
                                 <SectionContainer>
                                     <Section>
                                         <Title>{selectedAlbum.name}</Title>
@@ -102,15 +104,16 @@ export const AlbumPage = () => {
                             </Grid>
                             {
                                 viewMode && (
-                                    <Grid item xs={12} sm={8} md={8} lg={6}>
+                                    <Grid item xs={12} sm={8} md={7} lg={6}>
                                         <SectionContainer>
                                             <PhotoView>
-                                                <Title>{selectedPhotos.length > 0 ? selectedPhotos[0].title : ""}</Title>
-                                                <LateralSection 
-                                                    onExit={handleExitDetails} 
-                                                    selectedPhotos={selectedPhotos} 
-                                                />
+                                                <Title  $photoView={true}>{viewMode ? selectedPhotos[0].title : ""}</Title>
+                                                    <LateralSection 
+                                                        onExit={handleExitDetails} 
+                                                        selectedPhotos={selectedPhotos} 
+                                                    />
                                             </PhotoView>
+                                            <TagsBar tags={currentPhoto ? currentPhoto.tags : []}/>
                                         </SectionContainer>
                                     </Grid>
                                 )
@@ -125,31 +128,31 @@ export const AlbumPage = () => {
     )
 }
 
-const Title = styled.div`
+const Title = styled.div<{$photoView?:boolean}>`
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: #5B75B7;
     height: 80px;
     width: 100%;
     color: white;
     border-radius: none inherit none inherit;
-
     font-size: 20px;
     z-index: 101;
+
+    background-color: ${props => props.$photoView ? "#4166C7" : "#EB6767"};
 `
 
 const SectionContainer = styled.div`
     position: relative;
     width:100%;
-    height: calc(100vh - 160px);
-    padding : 10px;
+    height: calc(100vh - 140px);
+    padding : 10px 2.5px 10px 2.5px;
 `
 
-const Section = styled.div`
+const Section = styled.div<{$secondary ?: boolean}>`
     width:100%;
     height: 100%;
-    background-color : white;
+    background-color : ${props => props.$secondary ? "#EB6767" : "white"};
     border-radius: 10px;
     overflow: hidden;
 `
@@ -161,6 +164,10 @@ const ScrollableArea = styled.div`
 
 const AlbumsBar = styled(SectionContainer)`
     padding: 15px 10px 15px 10px;
+
+    @media(max-width: 1199px) {
+        height: 200px;
+    }
 `
 
 
@@ -171,7 +178,9 @@ const PhotoView = styled(Section)`
 const Content = styled.div`
     position : relative;
     overflow: auto;
-    height: calc(100vh - 160px);
+    height: calc(100vh - 140px);
+    margin-right : 7.5px;
+    margin-left : 7.5px;
 `
 const BodyGrid = styled.div`
     height: 100vh;

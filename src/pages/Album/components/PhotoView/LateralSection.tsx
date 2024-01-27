@@ -4,19 +4,18 @@ import styled from "styled-components";
 import { Deviation } from "../../../../types/photo";
 
 import CloseIcon from '@mui/icons-material/Close';
+import axios from "../../../../api/axios";
 
 export const LateralSection = ({show = false, onExit, selectedPhotos} : {show ?: boolean, onExit : () => any, selectedPhotos : Deviation[]}) => {
-
     return (
         <SectionContainer>
-                    <ExitButton onClick={() => onExit()}>
-                        <CloseIcon sx={{height: "inherit"}}/>
-                    </ExitButton>
-                    
-                    <ImageContainer>
-                        <ImageContent src={selectedPhotos[0].url} alt={selectedPhotos[0].title}/>
-                    </ImageContainer>
-                    
+            <ExitButton onClick={() => onExit()}>
+                <CloseIcon sx={{height: "inherit"}}/>
+            </ExitButton>
+            
+            <ImageContainer>
+                <ImageContent src={selectedPhotos[0].url} alt={selectedPhotos[0].title}/>
+            </ImageContainer>
         </SectionContainer>
         
     )

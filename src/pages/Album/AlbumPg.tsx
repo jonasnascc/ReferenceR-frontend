@@ -8,7 +8,7 @@ import { NavigationBar } from "./components/NavigationBar/NavigationBar";
 import { PhotosTable } from "./components/PhotosTable/PhotosTable";
 import usePhotos from "../../shared/hooks/usePhotos";
 import { useAlbums } from "../../shared/hooks/useAlbums";
-import { LateralSection } from "./components/LateralSection/LateralSection";
+import { LateralSection } from "./components/PhotoView/LateralSection";
 import styled from "styled-components";
 
 export const AlbumPg = () => {
