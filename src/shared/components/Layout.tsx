@@ -11,7 +11,7 @@ export const Layout = () => {
     return (
         <BodyContainer>
             <NavBar/>
-            {author!==null&&provider!==null && <AuthorBar albumsSize={0} author={author} provider={provider} />}
+            {/* {author!==null&&provider!==null && <AuthorBar albumsSize={0} author={author} provider={provider} />} */}
             
             <Content>
                 <Outlet/>
@@ -27,4 +27,6 @@ const BodyContainer = styled.div`
 
 const Content = styled.div`
     position: relative;
+    height: 100%;
+    width: 100%;
 `

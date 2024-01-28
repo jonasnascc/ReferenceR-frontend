@@ -19,8 +19,7 @@ export const ThumbnailContainer = ({ url, title, selectMode=false, onSelect = ()
     const [selectedPhoto, setSelectedPhoto] = useState(false);
 
     useEffect(() => {
-        if(selectedPhoto !== selected)
-            handleSelect();
+        setSelectedPhoto(selected);
     }, [selected])
 
     useEffect(()=>{
@@ -28,10 +27,8 @@ export const ThumbnailContainer = ({ url, title, selectMode=false, onSelect = ()
     }, [selectMode])
 
     const handleSelect = () => {
-        // if(selectMode) {
-            setSelectedPhoto(!selectedPhoto);
-            onSelect();
-        // } 
+        setSelectedPhoto(!selectedPhoto);
+        onSelect();
     }
 
     const handleClose = () => {
@@ -49,16 +46,14 @@ export const ThumbnailContainer = ({ url, title, selectMode=false, onSelect = ()
                     {selectedPhoto ? (<CheckBoxIcon/>) : (<CheckBoxOutlineBlankOutlinedIcon/>)}
                 </SelectionBox>
             )}
-            <ThumbContainer onClick={() => handleSelect()}>
-                <Box sx={{border : `${!selectedPhoto ? "none" : "solid 3px #0070ff"}`, borderRadius: "10px"}}>
-                    <ThumbImage
-                        src={`${url}`} 
-                        alt={title} 
-                        loading='lazy' 
-                        srcSet={`${url}`}
-                        onClick={handleOpen}
-                    />
-                </Box>
+            <ThumbContainer $selected={selectedPhoto} onClick={() => handleSelect()}>
+                <ThumbImage
+                    src={`${url}`} 
+                    alt={title} 
+                    loading='lazy' 
+                    srcSet={`${url}`}
+                    onClick={handleOpen}
+                />
             </ThumbContainer>
             {
                 // selectMode ? (null) : (
@@ -73,19 +68,23 @@ export const ThumbnailContainer = ({ url, title, selectMode=false, onSelect = ()
 const CentralizedDiv = styled.div`
     display:flex;
     align-items:center;
-    height:200px;
+    height:250px;
     cursor: pointer;
 `
 
-const ThumbContainer = styled.div`
+const ThumbContainer = styled.div<{$selected ?: boolean}>`
     position: relative;
     display:flex;
     align-items : center;
     justify-content: center;
     position: relative;
     width: 100%;
-    height: 200px;
+    height: 250px;
     overflow: hidden;
+    background-color: white;
+    padding: 10px;
+    box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
+    border: ${props => props.$selected ? "solid 3px #4f5157" : "none"};
 `
 const ThumbImage = styled.img`
     width: 100%;

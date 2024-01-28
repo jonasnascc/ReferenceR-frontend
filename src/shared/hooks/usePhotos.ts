@@ -18,16 +18,18 @@ const usePhotos = (
     const [loading, setLoading] = useState(false);
     const [selectedPhotos, setSelectedPhotos]= useState<Deviation[]>([]);
     const [currentPhoto, setCurrentPhoto]= useState<Deviation|null>(null);
+    const [loadingTags, setLoadingTags] = useState(false);
 
     const search = useContext(SearchContext);
 
     useEffect(() => {
         const fetchTags = async () => {
             if(selectedPhotos[0]) {
-                await axios.get(`deviations/tags?url=${selectedPhotos[0].deviationPage}`, {
-                    sendToken: true
-                }).then((resp) => setCurrentPhoto({...selectedPhotos[0], tags : resp.data}))
+                setLoadingTags(true);
+                await axios.get(`deviations/tags?url=${selectedPhotos[0].deviationPage}`, { sendToken: true })
+                .then((resp) => setCurrentPhoto({...selectedPhotos[0], tags : resp?.data??[]}))
                 .catch((err) => console.log(err))
+                .finally(() => setLoadingTags(false));
             }
         }
 
@@ -51,14 +53,10 @@ const usePhotos = (
         fetchPhotos();
     }, [page])
 
-    useEffect(() => {
-        console.log(selectedPhotos)
-    }, [selectedPhotos])
-
     const fetchPhotos = async () => {
         if(album!==null){
             setLoading(true);
-            await axios.get(`author/${author}/albums/${album.code.replace(`deviantart-${author}`, "all").replace("deviantart-", "")}/photos?provider=${provider}&page=${page}&limit=${photosPerPage}&maxThumbSize=200`, {
+            await axios.get(`author/${author}/albums/${album.code.replace(`deviantart-${author}`, "all").replace("deviantart-", "")}/photos?provider=${provider}&page=${page}&limit=${photosPerPage}&maxThumbSize=300`, {
                 sendToken : true
                 })
                 .then((response) => {
@@ -109,7 +107,8 @@ const usePhotos = (
         loading,
         handleSelectPhoto,
         clearSelectedPhotos,
-        currentPhoto
+        currentPhoto,
+        loadingTags
     }
 }
 

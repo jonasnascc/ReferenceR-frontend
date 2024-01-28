@@ -23,15 +23,15 @@ export const NavBar = () => {
         <NavbarKeeper>
             <NavBarContainer>
                 <Grid container>
-                    <Grid item xs={3}>
+                    <Grid item xs={2}>
                         <LogoBox>
                             <LogoText href="/">ReferenceR</LogoText>
                         </LogoBox>
                     </Grid>
-                    <Grid item xs={6}>
+                    <Grid item xs={8}>
                         <SearchBar/>
                     </Grid>
-                    <Grid item xs={3}>
+                    <Grid item xs={2}>
                         <RequireNoAuth>
                             <LoginButtonContainer>
                                 <LoginButton onClick={handleLoginClick}>Entrar</LoginButton>
@@ -56,7 +56,7 @@ const NavbarKeeper = styled.div`
 const NavBarContainer = styled(Box)`
     display : flex;
     position: fixed;
-    background-color: #4166C7;
+    background-color: #4f5157;
     height: inherit;
     width: 100%;
     margin: 0px;
