@@ -12,20 +12,14 @@ type PhotosTableProps = {
     selectMode ?: boolean,
     onSelectPhoto ?: (photo : Deviation) => any,
     selectedPhotos ?: Deviation[],
-    viewMode ?: boolean
+    viewMode ?: boolean,
+    currentPhoto : Deviation | null
 }
 
-export const PhotosTable = ({album, photos, loading=false, selectMode=false, onSelectPhoto = (photo : Deviation) => {}, selectedPhotos = [], viewMode=false} : PhotosTableProps) => {
+export const PhotosTable = ({album, photos, loading=false, selectMode=false, onSelectPhoto = (photo : Deviation) => {}, selectedPhotos = [], viewMode=false, currentPhoto} : PhotosTableProps) => {
 
     const handleSelect = (photo : Deviation) => {
         onSelectPhoto(photo);
-    }
-
-    const isPhotoSelected = (photoId : number) : boolean => {
-        if(selectedPhotos.length === 0) return false;
-        if(selectedPhotos.filter(ph => ph.id === photoId).length > 0){
-            return true;
-        } else return false;
     }
 
     return !album ? null : (
@@ -40,7 +34,7 @@ export const PhotosTable = ({album, photos, loading=false, selectMode=false, onS
                     return (
                         <ImageListItem key={deviation.id}>
                             <ThumbnailContainer 
-                                selected={isPhotoSelected(deviation.id)}
+                                selected={currentPhoto==null ? false : deviation.id === currentPhoto.id}
                                 url={deviation.thumbUrl ? deviation.thumbUrl : deviation.url} 
                                 title={deviation.title} 
                                 selectMode={selectMode} 
@@ -48,9 +42,6 @@ export const PhotosTable = ({album, photos, loading=false, selectMode=false, onS
                                     handleSelect(deviation)
                                 }}
                             />
-                            {/* <ImageListItemBar
-                                title={deviation.title}
-                            /> */}
                         </ImageListItem>
                     )
                 })}

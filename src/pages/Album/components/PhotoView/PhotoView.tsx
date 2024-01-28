@@ -5,6 +5,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import { Grid } from "@mui/material";
 import { TagsBar } from "./TagsBar";
 
+
 type PhotoViewProps = {
     show ?: boolean,
     onExit : () => any,
@@ -78,9 +79,10 @@ const ImageContent = styled.img`
 
 const ExitButton = styled.a`
     position : absolute;
-    top:8px;
-    right:8px;
+    top:20px;
+    left:8px;
     color: white;
     cursor: pointer;
     text-decoration: none;
+    z-index: 100;
 `

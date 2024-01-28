@@ -26,6 +26,7 @@ const usePhotos = (
         const fetchTags = async () => {
             if(selectedPhotos[0]) {
                 setLoadingTags(true);
+                setCurrentPhoto(null);
                 await axios.get(`deviations/tags?url=${selectedPhotos[0].deviationPage}`, { sendToken: true })
                 .then((resp) => setCurrentPhoto({...selectedPhotos[0], tags : resp?.data??[]}))
                 .catch((err) => console.log(err))
@@ -34,6 +35,7 @@ const usePhotos = (
         }
 
         if(selectedPhotos.length > 0) {
+            setCurrentPhoto(selectedPhotos[0])
             fetchTags();
         } else setCurrentPhoto(null);
     }, [selectedPhotos])
@@ -63,7 +65,9 @@ const usePhotos = (
                     setPhotos((response.data as Deviation[]).sort((a,b) => b.id - a.id));
                 })
                 .catch((err) => console.log(err))
-                .finally(() => setLoading(false))
+                .finally(() => {
+                    setLoading(false)
+                })
         }
     }
 

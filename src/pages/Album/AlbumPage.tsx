@@ -78,13 +78,14 @@ export const AlbumPage = () => {
                         <PhotosTable 
                             album={selectedAlbum} 
                             photos={photos} 
+                            currentPhoto={currentPhoto}
                             loading={loading} 
                             viewMode={viewMode}
                             onSelectPhoto={handleSelectPhoto}
                         />
                     </Grid>
                     <PhotoView 
-                        show={currentPhoto!==null} 
+                        show={selectedPhotos.length!==0} 
                         currentPhoto={currentPhoto}
                         selectedPhotos={selectedPhotos} 
                         onExit={handleExitDetails}
