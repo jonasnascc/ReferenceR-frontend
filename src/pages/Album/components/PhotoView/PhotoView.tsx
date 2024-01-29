@@ -1,7 +1,7 @@
 import styled from "styled-components";
-import { Deviation } from "../../../../types/photo";
+import { Deviation, Tag } from "../../../../types/photo";
 
-import CloseIcon from '@mui/icons-material/Close';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { Grid } from "@mui/material";
 import { TagsBar } from "./TagsBar";
 
@@ -10,18 +10,19 @@ type PhotoViewProps = {
     show ?: boolean,
     onExit : () => any,
     currentPhoto : Deviation | null,
-    selectedPhotos : Deviation[],
-    loadingTags ?: boolean
+    selectedPhotos ?: Deviation[],
+    loadingTags ?: boolean,
+    tags : Tag[]
 }
 
-export const PhotoView = ({show = false, onExit, selectedPhotos, loadingTags = true, currentPhoto} : PhotoViewProps) => {
+export const PhotoView = ({show = false, onExit, selectedPhotos = [], loadingTags = true, currentPhoto, tags} : PhotoViewProps) => {
     return (
         <>
         {show && currentPhoto!==null &&
             <Grid item xs={6}>
                 <SectionContainer>
                     <ExitButton onClick={() => onExit()}>
-                        <CloseIcon sx={{height: "inherit"}}/>
+                        <ArrowBackIcon sx={{height: "inherit"}}/>
                     </ExitButton>
                     
                     <PhotoTitle>{currentPhoto.title}</PhotoTitle>
@@ -30,7 +31,7 @@ export const PhotoView = ({show = false, onExit, selectedPhotos, loadingTags = t
                         <ImageContent src={currentPhoto.url} alt={currentPhoto.title}/>
                     </ImageContainer>
 
-                    <TagsBar tags={currentPhoto?.tags??[]} loading={loadingTags}/>
+                    <TagsBar tags={tags} loading={loadingTags}/>
                 </SectionContainer>
             </Grid>
         }

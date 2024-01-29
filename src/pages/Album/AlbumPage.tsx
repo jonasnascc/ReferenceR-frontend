@@ -10,15 +10,10 @@ import styled from "styled-components";
 import { TagsBar } from "./components/PhotoView/TagsBar";
 import { PhotoView } from "./components/PhotoView/PhotoView";
 import { AlbumsCarousel } from "./components/AlbumsCarousel";
+import { NavigationBar } from "./components/NavigationBar/NavigationBar";
 
 export const AlbumPage = () => {
-    const {author, provider, ...search} = useContext(SearchContext);
-
-    const [selectMode, setSelectMode] = useState(false);
-
-    const [showPhotoDetails, setShowPhotoDetails] = useState(false);
-
-    const [viewMode, setViewMode] = useState(false);
+    const {author, provider} = useContext(SearchContext);
 
     const {
         albums,
@@ -30,14 +25,18 @@ export const AlbumPage = () => {
             photos,
             page,
             lastPage,
-            hasNext,
             changePage,
             loading,
-            selectedPhotos,
             handleSelectPhoto,
             clearSelectedPhotos,
             currentPhoto,
-            loadingTags
+            currentTags,
+            loadingTags,
+            viewMode,
+            handleSelectMode,
+            selectMode,
+            selectedPhotos,
+            handleViewLastSelected
     } = usePhotos(author??"", selectedAlbum, provider??"", 60)
     
     useEffect(() => {
@@ -46,20 +45,12 @@ export const AlbumPage = () => {
         }
     }, [albums])
 
-    useEffect(() => {
-        setViewMode(selectedPhotos.length > 0);
-    }, [selectedPhotos])
-
-    const handleSelect = (select: boolean) => {
-        setSelectMode(select);
+    const handleSelectAlbum = (albumCode : string) => {
+        handleExitView();
+        handleAlbumSelect(albumCode);
     }
 
-    const handleDetails = () => {
-        setShowPhotoDetails(true);
-    }
-
-    const handleExitDetails = () => {
-        setShowPhotoDetails(false);
+    const handleExitView = () => {
         clearSelectedPhotos();
     }
 
@@ -71,7 +62,7 @@ export const AlbumPage = () => {
                 <Grid container>
                     <Grid item xs={12}>
                         <Carousel>
-                            <AlbumsCarousel albums={albums} onSelect={handleAlbumSelect} selectedAlbum={selectedAlbum}/>
+                            <AlbumsCarousel albums={albums} onSelect={handleSelectAlbum} selectedAlbum={selectedAlbum}/>
                         </Carousel>
                     </Grid>
                     <Grid item xs={viewMode ? 6 : 12}>
@@ -82,17 +73,25 @@ export const AlbumPage = () => {
                             loading={loading} 
                             viewMode={viewMode}
                             onSelectPhoto={handleSelectPhoto}
+                            selectedPhotos={selectedPhotos}
+                        />
+                        <NavigationBar 
+                            handlePageChange={changePage} 
+                            onSelect={handleSelectMode} 
+                            onViewPhoto={() => {}}
+                            page={page}
+                            pageLimit={lastPage}
+                            viewAllowed={selectMode}
                         />
                     </Grid>
                     <PhotoView 
-                        show={selectedPhotos.length!==0} 
+                        show={currentPhoto!==null} 
                         currentPhoto={currentPhoto}
-                        selectedPhotos={selectedPhotos} 
-                        onExit={handleExitDetails}
+                        onExit={handleExitView}
+                        tags = {currentTags}
                         loadingTags={loadingTags}
                     />
                 </Grid>
-                
             </Container>
         )}
         </>

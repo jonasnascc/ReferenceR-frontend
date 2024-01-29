@@ -1,4 +1,4 @@
-import { Grid, Typography } from "@mui/material";
+import { Container, Grid, Typography } from "@mui/material";
 import React from "react";
 import styled from "styled-components";
 import { NavigationButtons } from "./NavigationButtons";
@@ -12,46 +12,51 @@ type NavigationBarProps = {
     page ?: number,
     pageLimit ?: number,
     onSelect : (state : boolean) => any,
-    onDetails : () => any
+    onViewPhoto : () => any,
+    viewAllowed ?: boolean
 }
 
-export const NavigationBar = ({page, pageLimit, handlePageChange, onSelect, onDetails} : NavigationBarProps) => {
+export const NavigationBar = ({page, pageLimit, handlePageChange, onSelect, onViewPhoto, viewAllowed} : NavigationBarProps) => {
     return (
-        <BarContainer>
-            <Bar>
-                <Grid container>
-                    <Grid item xs={4}></Grid>
-                    <Grid item xs={4}>
-                        <NavigationButtons onPageChange={handlePageChange} page={page ?? 1} pageLimit={pageLimit ?? 1}/>
+        <Container>
+            <BarContainer>
+                <Bar>
+                    <Grid container>
+                        <Grid item xs={4}></Grid>
+                        <Grid item xs={4}>
+                            <NavigationButtons onPageChange={handlePageChange} page={page ?? 1} pageLimit={pageLimit ?? 1}/>
+                        </Grid>
+                        <Grid item xs={2}>
+                            {viewAllowed&&<DetailsMenu onClick={onViewPhoto}/>}
+                        </Grid>
+                        <Grid item xs={2}>
+                            <SelectionMenu onSelect={onSelect}/>
+                        </Grid>
                     </Grid>
-                    <Grid item xs={2}>
-                        <DetailsMenu onClick={onDetails}/>
-                    </Grid>
-                    <Grid item xs={2}>
-                        <SelectionMenu onSelect={onSelect}/>
-                    </Grid>
-                </Grid>
-            </Bar>
-        </BarContainer>
+                </Bar>
+            </BarContainer>
+        </Container>
     )
 }
 
 const BarContainer = styled.div`
-    display: flex;
-    align-items : center;
-    justify-content: center;
+    display: flex;  
+    justify-content : center;
     position: fixed;
-    bottom : 50px;
-    width : 100%;
-    height: 60px;
+    bottom: 40px;
+    left: 0px;
+    width: 100%;
 `
 
 const Bar = styled.div`
     display: flex;
-    align-items : center;
-    background-color: #C7CEE1;
-    height: 100%;
+    align-items:center;
+    justify-content: center;
     width: 30%;
-    border-radius : 30px;
+    height: 6vh;
+    background-color: #4f5157;
+    border-radius : 2vh;
+    color: white;
+    z-index : 100;
 `
 

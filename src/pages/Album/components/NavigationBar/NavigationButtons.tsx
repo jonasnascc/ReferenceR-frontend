@@ -24,11 +24,15 @@ export const NavigationButtons = ({onPageChange, page, pageLimit} : {onPageChang
     return (
         <ButtonsContainer>
             <Tooltip title="Voltar" placement="top" >
-                <NavButton onClick={handleBefore}><NavigateBeforeIcon style={{color: `${page==1 ? "black" : "light-gray"}`}}/></NavButton>
+                <NavButton onClick={handleBefore}>
+                    <NavigateBeforeIcon style={{color: `${page!==1 ? "white" : "light-gray"}`}}/>
+                </NavButton>
             </Tooltip>
             <PageContent page={page} pageLimit={pageLimit} onPageChange={handlePageChange}/>
             <Tooltip title="Avançar" placement="top" >
-                <NavButton onClick={handleNext}><NavigateNextIcon/></NavButton>
+                <NavButton onClick={handleNext}>
+                    <NavigateNextIcon  style={{color: `${page!==pageLimit ? "white" : "light-gray"}`}}/>
+                </NavButton>
             </Tooltip>
         </ButtonsContainer>
     );

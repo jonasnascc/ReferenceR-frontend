@@ -8,8 +8,6 @@ import LibraryAddCheckOutlinedIcon from '@mui/icons-material/LibraryAddCheckOutl
 export const SelectionMenu = ({onSelect} : {onSelect : (state:boolean) => void}) => {
     const [select, setSelect] = useState(false);
 
-    let color : string = select ? "#0070ff" : "black";
-
     const handleSelect = () => {
         setSelect(!select);
         onSelect(!select);
@@ -18,8 +16,8 @@ export const SelectionMenu = ({onSelect} : {onSelect : (state:boolean) => void})
     return(
         <SelectItemsContainer>
             <Tooltip title={select ? "DeSelect": "Select"} placement="top" >
-                <SelectItemsButton onClick={handleSelect}>
-                    <LibraryAddCheckOutlinedIcon fontSize="small" sx={{color:{color}}}/>
+                <SelectItemsButton onClick={handleSelect} $select={select}>
+                    <LibraryAddCheckOutlinedIcon fontSize="small"/>
                 </SelectItemsButton>
             </Tooltip>
         </SelectItemsContainer>
@@ -34,12 +32,15 @@ const SelectItemsContainer = styled.div`
     
 `
 
-const SelectItemsButton = styled.a`
+const SelectItemsButton = styled.a<{$select ?: boolean}>`
     padding : 5px;
     cursor: pointer;
     border-radius: 8px;
+    color: white;
+
+    background-color : ${props => props.$select ? "rgba(0,0,0,0.5)" : "none"};
 
     &:hover {
-        background-color : rgba(0,0,0,0.1);
+        background-color : ${props => props.$select ? "none" : "rgba(0,0,0,0.3)"};
     }
 `

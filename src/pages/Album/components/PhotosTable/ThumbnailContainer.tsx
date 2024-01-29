@@ -30,10 +30,6 @@ export const ThumbnailContainer = ({ url, title, selectMode=false, onSelect = ()
         setSelectedPhoto(!selectedPhoto);
         onSelect();
     }
-
-    const handleClose = () => {
-        setOpen(false);
-      };
       
     const handleOpen = () => {
         if(!selectMode) setOpen(true);
@@ -55,11 +51,6 @@ export const ThumbnailContainer = ({ url, title, selectMode=false, onSelect = ()
                     onClick={handleOpen}
                 />
             </ThumbContainer>
-            {
-                // selectMode ? (null) : (
-                //     <ExpandedImage url={url} title={title} open={open} handleClose={handleClose}/>
-                // )
-            }
         </CentralizedDiv>
 
     )

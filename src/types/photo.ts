@@ -11,3 +11,8 @@ export type Deviation = {
     tags : {name:string, url:string} []
     selected ?: boolean
 }
+
+export type Tag = {
+    name: string,
+    url : string
+}

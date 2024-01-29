@@ -48,7 +48,7 @@ const Tag = styled.span`
     margin: 10px 0px;
 
     &:hover {
-        background-color: #213e89;
+        background-color: #2b2d31;
         cursor: pointer;
     }
 `
@@ -58,6 +58,7 @@ const Bar = styled.div<{$expanded?: boolean}>`
     position: absolute;
     bottom: 0px;
     right: 0px;
+    min-height: 50px;
     max-height: 90%;
     height: ${props => props.$expanded ? "auto" : "50px"};
     width: 100%;
