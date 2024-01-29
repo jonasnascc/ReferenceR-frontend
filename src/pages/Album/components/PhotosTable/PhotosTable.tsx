@@ -32,25 +32,15 @@ export const PhotosTable = ({album, photos, loading=false, selectMode=false, onS
                 <LinearProgress/>
             ) : (
                 <>
-                <AlbumTitle>
-                    <Box textAlign={"center"}>
-                        <p>{album.name}</p>
-                        {selectedPhotos.length > 0 && <>
-                            <SelectedText>
-                                <SelectedNumber>{`${selectedPhotos.length}`}</SelectedNumber>{` selected.`}
-                            </SelectedText> 
-                        </>}
-                    </Box>
-                </AlbumTitle>
                 <ImageList cols={viewMode ? 3 : 5} rowHeight={250} sx={{width: "100%", height: "100%", overflow:"auto"}} variant="quilted" gap={20} > 
                 {photos!==undefined && photos.map((deviation : Deviation) => {
                     return (
                         <ImageListItem key={deviation.id}>
                             <ThumbnailContainer 
                                 selected={ currentPhoto==null? checkIsSelected(deviation) : (deviation.id === currentPhoto.id) }
+                                photo={deviation}
                                 url={deviation.thumbUrl ? deviation.thumbUrl : deviation.url} 
                                 title={deviation.title} 
-                                selectMode={selectMode} 
                                 onSelect={() => {
                                     handleSelect(deviation)
                                 }}
@@ -70,25 +60,4 @@ const TableContainer = styled.div`
     height: calc(100vh - 170px);
     margin-left: 10px;
     margin-right : 10px;
-`
-
-
-const AlbumTitle = styled.div`
-    margin: 20px 0;
-    width: 100%;
-    height: 70px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 18px;
-`
-
-const SelectedNumber = styled.span`
-    margin:0;
-    padding: 0;
-    color: green;
-`
-
-const SelectedText = styled.span`
-    font-size: 15px;
 `

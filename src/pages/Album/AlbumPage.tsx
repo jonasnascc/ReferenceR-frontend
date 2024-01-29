@@ -11,6 +11,7 @@ import { TagsBar } from "./components/PhotoView/TagsBar";
 import { PhotoView } from "./components/PhotoView/PhotoView";
 import { AlbumsCarousel } from "./components/AlbumsCarousel";
 import { NavigationBar } from "./components/NavigationBar/NavigationBar";
+import { AlbumTitle } from "./components/AlbumTitle";
 
 export const AlbumPage = () => {
     const {author, provider} = useContext(SearchContext);
@@ -66,6 +67,10 @@ export const AlbumPage = () => {
                         </Carousel>
                     </Grid>
                     <Grid item xs={viewMode ? 6 : 12}>
+                        <AlbumTitle 
+                            album={selectedAlbum} 
+                            selectedSize={selectedPhotos.length}
+                        />
                         <PhotosTable 
                             album={selectedAlbum} 
                             photos={photos} 
@@ -99,11 +104,6 @@ export const AlbumPage = () => {
     )
 }
 
-const Content = styled.div`
-    height: calc(100vh - 140px);
-    width: 100%;
-`
-
 const Menu = styled.div`
     width: 100%;
     height: 70px;
@@ -114,13 +114,6 @@ const Carousel = styled.div`
     margin: 20px 0;
     width: 100%;
     height: 200px;
-`
-
-const AlbumTitle = styled.div`
-    margin: 20px 0;
-    width: 100%;
-    height: 70px;
-    border: solid 1px black;
 `
 
 const Photos = styled.div`

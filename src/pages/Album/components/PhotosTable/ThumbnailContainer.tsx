@@ -5,16 +5,18 @@ import { Box } from '@mui/material';
 
 import CheckBoxOutlineBlankOutlinedIcon from '@mui/icons-material/CheckBoxOutlineBlankOutlined';
 import CheckBoxIcon from '@mui/icons-material/CheckBox';
+import { FavoriteStar } from '../../../../shared/components/FavoriteStar';
+import { Deviation } from '../../../../types/photo';
 
 type ThumbnailContainerProps = {
     url : string,
     title : string,
-    selectMode ?: boolean,
     onSelect ?: () => any,
-    selected ?: boolean
+    selected ?: boolean,
+    photo : Deviation
 }
 
-export const ThumbnailContainer = ({ url, title, selectMode=false, onSelect = () => {}, selected = false} : ThumbnailContainerProps) => {
+export const ThumbnailContainer = ({ photo, onSelect = () => {}, selected = false} : ThumbnailContainerProps) => {
     const [open, setOpen] = useState(false);
     const [selectedPhoto, setSelectedPhoto] = useState(false);
 
@@ -22,32 +24,24 @@ export const ThumbnailContainer = ({ url, title, selectMode=false, onSelect = ()
         setSelectedPhoto(selected);
     }, [selected])
 
-    useEffect(()=>{
-        if(!selectMode) setSelectedPhoto(false);
-    }, [selectMode])
-
-    const handleSelect = () => {
-        setSelectedPhoto(!selectedPhoto);
-        onSelect();
-    }
       
     const handleOpen = () => {
-        if(!selectMode) setOpen(true);
+        setOpen(true);
     };
     
     return (
         <CentralizedDiv>
-            {selectMode && (
-                <SelectionBox>
-                    {selectedPhoto ? (<CheckBoxIcon/>) : (<CheckBoxOutlineBlankOutlinedIcon/>)}
-                </SelectionBox>
-            )}
-            <ThumbContainer $selected={selectedPhoto} onClick={() => handleSelect()}>
+            <ThumbContainer $selected={selectedPhoto} onClick={() => onSelect()}>
+                {photo.favorited && 
+                    <StarContainer>
+                        <FavoriteStar photo={photo} active/>
+                    </StarContainer>
+                }
                 <ThumbImage
-                    src={`${url}`} 
-                    alt={title} 
+                    src={`${photo.thumbUrl ? photo.thumbUrl : photo.url}`} 
+                    alt={photo.title} 
                     loading='lazy' 
-                    srcSet={`${url}`}
+                    srcSet={`${photo.thumbUrl ? photo.thumbUrl : photo.url}`}
                     onClick={handleOpen}
                 />
             </ThumbContainer>
@@ -83,10 +77,11 @@ const ThumbImage = styled.img`
     object-fit : scale-down;
 `
 
-const SelectionBox = styled.div`
+
+const StarContainer = styled.div`
     position: absolute;
-    top : 10px;
-    right: 10px;
-    z-index: 99;
-    color : #0070ff;
+    top: 0.2em;
+    right: 0.2em;
+    color : #ffca00;
+
 `

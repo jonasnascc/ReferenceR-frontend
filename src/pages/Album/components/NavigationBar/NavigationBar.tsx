@@ -46,6 +46,8 @@ const BarContainer = styled.div`
     bottom: 40px;
     left: 0px;
     width: 100%;
+    
+    z-index : 100;
 `
 
 const Bar = styled.div`
@@ -57,6 +59,5 @@ const Bar = styled.div`
     background-color: #4f5157;
     border-radius : 2vh;
     color: white;
-    z-index : 100;
 `
 

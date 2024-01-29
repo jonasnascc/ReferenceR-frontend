@@ -8,8 +8,8 @@ export type Deviation = {
     matureLevel: string,
     deviationPage: string,
     license: string,
-    tags : {name:string, url:string} []
-    selected ?: boolean
+    tags : {name:string, url:string} [],
+    favorited ?: boolean
 }
 
 export type Tag = {

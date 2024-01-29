@@ -1,9 +1,12 @@
 import styled from "styled-components";
 import { Deviation, Tag } from "../../../../types/photo";
-
-import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { Grid } from "@mui/material";
 import { TagsBar } from "./TagsBar";
+
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import StarBorderRoundedIcon from '@mui/icons-material/StarBorderRounded';
+import { FavoriteStar } from "../../../../shared/components/FavoriteStar";
+
 
 
 type PhotoViewProps = {
@@ -21,9 +24,13 @@ export const PhotoView = ({show = false, onExit, selectedPhotos = [], loadingTag
         {show && currentPhoto!==null &&
             <Grid item xs={6}>
                 <SectionContainer>
-                    <ExitButton onClick={() => onExit()}>
-                        <ArrowBackIcon sx={{height: "inherit"}}/>
-                    </ExitButton>
+                    <ActionButton $position={"left"} onClick={() => onExit()}>
+                        <ArrowBackIcon/>
+                    </ActionButton>
+
+                    <ActionButton $position={"right"}>
+                        <FavoriteStar photo={currentPhoto} sx={{color : "yellow"}}/>
+                    </ActionButton>
                     
                     <PhotoTitle>{currentPhoto.title}</PhotoTitle>
 
@@ -62,6 +69,7 @@ const PhotoTitle = styled.div`
     background-color: #4f5157;
     color: white;
     font-size: 18px;
+    padding: 0px 40px;
 `
 
 const ImageContainer = styled.div`
@@ -78,10 +86,10 @@ const ImageContent = styled.img`
     object-fit : scale-down;
 `
 
-const ExitButton = styled.a`
+const ActionButton = styled.a<{$position:"left" | "right"}>`
     position : absolute;
     top:20px;
-    left:8px;
+    ${props => props.$position==="left" ? "left:8px;" : "right:8px;"}
     color: white;
     cursor: pointer;
     text-decoration: none;
