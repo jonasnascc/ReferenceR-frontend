@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import styled from "styled-components";
 
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
@@ -7,7 +7,7 @@ import VisibilityOffOutlinedIcon from '@mui/icons-material/VisibilityOffOutlined
 import { Box, Tooltip, Typography } from "@mui/material";
 import { Album } from "../../../types/album";
 
-const MOVE_CONSTANT = 300;
+const MOVE_CONSTANT = 200;
 
 type AlbumsCarouselProps = {
     albums : Album[],
@@ -16,21 +16,7 @@ type AlbumsCarouselProps = {
 }
 
 export const AlbumsCarousel = ({albums, onSelect, selectedAlbum} : AlbumsCarouselProps) =>{
-    const [position, setPosition] = useState({left: 0});
-
-    const minLeft = ~~((MOVE_CONSTANT * albums.length)  / 4.5);
-
-    const moveLeft = () => {
-        if(position.left < 0)
-            setPosition({left: position.left + MOVE_CONSTANT})
-    }
-
-    const moveRight = () => {
-        // if(position.left + minLeft >= 0)
-            setPosition({left: position.left - MOVE_CONSTANT})
-            // console.log({length: albums.length, minLeft: minLeft, constant: MOVE_CONSTANT, left: position.left - MOVE_CONSTANT, size_times_constant : (albums.length * MOVE_CONSTANT)})
-
-    }
+    const listRef = useRef<HTMLUListElement>(null);
 
     const formatAlbumLabel = (label : string) : string => {
         if(label.length >= 44)
@@ -44,13 +30,32 @@ export const AlbumsCarousel = ({albums, onSelect, selectedAlbum} : AlbumsCarouse
         return false;
     }
 
+    const moveLeft = () => {
+        const ref : any = listRef.current;
+        if(ref) {
+            ref.scrollTo({
+                left: ref.scrollLeft - MOVE_CONSTANT,
+                behavior: 'smooth'
+            });
+        }
+    }
+    const moveRight = () => {
+        const ref : any = listRef.current;
+        if(ref) {
+            ref.scrollTo({
+                left: ref.scrollLeft + MOVE_CONSTANT,
+                behavior: 'smooth'
+            });
+        }
+    }
+
     return (
         <Carousel>
-            <ArrowButtonContainer $position={"left"}>
+            <ArrowButtonContainer $position={"left"} onClick={moveLeft}>
                 <ArrowButton><ArrowBackIosIcon/></ArrowButton>
             </ArrowButtonContainer>
             <Items>
-                <ItemsList>
+                <ItemsList ref={listRef}>
                     {
                         albums.map(album => (
                             <Item key={album.url}>
@@ -67,7 +72,7 @@ export const AlbumsCarousel = ({albums, onSelect, selectedAlbum} : AlbumsCarouse
                     }
                 </ItemsList>
             </Items>
-            <ArrowButtonContainer $position={"right"}>
+            <ArrowButtonContainer $position={"right"} onClick={moveRight}>
                 <ArrowButton><ArrowForwardIosIcon/></ArrowButton>
             </ArrowButtonContainer>    
         </Carousel>
@@ -78,6 +83,7 @@ const Carousel = styled.div`
     position: relative;
     width: 100%;
     height: 100%;
+
 `
 
 const Items = styled.div`
@@ -86,7 +92,7 @@ const Items = styled.div`
     height: 100%;
     width: 100%;
     overflow: hidden;
-    padding: 0 75px;
+    padding: 0 50px;
 `
 
 const ItemsList = styled.ul`
@@ -96,8 +102,10 @@ const ItemsList = styled.ul`
     position: relative;
     height: 100%;
     width: 100%;
-`
+    transition: scrollLeft 0.5s ease, scrollRight 0.5s ease;
 
+    overflow-x : hidden;
+`
 const Item = styled.div`
     margin: 0;
     padding: 0;
@@ -113,7 +121,6 @@ const Thumbnail = styled.a`
     text-decoration: none;
     align-items : center;
     justify-content: center;
-    box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
 
     &:hover {
         cursor: pointer;
@@ -170,17 +177,17 @@ const ArrowButton = styled.div`
     align-items : center;
     justify-content : center;
     width: 50px;
-    background-color : #4f5157;
-    color: white;
+    background-color : #F9F9F9;
+    color: #4f5157;
 
     z-index:1;
 
     &:hover {
-        background-color: #4f5157;
+        background-color: #F9F9F9;
         cursor: pointer;
     }
 
     &:active {
-        background-color: #4f5157;
+        background-color: #F9F9F9;
     }
 `
