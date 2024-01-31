@@ -4,6 +4,9 @@ import { Outlet } from "react-router-dom";
 import styled from "styled-components";
 import { AuthorBar } from "../../pages/Album/components/AuthorBar";
 import { SearchContext } from "../../context/Search/SearchContext";
+import { MenuBar } from "./MenuBar";
+
+
 
 export const Layout = () => {
     const {author, provider} = useContext(SearchContext);
@@ -11,7 +14,7 @@ export const Layout = () => {
     return (
         <BodyContainer>
             <NavBar/>
-            {/* {author!==null&&provider!==null && <AuthorBar albumsSize={0} author={author} provider={provider} />} */}
+            <MenuBar/>
             
             <Content>
                 <Outlet/>

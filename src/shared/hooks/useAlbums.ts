@@ -14,6 +14,7 @@ export const useAlbums = () => {
         changeAlbumId,
         changePage
     } = useContext(SearchContext);
+    
 
     useEffect(()=>{
         if(author!==null && provider!==null) {
@@ -29,8 +30,8 @@ export const useAlbums = () => {
         if(data) {
             const all = data.filter(alb => alb.code == "all");
             const featured = data.filter(alb => alb.name.toLowerCase().trim() == "featured");
-            let left : Album[] = data.filter(alb => (alb.name.toLowerCase().trim() !== "featured")&&(alb.code !== "all"))
-            left = left.sort((a,b) => {
+            let right : Album[] = data.filter(alb => (alb.name.toLowerCase().trim() !== "featured")&&(alb.code !== "all"))
+            right = right.sort((a,b) => {
                 const nameA = a.name.toUpperCase();
                 const nameB = b.name.toUpperCase();
 
@@ -42,7 +43,7 @@ export const useAlbums = () => {
                     return 0;
                 }
             });
-            return [...all, ...featured, ...left]
+            return [...all, ...featured, ...right]
         } 
         return data;
     }
@@ -58,6 +59,9 @@ export const useAlbums = () => {
             }
         }
     }
+
+
+
 
     return {
         handleAlbumSelect,

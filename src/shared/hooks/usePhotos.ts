@@ -29,7 +29,7 @@ const usePhotos = (
     
     useEffect(()=>{
         changePage(1);
-        setLastPage(~~Math.ceil((album?.photosQuantity??1)/photosPerPage));
+        setLastPage(~~Math.ceil((album?.size??1)/photosPerPage));
         fetchPhotos();
     }, [album])
 

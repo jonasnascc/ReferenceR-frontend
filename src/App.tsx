@@ -3,6 +3,8 @@ import { Layout } from './shared/components/Layout';
 import { LoginPage } from './pages/Login/LoginPage';
 import { RequireNoAuth } from './context/Auth/RequireNoAuth';
 import { AlbumPage } from './pages/Album/AlbumPage';
+import { AuthorPage } from './pages/Author/AuthorPage';
+import { UserAlbumsPage } from './pages/Album/UserAlbumsPage';
 
 
 function App() {
@@ -10,7 +12,9 @@ function App() {
       <div className="App">
         <Routes>
           <Route path='/' element={<Layout/>}>
+            <Route path="/authors" element={<AuthorPage/>}/>
             <Route path="/author" element={<AlbumPage/>}/>
+            <Route path="/albums" element={<UserAlbumsPage/>}/>
             <Route path="/login" element={<RequireNoAuth><LoginPage/></RequireNoAuth>}/>
           </Route>
         </Routes>

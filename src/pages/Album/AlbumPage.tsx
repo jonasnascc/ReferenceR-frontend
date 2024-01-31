@@ -57,7 +57,6 @@ export const AlbumPage = () => {
 
     return (
         <>
-        <Menu/>
         {author!==null&&provider!==null&&(
             <Container>
                 <Grid container>
@@ -83,7 +82,7 @@ export const AlbumPage = () => {
                         <NavigationBar 
                             handlePageChange={changePage} 
                             onSelect={handleSelectMode} 
-                            onViewPhoto={() => {}}
+                            onViewPhoto={() => null}
                             page={page}
                             pageLimit={lastPage}
                             viewAllowed={selectMode}

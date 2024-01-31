@@ -5,7 +5,7 @@ export type Deviation = {
     thumbUrl : string,
     mature: boolean,
     type: string,
-    matureLevel: string,
+    matureLevel: string | null,
     deviationPage: string,
     license: string,
     tags : {name:string, url:string} [],

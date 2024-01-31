@@ -1,9 +1,11 @@
 export type Album = {
+    id : number,
     code : string,
     name : string,
     url : string,
     thumbUrl : string,
     author : string,
     provider : string,
-    photosQuantity : number
+    size : number,
+    favorited ?: boolean;
 }
