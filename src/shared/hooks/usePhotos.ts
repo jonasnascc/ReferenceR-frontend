@@ -30,7 +30,6 @@ const usePhotos = (
     useEffect(()=>{
         changePage(1);
         setLastPage(~~Math.ceil((album?.size??1)/photosPerPage));
-        fetchPhotos();
     }, [album])
 
     useEffect(() => {
@@ -48,7 +47,15 @@ const usePhotos = (
             setLoading(true);
             await axios.get(`author/${author}/albums/${album.code}/photos?provider=${provider}&page=${page}&limit=${photosPerPage}&maxThumbSize=300`,{sendToken : true})
             .then((response) => {
-                setPhotos((response.data as Deviation[]).sort((a,b) => b.id - a.id));
+                setPhotos((response.data as Deviation[]).sort((a,b) => {
+                    if (a.code < b.code) {
+                        return 1;
+                    } else if (a.code > b.code) {
+                        return -1;
+                    } else {
+                        return 0;
+                    }
+                }));
             })
             .catch((err) => console.log(err))
             .finally(() => {
@@ -61,7 +68,7 @@ const usePhotos = (
         if(currentPhoto!==null) {
             setLoadingTags(true);
 
-            await axios.get(`deviations/tags?url=${currentPhoto.deviationPage}`, { sendToken: true })
+            await axios.get(`deviations/tags?url=${currentPhoto.photoPage}`, { sendToken: true })
                 .then((resp) => setCurrentTags(resp?.data ?? []))
                 .catch((err) => console.log(err))
                 .finally(() => setLoadingTags(false));
@@ -83,13 +90,13 @@ const usePhotos = (
                 setCurrentPhoto(null);
             }
 
-            if(selectedPhotos.filter(ph => ph.id === photo.id).length > 0){
-                setSelectedPhotos(selectedPhotos.filter(ph => ph.id !== photo.id));
+            if(selectedPhotos.filter(ph => ph.code === photo.code).length > 0){
+                setSelectedPhotos(selectedPhotos.filter(ph => ph.code !== photo.code));
             } else {
                 setSelectedPhotos([...selectedPhotos, photo]);
             }
         } else{
-            if( currentPhoto!==null && photo.id===currentPhoto.id ) {
+            if( currentPhoto!==null && photo.code===currentPhoto.code ) {
                 setCurrentPhoto(null);
                 setCurrentTags([]);
             }

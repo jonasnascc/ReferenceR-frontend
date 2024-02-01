@@ -61,9 +61,7 @@ export const AlbumPage = () => {
             <Container>
                 <Grid container>
                     <Grid item xs={12}>
-                        <Carousel>
-                            <AlbumsCarousel albums={albums} onSelect={handleSelectAlbum} selectedAlbum={selectedAlbum}/>
-                        </Carousel>
+                        <AlbumsCarousel albums={albums} onSelect={handleSelectAlbum} selectedAlbum={selectedAlbum}/>
                     </Grid>
                     <Grid item xs={viewMode ? 6 : 12}>
                         <AlbumTitle 
@@ -109,11 +107,7 @@ const Menu = styled.div`
     border: solid 1px black;
 `
 
-const Carousel = styled.div`
-    margin: 20px 0;
-    width: 100%;
-    height: 200px;
-`
+
 
 const Photos = styled.div`
     width: 100%;

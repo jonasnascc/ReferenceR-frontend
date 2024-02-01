@@ -23,7 +23,7 @@ export const PhotosTable = ({album, photos, loading=false, selectMode=false, onS
     }
 
     const checkIsSelected = (photo : Deviation) : boolean => {
-        return selectedPhotos.filter(ph => ph.id===photo.id).length > 0;
+        return selectedPhotos.filter(ph => ph.code===photo.code).length > 0;
     }
 
     return !album ? null : (
@@ -35,9 +35,9 @@ export const PhotosTable = ({album, photos, loading=false, selectMode=false, onS
                 <ImageList cols={viewMode ? 3 : 5} rowHeight={250} sx={{width: "100%", height: "100%", overflow:"auto"}} variant="quilted" gap={20} > 
                 {photos!==undefined && photos.map((deviation : Deviation) => {
                     return (
-                        <ImageListItem key={deviation.id}>
+                        <ImageListItem key={deviation.code}>
                             <ThumbnailContainer 
-                                selected={ currentPhoto==null? checkIsSelected(deviation) : (deviation.id === currentPhoto.id) }
+                                selected={ currentPhoto==null? checkIsSelected(deviation) : (deviation.code === currentPhoto.code) }
                                 photo={deviation}
                                 url={deviation.thumbUrl ? deviation.thumbUrl : deviation.url} 
                                 title={deviation.title} 

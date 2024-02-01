@@ -12,10 +12,11 @@ const MOVE_CONSTANT = 200;
 type AlbumsCarouselProps = {
     albums : Album[],
     onSelect : (code : string) => void,
-    selectedAlbum : Album | null
+    selectedAlbum : Album | null,
+    fullView ?: boolean
 }
 
-export const AlbumsCarousel = ({albums, onSelect, selectedAlbum} : AlbumsCarouselProps) =>{
+export const AlbumsCarousel = ({albums, onSelect, selectedAlbum, fullView=false} : AlbumsCarouselProps) =>{
     const listRef = useRef<HTMLUListElement>(null);
 
     const formatAlbumLabel = (label : string) : string => {
@@ -50,18 +51,18 @@ export const AlbumsCarousel = ({albums, onSelect, selectedAlbum} : AlbumsCarouse
     }
 
     return (
-        <Carousel>
+        <Carousel $fullView={fullView}>
             <ArrowButtonContainer $position={"left"} onClick={moveLeft}>
                 <ArrowButton><ArrowBackIosIcon/></ArrowButton>
             </ArrowButtonContainer>
-            <Items>
-                <ItemsList ref={listRef}>
+            
+                <ItemsList ref={listRef} $fullView={fullView}>
                     {
                         albums.map(album => (
                             <Item key={album.url}>
                                 <Thumbnail>
                                     <AlbumThumb $selected={isAlbumSelected(album)}>
-                                        <ThumbImage src={album.thumbUrl} alt={album.name} onClick={() => onSelect(album.code)}/>
+                                        <ThumbImage src={album.thumbnail.url} alt={album.name} onClick={() => onSelect(album.code)}/>
                                         <ThumbLabel>
                                             <LabelText>{formatAlbumLabel(album.name)}</LabelText>
                                         </ThumbLabel>
@@ -71,7 +72,7 @@ export const AlbumsCarousel = ({albums, onSelect, selectedAlbum} : AlbumsCarouse
                         ))
                     }
                 </ItemsList>
-            </Items>
+            
             <ArrowButtonContainer $position={"right"} onClick={moveRight}>
                 <ArrowButton><ArrowForwardIosIcon/></ArrowButton>
             </ArrowButtonContainer>    
@@ -79,30 +80,24 @@ export const AlbumsCarousel = ({albums, onSelect, selectedAlbum} : AlbumsCarouse
     )
 }
 
-const Carousel = styled.div`
+const Carousel = styled.div<{$fullView ?: boolean}>`
     position: relative;
     width: 100%;
-    height: 100%;
+    height: ${props => props.$fullView ? "100%" : "200px"};
+    margin: 20px 0;
+    
 
 `
 
-const Items = styled.div`
-    display: flex;
-    position: relative;
-    height: 100%;
-    width: 100%;
-    overflow: hidden;
-    padding: 0 50px;
-`
-
-const ItemsList = styled.ul`
+const ItemsList = styled.ul<{$fullView ?: boolean}>`
     display: flex;
     margin: 0;
-    padding: 0;
+    padding: 0 50px;
     position: relative;
     height: 100%;
     width: 100%;
-    transition: scrollLeft 0.5s ease, scrollRight 0.5s ease;
+
+    ${props => props.$fullView ? "flex-wrap : wrap;" : ""}
 
     overflow-x : hidden;
 `
