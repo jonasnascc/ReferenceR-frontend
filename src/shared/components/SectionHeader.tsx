@@ -1,9 +1,12 @@
 import React from "react";
 import styled from "styled-components";
 
+type SectionHeaderProps = {
+    label:string, 
+    children ?: JSX.Element
+}
 
-
-export const SectionHeader = ({label, rightComponent}: {label:string, rightComponent ?: JSX.Element}) => {
+export const SectionHeader = ({label, children}: SectionHeaderProps ) => {
     return(
         <SectionContainer>
             <Header>
@@ -11,7 +14,7 @@ export const SectionHeader = ({label, rightComponent}: {label:string, rightCompo
                 <hr/>
             </Header>
             <RightSection>
-                {rightComponent}
+                {children}
             </RightSection>
         </SectionContainer>
     )
@@ -33,5 +36,4 @@ const RightSection = styled.div`
     top : 0px;
     right: 0px;
     height: 100%;
-    width: 500px;
 `

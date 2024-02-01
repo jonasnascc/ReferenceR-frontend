@@ -3,6 +3,8 @@ import axios from "../../api/axios"
 import { Album } from "../../types/album"
 import { Deviation, Tag } from "../../types/photo"
 import { SearchContext } from "../../context/Search/SearchContext"
+import { useQuery } from "react-query"
+import { fetchAlbumPhotos, fetchPhotoTags } from "../../api/services/Photo"
 
 const usePhotos = (
         author: string,
@@ -18,15 +20,25 @@ const usePhotos = (
     const [selectedPhotos, setSelectedPhotos]= useState<Deviation[]>([]);
     const [currentPhoto, setCurrentPhoto]= useState<Deviation|null>(null);
     const [currentTags, setCurrentTags] = useState<Tag[]>([])
-    
-    const [loading, setLoading] = useState(false);
-    const [loadingTags, setLoadingTags] = useState(false);
-
     const [viewMode, setViewMode] = useState(false);
     const [selectMode, setSelectMode] = useState(false);
 
     const search = useContext(SearchContext);
-    
+
+    const {isFetching : loading} = useQuery(["album-photos", page, album], () => fetchAlbumPhotos(album, author, provider, page, photosPerPage), {
+        enabled : album!==null,
+        refetchOnWindowFocus : false,
+        retry: 3,
+        onSuccess : (data) => setPhotos( sortPhotos(data) )
+    })
+
+    const {isFetching : loadingTags} = useQuery(["photo-tags", currentPhoto], () => fetchPhotoTags(currentPhoto, provider), {
+        enabled : currentPhoto !== null,
+        refetchOnWindowFocus : false,
+        onSuccess: (data) => setCurrentTags(data)
+    })
+
+
     useEffect(()=>{
         changePage(1);
         setLastPage(~~Math.ceil((album?.size??1)/photosPerPage));
@@ -42,42 +54,15 @@ const usePhotos = (
         console.log("selected photos:",selectedPhotos)
     }, [selectedPhotos])
 
-    const fetchPhotos = async () => {
-        if(album!==null){
-            setLoading(true);
-            await axios.get(`author/${author}/albums/${album.code}/photos?provider=${provider}&page=${page}&limit=${photosPerPage}&maxThumbSize=300`,{sendToken : true})
-            .then((response) => {
-                setPhotos((response.data as Deviation[]).sort((a,b) => {
-                    if (a.code < b.code) {
-                        return 1;
-                    } else if (a.code > b.code) {
-                        return -1;
-                    } else {
-                        return 0;
-                    }
-                }));
-            })
-            .catch((err) => console.log(err))
-            .finally(() => {
-                setLoading(false)
-            })
-        }
-    }
 
-    const fetchTags = async () => {
-        if(currentPhoto!==null) {
-            setLoadingTags(true);
-
-            await axios.get(`deviations/tags?url=${currentPhoto.photoPage}`, { sendToken: true })
-                .then((resp) => setCurrentTags(resp?.data ?? []))
-                .catch((err) => console.log(err))
-                .finally(() => setLoadingTags(false));
-        }
+    const sortPhotos = (photos : Deviation[]) => {
+        if(photos && photos.length >= 2)
+            return photos.sort((a,b) => (a.code < b.code) ? 1: ((a.code > b.code) ? -1 : 0))
+        else return photos;
     }
 
     const changePage = (newPage : number) => {
         if((newPage >= 1) && (newPage <= lastPage)){
-            fetchPhotos();
             setPage(newPage);
             if(search.changePage) search.changePage(newPage);
         }
@@ -102,7 +87,6 @@ const usePhotos = (
             }
             else {
                 setCurrentPhoto(photo);
-                fetchTags();
             }
         }
     }
@@ -123,7 +107,6 @@ const usePhotos = (
     const handleViewLastSelected = () => {
         if(selectMode && (selectedPhotos.length > 0)){
             setCurrentPhoto(selectedPhotos[selectedPhotos.length-1]);
-            fetchTags();
         } else if(selectMode && viewMode) {
             setCurrentPhoto(null);
             setCurrentTags([]);
@@ -135,7 +118,6 @@ const usePhotos = (
         page,
         lastPage,
         changePage,
-        loading,
         handleSelectPhoto,
         clearSelectedPhotos,
         currentPhoto,
@@ -145,7 +127,8 @@ const usePhotos = (
         selectMode,
         handleSelectMode,
         selectedPhotos,
-        handleViewLastSelected
+        handleViewLastSelected,
+        loading
     }
 }
 

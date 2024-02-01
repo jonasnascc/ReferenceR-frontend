@@ -1,32 +1,35 @@
-import { Container, Switch } from "@mui/material";
+import { CircularProgress, Container, LinearProgress, Switch } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { SectionHeader } from "../../shared/components/SectionHeader";
 import { AlbumsCarousel } from "./components/AlbumsCarousel";
 import { Album } from "../../types/album";
-import axios from "../../api/axios";
+import { HeaderControlButtons } from "./components/HeaderControlButtons/HeaderControlButtons";
+import { useQuery } from "react-query";
+import { fetchFavoritedAlbums } from "../../api/services/Album";
 
 export const UserAlbumsPage = () => {
     const [expandFavorites, setExpandFavorites] = useState(false);
     const [favorites, setFavorites] = useState<Album[]>([]);
 
-    useEffect(() => {
-        fetchFavorites();
-    }, [])
+    const {isFetching : fetchingAlbums} = useQuery("favorited-albums", () => fetchFavoritedAlbums(), {
+        refetchOnWindowFocus : false,
+        onSuccess: (data) => setFavorites(data)
+    })
 
-    const fetchFavorites = async () => {
-        let response : any = null;
-        await axios.get("albums/favorites", {sendToken:true})
-        .then((resp) => response = resp)
-        .catch((error) => console.log(error))
-
-        if(response !== null ) setFavorites(response.data);
+    const handleExpandFavorites = (event : any) => {
+        setExpandFavorites(event.target.checked);
     }
 
     return(
         <Container>
-            <Switch onChange={() => setExpandFavorites(!expandFavorites)}/>
-            <SectionHeader label="Favorites"/>
-            <AlbumsCarousel albums={favorites} onSelect={() => null} selectedAlbum={null} fullView={expandFavorites}/>
+            <SectionHeader label="Favorites">
+                <HeaderControlButtons onExpand={handleExpandFavorites}/>
+            </SectionHeader>
+            {
+                !fetchingAlbums ? (
+                    <AlbumsCarousel albums={favorites} onSelect={() => null} selectedAlbum={null} fullView={expandFavorites}/>
+                ) : (<LinearProgress/>)
+            }
             <SectionHeader label="My Collections"/>
         </Container>
     )

@@ -7,6 +7,8 @@ import StarRateRoundedIcon from '@mui/icons-material/StarRateRounded';
 import styled from "styled-components";
 import { Album } from "../../types/album";
 import axios from "../../api/axios";
+import { useMutation } from "react-query";
+import { favoriteAlbum, unfavoriteAlbum } from "../../api/services/Album";
 
 
 type FavoriteStarProps = {
@@ -19,7 +21,15 @@ type FavoriteStarProps = {
 }
 
 export const FavoriteStar = ({photo, album, sx, blocked, active=false, color="yellow"} : FavoriteStarProps) => {
-    const [favorited, setFavorited] = useState(active)
+    const [favorited, setFavorited] = useState(active);
+
+    const favoriteAlbumMutation = useMutation(["favorite"], (album : Album) => favoriteAlbum(album), {
+        onSuccess: () => switchFavorite(true)
+    });
+    
+    const unFavoriteAlbumMutation = useMutation(["unfavorite"], (album:Album) => unfavoriteAlbum(album), {
+        onSuccess: () => switchFavorite(false)
+    })
 
     useEffect(()=>{
         setFavorited(active);
@@ -33,59 +43,28 @@ export const FavoriteStar = ({photo, album, sx, blocked, active=false, color="ye
         } else setFavorited(false)
     }, [album])
 
-    
-    const favoriteAlbum = () => {
-        const favorite = async (album : Album) => {
-            let response : any = null;
-            await axios.post(`albums/favorite`, album, {
-                sendToken : true
-            }).then((resp) => response = resp)
-            .catch((err) => console.log(err))
-
-            .finally(() => {
-                if(response !== null) {
-                    setFavorited(true);
-                    album.favorited = true;
-                }
-            })
-            
-            return response;
-        }
-
+    const switchFavorite = (state:boolean) => {
         if(album) {
-            favorite(album);
+            setFavorited(state);
+            album.favorited = state;
         }
     }
 
-    const unFavoriteAlbum = () => {
-        const unfavorite = async (album : Album) => {
-            let response : any = null;
-
-            await axios.delete(`author/${album.author}/albums/${album.code}`, {
-                params : {provider: album.provider},
-                sendToken : true
-            }).then((resp) => response = resp)
-            .catch((err) => console.log(err))
-
-            .finally(() => {
-                if(response !== null) {
-                    setFavorited(false);
-                    album.favorited = false;
-                }
-            });
-                
-            return response;
+    const handleFavoriteAlbum = () => {
+        if(album){
+            favoriteAlbumMutation.mutate(album);
         }
+    }
 
-        if(album) {
-            unfavorite(album);
+    const handleUnFavoriteAlbum = () => {
+        if(album){
+            unFavoriteAlbumMutation.mutate(album);
         }
     }
 
     const handleClick = () => {
-        if(favorited) unFavoriteAlbum();
-        else favoriteAlbum();
-        console.log("click", favorited)
+        if(favorited) handleUnFavoriteAlbum();
+        else handleFavoriteAlbum();
     }
 
     return (

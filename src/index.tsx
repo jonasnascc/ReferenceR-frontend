@@ -5,18 +5,23 @@ import App from './App';
 import { BrowserRouter } from 'react-router-dom';
 import { AuthProvider } from './context/Auth/AuthProvider';
 import { SearchProvider } from './context/Search/SearchProvider';
+import { QueryClient, QueryClientProvider} from "react-query"
+
+const queryClient = new QueryClient();
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
 );
 root.render(
   <React.StrictMode>
-    <AuthProvider>
-      <SearchProvider>
-        <BrowserRouter>
-            <App />
-        </BrowserRouter>
-      </SearchProvider>
-    </AuthProvider>
+    <QueryClientProvider client={queryClient}>
+      <AuthProvider>
+        <SearchProvider>
+          <BrowserRouter>
+              <App />
+          </BrowserRouter>
+        </SearchProvider>
+      </AuthProvider>
+    </QueryClientProvider>
   </React.StrictMode>
 );
