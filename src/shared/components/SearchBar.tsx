@@ -1,4 +1,3 @@
-import { Box } from "@mui/material";
 import React, { useContext, useState } from "react";
 import styled from "styled-components";
 import { SearchContext } from "../../context/Search/SearchContext";

@@ -2,7 +2,6 @@ import { Box } from "@mui/material";
 import React from "react";
 import styled from "styled-components";
 import { Album } from "../../../types/album";
-import { Deviation } from "../../../types/photo";
 import { FavoriteStar } from "../../../shared/components/FavoriteStar";
 
 type AlbumTitleProps = {

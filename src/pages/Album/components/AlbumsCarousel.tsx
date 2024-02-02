@@ -1,10 +1,8 @@
-import React, { useRef, useState } from "react";
+import React, { useRef } from "react";
 import styled from "styled-components";
 
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
-import VisibilityOffOutlinedIcon from '@mui/icons-material/VisibilityOffOutlined';
-import { Box, Tooltip, Typography } from "@mui/material";
 import { Album } from "../../../types/album";
 
 const MOVE_CONSTANT = 200;

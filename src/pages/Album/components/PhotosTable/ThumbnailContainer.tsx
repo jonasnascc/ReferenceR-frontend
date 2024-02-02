@@ -1,10 +1,9 @@
 
+import React from "react";
+
 import { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import { Box } from '@mui/material';
 
-import CheckBoxOutlineBlankOutlinedIcon from '@mui/icons-material/CheckBoxOutlineBlankOutlined';
-import CheckBoxIcon from '@mui/icons-material/CheckBox';
 import { FavoriteStar } from '../../../../shared/components/FavoriteStar';
 import { Deviation } from '../../../../types/photo';
 
@@ -16,7 +15,7 @@ type ThumbnailContainerProps = {
     photo : Deviation
 }
 
-export const ThumbnailContainer = ({ photo, onSelect = () => {}, selected = false} : ThumbnailContainerProps) => {
+export const ThumbnailContainer = ({ photo, onSelect = () => null, selected = false} : ThumbnailContainerProps) => {
     const [open, setOpen] = useState(false);
     const [selectedPhoto, setSelectedPhoto] = useState(false);
 

@@ -1,13 +1,11 @@
-import { Box, Collapse, Container, Grid, Typography } from "@mui/material";
-import axios from "../../api/axios";
-import React, { useContext, useEffect, useState } from "react";
+import React from "react";
+import { Container, Grid } from "@mui/material";
+import { useContext, useEffect } from "react";
 import { SearchContext } from "../../context/Search/SearchContext";
-import { Album } from "../../types/album";
 import { PhotosTable } from "./components/PhotosTable/PhotosTable";
 import usePhotos from "../../shared/hooks/usePhotos";
 import { useAlbums } from "../../shared/hooks/useAlbums";
 import styled from "styled-components";
-import { TagsBar } from "./components/PhotoView/TagsBar";
 import { PhotoView } from "./components/PhotoView/PhotoView";
 import { AlbumsCarousel } from "./components/AlbumsCarousel";
 import { NavigationBar } from "./components/NavigationBar/NavigationBar";
@@ -36,8 +34,7 @@ export const AlbumPage = () => {
             viewMode,
             handleSelectMode,
             selectMode,
-            selectedPhotos,
-            handleViewLastSelected
+            selectedPhotos
     } = usePhotos(author??"", selectedAlbum, provider??"", 60)
     
     useEffect(() => {
@@ -100,16 +97,3 @@ export const AlbumPage = () => {
 
     )
 }
-
-const Menu = styled.div`
-    width: 100%;
-    height: 70px;
-    border: solid 1px black;
-`
-
-
-
-const Photos = styled.div`
-    width: 100%;
-    height: 100%;
-`

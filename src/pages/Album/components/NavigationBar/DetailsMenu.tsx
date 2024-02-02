@@ -5,7 +5,7 @@ import InsertPhotoOutlinedIcon from '@mui/icons-material/InsertPhotoOutlined';
 import styled from "styled-components";
 
 
-export const DetailsMenu = ({onClick = () => {}} : {onClick : () => any}) => {
+export const DetailsMenu = ({onClick = () => null} : {onClick : () => any}) => {
     const [selected, setSelect] = useState(false);
 
     const handleDetails = () => {

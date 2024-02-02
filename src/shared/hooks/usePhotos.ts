@@ -1,5 +1,4 @@
 import { useContext, useEffect, useState } from "react"
-import axios from "../../api/axios"
 import { Album } from "../../types/album"
 import { Deviation, Tag } from "../../types/photo"
 import { SearchContext } from "../../context/Search/SearchContext"

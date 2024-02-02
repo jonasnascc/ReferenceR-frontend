@@ -46,7 +46,7 @@ const PageContent = ({page, pageLimit, onPageChange} : {page:number, pageLimit:n
     }
 
     const handleEnter = (event : any) => {
-        var key = event.which || event.keyCode;
+        const key = event.which || event.keyCode;
         if (key == 13) {
             onPageChange(event.target.value);
             setEdit(false)

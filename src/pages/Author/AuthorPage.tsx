@@ -4,7 +4,7 @@ import { SectionHeader } from "../../shared/components/SectionHeader";
 import { SearchContext } from "../../context/Search/SearchContext";
 
 export const AuthorPage = () => {
-    const {author, provider} = useContext(SearchContext);
+    const {author} = useContext(SearchContext);
 
     return (
         <>

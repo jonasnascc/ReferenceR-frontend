@@ -1,10 +1,9 @@
+import React from "react";
 import styled from "styled-components";
 import { Deviation, Tag } from "../../../../types/photo";
 import { Grid } from "@mui/material";
 import { TagsBar } from "./TagsBar";
-
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-import StarBorderRoundedIcon from '@mui/icons-material/StarBorderRounded';
 import { FavoriteStar } from "../../../../shared/components/FavoriteStar";
 
 

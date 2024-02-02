@@ -1,11 +1,10 @@
-import React, { createContext, useState } from "react";
-import axios from "../../api/axios";
+import React, { createContext } from "react";
 import { User } from "../../types/user";
 
 export type AuthContextType = {
     user : User | null,
     signin: (login:string, password:string) => Promise<boolean>
-    signout : () => {},
+    signout : () => any,
     authenticated : boolean
 }
 

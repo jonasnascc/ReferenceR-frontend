@@ -1,3 +1,4 @@
+import React from "react";
 import { useEffect, useState } from "react"
 import { User } from "../../types/user";
 import { AuthContext } from "./AuthContext";
@@ -9,7 +10,7 @@ export const AuthProvider = ({children} : {children : JSX.Element}) => {
     const api = useAuth();
 
     useEffect(() => {
-        let validate = async () => {
+        const validate = async () => {
             const token = localStorage.getItem("token");
 
             if(token){

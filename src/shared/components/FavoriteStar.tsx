@@ -1,12 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { Deviation } from "../../types/photo";
-import { Box, SxProps, Theme } from "@mui/material";
+import { SxProps, Theme } from "@mui/material";
 
 import StarBorderRoundedIcon from '@mui/icons-material/StarBorderRounded';
 import StarRateRoundedIcon from '@mui/icons-material/StarRateRounded';
 import styled from "styled-components";
 import { Album } from "../../types/album";
-import axios from "../../api/axios";
 import { useMutation } from "react-query";
 import { favoriteAlbum, unfavoriteAlbum } from "../../api/services/Album";
 
@@ -20,7 +19,7 @@ type FavoriteStarProps = {
     color ?: string
 }
 
-export const FavoriteStar = ({photo, album, sx, blocked, active=false, color="yellow"} : FavoriteStarProps) => {
+export const FavoriteStar = ({album, sx, active=false, color="yellow"} : FavoriteStarProps) => {
     const [favorited, setFavorited] = useState(active);
 
     const favoriteAlbumMutation = useMutation(["favorite"], (album : Album) => favoriteAlbum(album), {

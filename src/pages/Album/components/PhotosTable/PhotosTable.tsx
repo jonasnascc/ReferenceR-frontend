@@ -1,5 +1,5 @@
-import { Box, ImageList, ImageListItem, ImageListItemBar, LinearProgress } from "@mui/material";
-import { useEffect, useState } from "react";
+import React from "react";
+import { ImageList, ImageListItem, LinearProgress } from "@mui/material";
 import { Deviation } from "../../../../types/photo";
 import { ThumbnailContainer } from "./ThumbnailContainer";
 import { Album } from "../../../../types/album";
@@ -16,7 +16,7 @@ type PhotosTableProps = {
     currentPhoto : Deviation | null
 }
 
-export const PhotosTable = ({album, photos, loading=false, selectMode=false, onSelectPhoto = (photo : Deviation) => {}, selectedPhotos = [], viewMode=false, currentPhoto} : PhotosTableProps) => {
+export const PhotosTable = ({album, photos, loading=false, selectMode=false, onSelectPhoto = (photo : Deviation) => null, selectedPhotos = [], viewMode=false, currentPhoto} : PhotosTableProps) => {
 
     const handleSelect = (photo : Deviation) => {
         onSelectPhoto(photo);

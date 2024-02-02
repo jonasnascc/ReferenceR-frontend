@@ -1,11 +1,13 @@
-import { CircularProgress, Container, LinearProgress, Switch } from "@mui/material";
-import React, { useEffect, useState } from "react";
+import { Container, LinearProgress } from "@mui/material";
+import React, { useState } from "react";
 import { SectionHeader } from "../../shared/components/SectionHeader";
 import { AlbumsCarousel } from "./components/AlbumsCarousel";
 import { Album } from "../../types/album";
 import { HeaderControlButtons } from "./components/HeaderControlButtons/HeaderControlButtons";
 import { useQuery } from "react-query";
 import { fetchFavoritedAlbums } from "../../api/services/Album";
+import { useAlbums } from "../../shared/hooks/useAlbums";
+
 
 export const UserAlbumsPage = () => {
     const [expandFavorites, setExpandFavorites] = useState(false);
@@ -15,6 +17,12 @@ export const UserAlbumsPage = () => {
         refetchOnWindowFocus : false,
         onSuccess: (data) => setFavorites(data)
     })
+    
+    const {
+        albums,
+        handleAlbumSelect,
+        selectedAlbum
+    } = useAlbums(favorites);
 
     const handleExpandFavorites = (event : any) => {
         setExpandFavorites(event.target.checked);
@@ -27,7 +35,7 @@ export const UserAlbumsPage = () => {
             </SectionHeader>
             {
                 !fetchingAlbums ? (
-                    <AlbumsCarousel albums={favorites} onSelect={() => null} selectedAlbum={null} fullView={expandFavorites}/>
+                    <AlbumsCarousel albums={albums} onSelect={handleAlbumSelect} selectedAlbum={selectedAlbum} fullView={expandFavorites}/>
                 ) : (<LinearProgress/>)
             }
             <SectionHeader label="My Collections"/>

@@ -1,8 +1,8 @@
-import { Box, Grid, Stack, TextField, Typography } from "@mui/material";
-import React, { useContext, useState } from "react";
+import { Box, Grid } from "@mui/material";
+import React, { useContext } from "react";
 import styled from "styled-components";
 import { SearchBar } from "./SearchBar";
-import { Navigate, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { RequireAuth } from "../../context/Auth/RequireAuth";
 import { RequireNoAuth } from "../../context/Auth/RequireNoAuth";
 import { AuthContext } from "../../context/Auth/AuthContext";

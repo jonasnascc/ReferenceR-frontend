@@ -1,16 +1,12 @@
-import { useContext, useEffect } from "react";
+import React from "react";
 import { NavBar } from "./NavBar";
 import { Outlet } from "react-router-dom";
 import styled from "styled-components";
-import { AuthorBar } from "../../pages/Album/components/AuthorBar";
-import { SearchContext } from "../../context/Search/SearchContext";
 import { MenuBar } from "./MenuBar";
 
 
 
 export const Layout = () => {
-    const {author, provider} = useContext(SearchContext);
-
     return (
         <BodyContainer>
             <NavBar/>
