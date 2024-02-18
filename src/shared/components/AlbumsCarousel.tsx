@@ -4,9 +4,10 @@ import styled from "styled-components";
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import { Album } from "../../types/album";
-import { useQuery, useQueryClient } from "react-query";
+import { useQuery } from "react-query";
 import { fetchAlbumThumbnail } from "../../api/services/Album";
 import { Skeleton } from "@mui/material";
+import { FavoriteStar } from "./FavoriteStar";
 
 const MOVE_CONSTANT = 200;
 
@@ -55,8 +56,9 @@ export const AlbumsCarousel = ({albums, onSelect, selectedAlbum, fullView=false}
         <Carousel $fullView={fullView}>
             
             <ArrowButtonContainer $position={"left"} onClick={moveLeft}>
-                
-                <ArrowButton><ArrowBackIosIcon/></ArrowButton>
+                <ArrowButton>
+                    <ArrowBackIosIcon/>
+                </ArrowButton>
             </ArrowButtonContainer>
             
                 <ItemsList ref={listRef} $fullView={fullView}>
@@ -64,6 +66,12 @@ export const AlbumsCarousel = ({albums, onSelect, selectedAlbum, fullView=false}
                         albums.map(album => (
                             <Item key={album.url}>
                                 <Thumbnail>
+                                    <Star>
+                                        <FavoriteStar 
+                                            album={album}
+                                            
+                                        />
+                                    </Star>
                                     <AlbumThumb $selected={isAlbumSelected(album)}>
                                         <CarouselImage album={album} onSelect={onSelect}/>
                                         <ThumbLabel>
@@ -84,7 +92,6 @@ export const AlbumsCarousel = ({albums, onSelect, selectedAlbum, fullView=false}
 }
 
 const CarouselImage = ({album, onSelect} : {album: Album, onSelect: (code:string) => void}) => {
-    const queryClient = useQueryClient();
 
     const [url, setUrl] = useState(album.thumbnail?.url??"");
     const [error, setError] = useState(false);
@@ -158,13 +165,20 @@ const Thumbnail = styled.a`
     }
 `
 
+const Star = styled.div`
+    position: absolute;
+    top: 10px;
+    right: 20px;
+    z-index: 10;
+`
+
 const AlbumThumb = styled.div<{$selected ?: boolean}>`
     position: relative;
     width : 100%;
     height: 100%;
     background-color : white;
     border-radius : 5px;
-    border: ${props => props.$selected ? "2px solid black" : "none"}
+    border: ${props => props.$selected ? "2px solid black" : "none"};
 `
 
 const ThumbImage = styled.img`
@@ -197,7 +211,7 @@ const LabelText = styled.span`
 const ArrowButtonContainer = styled.div<{$position: "right" | "left"}>`
     position : absolute;
     display: flex;
-    z-index: 2;
+    z-index: 11;
     height:100%;
     top: 0px;
     right: ${props => props.$position === "right" ? "0px" : "auto"}

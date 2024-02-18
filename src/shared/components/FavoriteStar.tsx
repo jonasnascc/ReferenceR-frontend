@@ -16,10 +16,11 @@ type FavoriteStarProps = {
     active ?: boolean,
     album ?: Album | null,
     photo ?: Deviation | null,
-    color ?: string
+    color ?: string,
+    disableInactive ?: boolean
 }
 
-export const FavoriteStar = ({album, sx, active=false, color="yellow"} : FavoriteStarProps) => {
+export const FavoriteStar = ({album, sx, active=false, color="yellow", blocked = false, disableInactive = false} : FavoriteStarProps) => {
     const [favorited, setFavorited] = useState(active);
 
     const favoriteAlbumMutation = useMutation(["favorite"], (album : Album) => favoriteAlbum(album), {
@@ -62,14 +63,20 @@ export const FavoriteStar = ({album, sx, active=false, color="yellow"} : Favorit
     }
 
     const handleClick = () => {
-        if(favorited) handleUnFavoriteAlbum();
-        else handleFavoriteAlbum();
+        if(!blocked) {
+            if(favorited) handleUnFavoriteAlbum();
+            else handleFavoriteAlbum();
+        }
     }
 
     return (
-        <Star onClick={handleClick} $color={color}>
-            {favorited ? <StarRateRoundedIcon sx={sx}/> : <StarBorderRoundedIcon sx={sx}/>}
-        </Star>
+        <>
+        {(disableInactive && !favorited) ? null : (
+            <Star onClick={handleClick} $color={color}>
+                {favorited ? <StarRateRoundedIcon sx={sx}/> : <StarBorderRoundedIcon sx={sx}/>}
+            </Star>
+        )}
+        </>
     )
 }
 
