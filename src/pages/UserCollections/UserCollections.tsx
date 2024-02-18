@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { SectionHeader } from "../../shared/components/SectionHeader";
 import { AlbumsCarousel } from "../../shared/components/AlbumsCarousel";
 import { Album } from "../../types/album";
-import { HeaderControlButtons } from "../Album/components/HeaderControlButtons/HeaderControlButtons";
+import { HeaderControlButtons } from "./components/HeaderControlButtons/HeaderControlButtons";
 import { useQuery } from "react-query";
 import { fetchFavoritedAlbums } from "../../api/services/Album";
 import { useAlbums } from "../../shared/hooks/useAlbums";
@@ -28,7 +28,7 @@ export const UserCollections = () => {
     return(
         <Container>
             <SectionHeader label="Favorites">
-                <HeaderControlButtons/>
+                <HeaderControlButtons selectedAlbum={selectedAlbum}/>
             </SectionHeader>
             {
                 !fetchingAlbums ? (
