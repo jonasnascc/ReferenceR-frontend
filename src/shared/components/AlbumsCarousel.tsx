@@ -1,9 +1,12 @@
-import React, { useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
-import { Album } from "../../../types/album";
+import { Album } from "../../types/album";
+import { useQuery, useQueryClient } from "react-query";
+import { fetchAlbumThumbnail } from "../../api/services/Album";
+import { Skeleton } from "@mui/material";
 
 const MOVE_CONSTANT = 200;
 
@@ -50,7 +53,9 @@ export const AlbumsCarousel = ({albums, onSelect, selectedAlbum, fullView=false}
 
     return (
         <Carousel $fullView={fullView}>
+            
             <ArrowButtonContainer $position={"left"} onClick={moveLeft}>
+                
                 <ArrowButton><ArrowBackIosIcon/></ArrowButton>
             </ArrowButtonContainer>
             
@@ -60,7 +65,7 @@ export const AlbumsCarousel = ({albums, onSelect, selectedAlbum, fullView=false}
                             <Item key={album.url}>
                                 <Thumbnail>
                                     <AlbumThumb $selected={isAlbumSelected(album)}>
-                                        <ThumbImage src={album.thumbnail.url} alt={album.name} onClick={() => onSelect(album.code)}/>
+                                        <CarouselImage album={album} onSelect={onSelect}/>
                                         <ThumbLabel>
                                             <LabelText>{formatAlbumLabel(album.name)}</LabelText>
                                         </ThumbLabel>
@@ -75,6 +80,39 @@ export const AlbumsCarousel = ({albums, onSelect, selectedAlbum, fullView=false}
                 <ArrowButton><ArrowForwardIosIcon/></ArrowButton>
             </ArrowButtonContainer>    
         </Carousel>
+    )
+}
+
+const CarouselImage = ({album, onSelect} : {album: Album, onSelect: (code:string) => void}) => {
+    const queryClient = useQueryClient();
+
+    const [url, setUrl] = useState(album.thumbnail?.url??"");
+    const [error, setError] = useState(false);
+
+    const {isLoading} = useQuery(`album-${album.id}-thumbnail-url`, () => fetchAlbumThumbnail(album.id), {
+        enabled: url === "",
+        refetchOnWindowFocus:false,
+        onSuccess: (resp) => setUrl(resp)
+    });
+
+    const handleError = () => {
+        setError(false);
+    }
+
+    return(
+        <>
+            {
+                (isLoading || error) ? 
+                (
+                    <Skeleton variant="rectangular" width="100%" height="100%" onClick={() => onSelect(album.code)}/>
+                ) 
+                : 
+                (
+                    <ThumbImage src={url} alt={album.name} onClick={() => onSelect(album.code)} onError={handleError}/>
+                )
+            }
+        </>
+        
     )
 }
 

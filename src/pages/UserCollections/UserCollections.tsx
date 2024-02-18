@@ -1,15 +1,15 @@
 import { Container, LinearProgress } from "@mui/material";
 import React, { useState } from "react";
 import { SectionHeader } from "../../shared/components/SectionHeader";
-import { AlbumsCarousel } from "./components/AlbumsCarousel";
+import { AlbumsCarousel } from "../../shared/components/AlbumsCarousel";
 import { Album } from "../../types/album";
-import { HeaderControlButtons } from "./components/HeaderControlButtons/HeaderControlButtons";
+import { HeaderControlButtons } from "../Album/components/HeaderControlButtons/HeaderControlButtons";
 import { useQuery } from "react-query";
 import { fetchFavoritedAlbums } from "../../api/services/Album";
 import { useAlbums } from "../../shared/hooks/useAlbums";
 
 
-export const UserAlbumsPage = () => {
+export const UserCollections = () => {
     const [expandFavorites, setExpandFavorites] = useState(false);
     const [favorites, setFavorites] = useState<Album[]>([]);
 
@@ -22,16 +22,13 @@ export const UserAlbumsPage = () => {
         albums,
         handleAlbumSelect,
         selectedAlbum
-    } = useAlbums(favorites);
+    } = useAlbums(true);
 
-    const handleExpandFavorites = (event : any) => {
-        setExpandFavorites(event.target.checked);
-    }
 
     return(
         <Container>
             <SectionHeader label="Favorites">
-                <HeaderControlButtons onExpand={handleExpandFavorites}/>
+                <HeaderControlButtons/>
             </SectionHeader>
             {
                 !fetchingAlbums ? (

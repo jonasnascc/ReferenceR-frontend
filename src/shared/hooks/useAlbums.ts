@@ -2,9 +2,9 @@ import { useContext, useEffect, useState } from "react";
 import { Album } from "../../types/album";
 import { SearchContext } from "../../context/Search/SearchContext";
 import { useQuery } from "react-query";
-import { fetchAuthorAlbums } from "../../api/services/Album";
+import { fetchAuthorAlbums, fetchFavoritedAlbums } from "../../api/services/Album";
 
-export const useAlbums = (userAlbums ?: Album[]) => {
+export const useAlbums = (favoritedAlbums ?: boolean) => {
     const [albums, setAlbums] = useState<Album[]>([])
 
     const [selectedAlbum, setSelectedAlbum] = useState<Album|null>(null);
@@ -16,17 +16,16 @@ export const useAlbums = (userAlbums ?: Album[]) => {
         changePage
     } = useContext(SearchContext);
 
-    useQuery(["author-albums"], () => fetchAuthorAlbums(author??"", provider??""), {
-        enabled : author!==null&&provider!==null&&!userAlbums,
+    const fetchFunction = favoritedAlbums ? () => fetchFavoritedAlbums() : () => fetchAuthorAlbums(author??"", provider??"");
+
+    useQuery(["author-albums"], fetchFunction, {
+        enabled :(author!==null&&provider!==null) || favoritedAlbums,
         refetchOnWindowFocus : false,
         onSuccess : (data) => {
             setAlbums(sortAlbums(data));
         }
     });
 
-    useEffect(() => {
-        if(userAlbums) setAlbums(userAlbums);
-    } , [userAlbums])
 
     const handleAlbumSelect = (albumId : string) => {
         const selAlbum : Album[] = albums.filter(alb => alb.code === albumId);

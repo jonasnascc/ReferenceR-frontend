@@ -8,8 +8,8 @@ const MenuItems = [
         path : "/"
     },
     {
-        label: "Albums",
-        path : "/albums"
+        label: "Collections",
+        path : "/user/collections"
     },
     {
         label: "Authors",

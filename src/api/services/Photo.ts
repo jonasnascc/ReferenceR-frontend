@@ -2,15 +2,17 @@ import { Album } from "../../types/album";
 import { Deviation } from "../../types/photo";
 import axios from "../axios";
 
-export const fetchAlbumPhotos = async (album: Album | null, author: string, provider: string, page:number, photosPerPage: number) => {
-    if(album){
-    return await axios.get(`author/${author}/albums/${album.code}/photos?page=${page}&limit=${photosPerPage}&maxThumbSize=300`,{sendToken : true, provider : provider})
-        .then((response) => response.data)
+export const fetchAlbumPhotos = async (album: Album | null, author: string | null, provider: string, page:number, photosPerPage: number) => {
+    if(album && author){
+        return await axios.get(`author/${author}/albums/${album.code}/photos?page=${page}&limit=${photosPerPage}&maxThumbSize=300`, {
+            sendToken : true, provider : provider}
+        ).then((response) => response.data)
     }
 }
 
 
 export const fetchPhotoTags = async (photo : Deviation | null, provider : string) => {
-    return await axios.get(`deviations/tags?url=${photo?.photoPage}`, { sendToken: true, provider:provider })
-        .then((resp) => resp.data);
+    return await axios.get(`deviations/tags?url=${photo?.photoPage}`, { 
+        sendToken: true, provider:provider 
+    }).then((resp) => resp.data);
 }

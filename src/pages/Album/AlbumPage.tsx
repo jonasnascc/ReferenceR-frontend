@@ -7,18 +7,19 @@ import usePhotos from "../../shared/hooks/usePhotos";
 import { useAlbums } from "../../shared/hooks/useAlbums";
 import styled from "styled-components";
 import { PhotoView } from "./components/PhotoView/PhotoView";
-import { AlbumsCarousel } from "./components/AlbumsCarousel";
+import { AlbumsCarousel } from "../../shared/components/AlbumsCarousel";
 import { NavigationBar } from "./components/NavigationBar/NavigationBar";
 import { AlbumTitle } from "./components/AlbumTitle";
+import { useLocation } from "react-router-dom";
 
-export const AlbumPage = () => {
+export const AlbumPage = ({favorites = false} : {favorites?:boolean}) => {
     const {author, provider} = useContext(SearchContext);
 
     const {
         albums,
         handleAlbumSelect,
         selectedAlbum
-    } = useAlbums()
+    } = useAlbums(favorites)
 
     const {
             photos,
@@ -54,7 +55,7 @@ export const AlbumPage = () => {
 
     return (
         <>
-        {author!==null&&provider!==null&&(
+        {((author!==null&&provider!==null) || favorites)&&(
             <Container>
                 <Grid container>
                     <Grid item xs={12}>

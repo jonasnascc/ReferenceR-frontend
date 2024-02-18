@@ -6,7 +6,7 @@ import { useQuery } from "react-query"
 import { fetchAlbumPhotos, fetchPhotoTags } from "../../api/services/Photo"
 
 const usePhotos = (
-        author: string,
+        author: string | null,
         album : Album | null,
         provider : string,
         photosPerPage : number
@@ -24,15 +24,15 @@ const usePhotos = (
 
     const search = useContext(SearchContext);
 
-    const {isFetching : loading} = useQuery(["album-photos", page, album], () => fetchAlbumPhotos(album, author, provider, page, photosPerPage), {
-        enabled : album!==null,
+    const {isFetching : loading} = useQuery(["album-photos", page, album], () => fetchAlbumPhotos(album, (album?.author ? album.author : author) , (album?.provider ? album.provider : provider), page, photosPerPage), {
+        enabled : album!==null && (author!==null || album.author !== "") && (provider !== null || album.provider !== ""),
         refetchOnWindowFocus : false,
         retry: 3,
         onSuccess : (data) => setPhotos( sortPhotos(data) )
     })
 
-    const {isFetching : loadingTags} = useQuery(["photo-tags", currentPhoto], () => fetchPhotoTags(currentPhoto, provider), {
-        enabled : currentPhoto !== null,
+    const {isFetching : loadingTags} = useQuery(["photo-tags", currentPhoto], () => fetchPhotoTags(currentPhoto, (album?.provider ? album.provider : provider)), {
+        enabled : currentPhoto !== null && (provider !== null || (album!==null && album.provider !== "")),
         refetchOnWindowFocus : false,
         onSuccess: (data) => setCurrentTags(data)
     })
