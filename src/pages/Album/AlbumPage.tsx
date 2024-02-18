@@ -35,7 +35,9 @@ export const AlbumPage = ({favorites = false} : {favorites?:boolean}) => {
             viewMode,
             handleSelectMode,
             selectMode,
-            selectedPhotos
+            selectedPhotos,
+            handleNextPhoto,
+            handlePreviousPhoto
     } = usePhotos(author??"", selectedAlbum, provider??"", 60)
     
     useEffect(() => {
@@ -90,6 +92,8 @@ export const AlbumPage = ({favorites = false} : {favorites?:boolean}) => {
                         onExit={handleExitView}
                         tags = {currentTags}
                         loadingTags={loadingTags}
+                        onClickBack={handlePreviousPhoto}
+                        onClickForward={handleNextPhoto}
                     />
                 </Grid>
             </Container>

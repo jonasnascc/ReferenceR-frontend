@@ -5,6 +5,7 @@ import { Grid } from "@mui/material";
 import { TagsBar } from "./TagsBar";
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { FavoriteStar } from "../../../../shared/components/FavoriteStar";
+import { NavigationButtons } from "./NavigationButtons";
 
 
 
@@ -14,10 +15,12 @@ type PhotoViewProps = {
     currentPhoto : Deviation | null,
     selectedPhotos ?: Deviation[],
     loadingTags ?: boolean,
-    tags : Tag[]
+    tags : Tag[],
+    onClickBack ?: () => void,
+    onClickForward ?: () => void
 }
 
-export const PhotoView = ({show = false, onExit, selectedPhotos = [], loadingTags = true, currentPhoto, tags} : PhotoViewProps) => {
+export const PhotoView = ({show = false, onExit, selectedPhotos = [], loadingTags = true, currentPhoto, tags, onClickBack = () => null, onClickForward = () => null} : PhotoViewProps) => {
     return (
         <>
         {show && currentPhoto!==null &&
@@ -38,6 +41,7 @@ export const PhotoView = ({show = false, onExit, selectedPhotos = [], loadingTag
                     </ImageContainer>
 
                     <TagsBar tags={tags} loading={loadingTags}/>
+                    <NavigationButtons onClickBack={onClickBack} onClickForward={onClickForward}/>
                 </SectionContainer>
             </Grid>
         }

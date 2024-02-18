@@ -18,6 +18,7 @@ const usePhotos = (
 
     const [selectedPhotos, setSelectedPhotos]= useState<Deviation[]>([]);
     const [currentPhoto, setCurrentPhoto]= useState<Deviation|null>(null);
+    const [currentIndex, setCurrentIndex] = useState<number|null>(null);
     const [currentTags, setCurrentTags] = useState<Tag[]>([])
     const [viewMode, setViewMode] = useState(false);
     const [selectMode, setSelectMode] = useState(false);
@@ -82,10 +83,12 @@ const usePhotos = (
         } else{
             if( currentPhoto!==null && photo.code===currentPhoto.code ) {
                 setCurrentPhoto(null);
+                setCurrentIndex(null);
                 setCurrentTags([]);
             }
             else {
                 setCurrentPhoto(photo);
+                setCurrentIndex(photos.indexOf(photo));
             }
         }
     }
@@ -112,6 +115,22 @@ const usePhotos = (
         }
     }
 
+    const handlePreviousPhoto = () => {
+        if(currentIndex !== null) {
+            const newIndex = currentIndex - 1;
+            if(newIndex >= 0) 
+                handleSelectPhoto(photos[newIndex]);
+        }
+    }
+
+    const handleNextPhoto = () => {
+        if(currentIndex !== null) {
+            const newIndex = currentIndex + 1;
+            if(newIndex < photos.length) 
+                handleSelectPhoto(photos[newIndex]);
+        }
+    }
+
     return {
         photos,
         page,
@@ -127,7 +146,9 @@ const usePhotos = (
         handleSelectMode,
         selectedPhotos,
         handleViewLastSelected,
-        loading
+        loading,
+        handleNextPhoto,
+        handlePreviousPhoto
     }
 }
 
