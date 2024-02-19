@@ -19,10 +19,6 @@ export const useChronoPresentation = (album : Album | null) => {
         }
     }, [history, currentHistoryIndex])
 
-    useEffect(() => {
-        console.log(isLoading ? "loading" : "loaded")
-    }, [isLoading]);
-
     const fetchNextPhoto = async () => {
         setLoading(true);
         await queryClient.fetchQuery("album-photo", () => fetchAlbumPhotos(

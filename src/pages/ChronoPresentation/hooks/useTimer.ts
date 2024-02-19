@@ -29,7 +29,6 @@ export const useTimer = (initialSecondsValue: number, onTimerReset?:() => void) 
                 handleReset();
             }
         }
-        
     }
 
     const handleDecreaseSeconds = () => {
@@ -59,7 +58,6 @@ export const useTimer = (initialSecondsValue: number, onTimerReset?:() => void) 
 
     const handleBlock = (state:boolean) => {
         setIsBlocked(state);
-        console.log(state ? "blocked" : "not blocked")
     }
 
     return {
