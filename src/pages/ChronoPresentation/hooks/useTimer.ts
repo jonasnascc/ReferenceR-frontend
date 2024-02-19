@@ -6,14 +6,14 @@ export const useTimer = (initialSecondsValue: number, onTimerReset?:() => void) 
 
     const [isZero, setIsZero] = useState(false);
     const [isPaused, setIsPaused] = useState(false);
-
+    const [isBlocked, setIsBlocked] = useState(false);
 
     useEffect(() => {
         const interval = setInterval(() => {
             handleDecreaseSeconds();
           }, 1000);
         return () => clearInterval(interval);
-    }, [isZero, isPaused])
+    }, [isZero, isPaused, isBlocked])
 
     useEffect(() => {
         handleSeconds()
@@ -33,7 +33,7 @@ export const useTimer = (initialSecondsValue: number, onTimerReset?:() => void) 
     }
 
     const handleDecreaseSeconds = () => {
-        if((seconds >= -1) && !isPaused) {
+        if((seconds >= -1) && !isPaused && !isBlocked) {
             setSeconds((prevSeconds) => prevSeconds-1);
         }
     }
@@ -57,11 +57,17 @@ export const useTimer = (initialSecondsValue: number, onTimerReset?:() => void) 
         return `${formattedMinutes}:${formattedSeconds}`;
     }
 
+    const handleBlock = (state:boolean) => {
+        setIsBlocked(state);
+        console.log(state ? "blocked" : "not blocked")
+    }
+
     return {
         seconds,
         formatSecondsToTime,
         handlePlayPause,
         handleReset,
+        handleBlock,
         isZero,
         isPaused
     };

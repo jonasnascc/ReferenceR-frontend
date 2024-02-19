@@ -1,6 +1,6 @@
 import styled from "@emotion/styled";
 import { Container, Grid } from "@mui/material";
-import React from "react";
+import React, { useState } from "react";
 import { useLocation } from "react-router-dom";
 import { PhotoArea } from "./components/PhotoArea/PhotoArea";
 import { ControlPanel } from "./components/ControlPanel/ControlPanel";
@@ -10,14 +10,24 @@ import { Album } from "../../types/album";
 
 export const ChronoPresentation = () => {
     const location = useLocation();
+    const [blockTimer, setBlockTimer] = useState(false);
     
     const {
         album,
         currentPhoto,
         history,
         handleNextPhoto,
-        isLoading
+        isLoading:fetching
     } = useChronoPresentation(location.state);
+
+    const handleNext = () => {
+        setBlockTimer(true);
+        handleNextPhoto();
+    }
+
+    const handleLoaded = () => {
+        setBlockTimer(false);
+    }
     
     return (
         <Container>
@@ -27,12 +37,13 @@ export const ChronoPresentation = () => {
             <FunctionalArea>
                 <Grid container sx={{height:"100%"}}  spacing={"15px"}>
                     <Grid item xs={9}>
-                        <PhotoArea photo={currentPhoto} loading={isLoading}/>
+                        <PhotoArea photo={currentPhoto} loading={fetching} handleImageLoaded={handleLoaded}/>
                     </Grid>
 
                     <Grid item xs={3}>
                         <ControlPanel
-                            onTimerReset={handleNextPhoto}
+                            onTimerReset={handleNext}
+                            blockTimer={blockTimer}
                         />
                     </Grid>
                 </Grid>

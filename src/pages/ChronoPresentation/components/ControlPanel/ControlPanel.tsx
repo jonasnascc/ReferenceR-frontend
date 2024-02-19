@@ -4,13 +4,17 @@ import { Timer } from "./Timer";
 
 
 type ControlPanelProps = {
-    onTimerReset : () => void
+    onTimerReset : () => void,
+    blockTimer ?: boolean
 }
 
-export const ControlPanel = ({onTimerReset} : ControlPanelProps) => {
+export const ControlPanel = ({onTimerReset, blockTimer} : ControlPanelProps) => {
     return (
         <Panel>
-            <Timer onTimerReset={onTimerReset}/>
+            <Timer 
+                onTimerReset={onTimerReset}
+                block={blockTimer}
+            />
         </Panel>
     )
 }

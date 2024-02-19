@@ -5,20 +5,26 @@ import { CircularProgress } from "@mui/material";
 
 type PhotoAreaProps = {
     photo : Deviation | null,
-    loading ?: boolean
+    loading ?: boolean,
+    handleImageLoaded ?: () => void,
 }
 
-export const PhotoArea = ({photo, loading=false} : PhotoAreaProps) => {
+export const PhotoArea = ({photo, loading=false, handleImageLoaded} : PhotoAreaProps) => {
+
+    const handleLoaded = () => {
+        if(handleImageLoaded) handleImageLoaded();
+    }
+
     return (
         <Area>
             {
                 photo!==null && (
                     <ImageContainer>
                         {loading ? 
-                        (<CircularProgress/>) 
+                            (<CircularProgress/>)
                         : 
                         (
-                            <ImageContent src={photo.url} alt={photo.title}/>
+                            <ImageContent src={photo.url} alt={photo.title} onLoad={handleLoaded}/>
                         )}
                     </ImageContainer>
                 )

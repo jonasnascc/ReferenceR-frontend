@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import styled from "styled-components";
 import { useTimer } from "../../hooks/useTimer";
 
@@ -8,11 +8,16 @@ import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import RestartAltIcon from '@mui/icons-material/RestartAlt';
 
 type TimerProps = {
-    onTimerReset : () => void
+    onTimerReset : () => void,
+    block ?: boolean
 }
 
-export const Timer = ({onTimerReset} : TimerProps) => {
+export const Timer = ({onTimerReset, block = false} : TimerProps) => {
     const timer = useTimer(10, onTimerReset);
+
+    useEffect(()=>{
+        timer.handleBlock(block);
+    },[block])
 
     return (
         <TimerTile>
