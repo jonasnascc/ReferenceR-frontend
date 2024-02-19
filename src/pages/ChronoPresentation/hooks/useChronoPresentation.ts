@@ -14,6 +14,10 @@ export const useChronoPresentation = (album : Album | null) => {
     const [isLoading, setLoading] = useState(false);
 
     useEffect(() => {
+        handleNextPhoto();
+    }, [])
+
+    useEffect(() => {
         if(history.length > 0) {
             fetchNextPhoto();
         }
@@ -48,7 +52,6 @@ export const useChronoPresentation = (album : Album | null) => {
 
         setHistory([...history, num]);
         setCurrentHistoryIndex((index) => index + 1);
-
     }
 
     const generateRandomNumber = () => {

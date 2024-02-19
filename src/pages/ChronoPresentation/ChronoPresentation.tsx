@@ -31,7 +31,7 @@ export const ChronoPresentation = () => {
     
     return (
         <Container>
-            <PageHeader>{fetching ? "" : `${currentPhoto?.title??""} - ${album?.name??""}`}</PageHeader>
+            <PageHeader>{fetching ? "" : `${currentPhoto !== null ? `${currentPhoto.title} - ` : ""}${album?.name??""}`}</PageHeader>
             <FunctionalArea>
                 <Grid container sx={{height:"100%"}}  spacing={"15px"}>
                     <Grid item xs={9}>
