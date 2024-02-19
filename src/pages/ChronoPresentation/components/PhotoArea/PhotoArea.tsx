@@ -21,7 +21,7 @@ export const PhotoArea = ({photo, loading=false, handleImageLoaded} : PhotoAreaP
                 photo!==null && (
                     <ImageContainer>
                         {loading ? 
-                            (<CircularProgress/>)
+                            (<CenterDiv><CircularProgress/></CenterDiv>)
                         : 
                         (
                             <ImageContent src={photo.url} alt={photo.title} onLoad={handleLoaded}/>
@@ -39,6 +39,12 @@ const Area = styled.div`
     width: 100%;
     background-color: white;
     border-radius: 10px;
+`
+
+const CenterDiv = styled.div`
+    display: flex;
+    justify-content:center;
+    align-items: center;
 `
 
 const ImageContainer = styled.div`
