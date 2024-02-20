@@ -9,6 +9,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import SaveIcon from '@mui/icons-material/Save';
 import SkipPreviousIcon from '@mui/icons-material/SkipPrevious';
 import SkipNextIcon from '@mui/icons-material/SkipNext';
+import { Divider } from "@mui/material";
 
 type TimerProps = {
     onTimerReset ?: () => void,
@@ -19,7 +20,7 @@ type TimerProps = {
 }
 
 export const Timer = ({onNextPhoto, onPreviousPhoto, onTimerReset, onTimerIsZero, block = false} : TimerProps) => {
-    const timer = useTimer(5, onTimerReset, onTimerIsZero);
+    const timer = useTimer(30, onTimerReset, onTimerIsZero);
 
     useEffect(()=>{
         timer.handleBlock(block);
@@ -40,46 +41,71 @@ export const Timer = ({onNextPhoto, onPreviousPhoto, onTimerReset, onTimerIsZero
     }
 
     return (
-        <TimerTile>
-            <ControlButton onClick={timer.handleEdit}>
-                {timer.isEditing ? (<SaveIcon/>) : (<EditIcon/>)}
-            </ControlButton>
+        <ControlsDiv>
+            <Divider/>
+                <TimerTile>
+                    <ControlButton onClick={timer.handleEdit}>
+                        {timer.isEditing ? (<SaveIcon/>) : (<EditIcon/>)}
+                    </ControlButton>
 
-            <TimerInput value={timer.timerValue} disabled={!timer.isEditing} onChange={timer.handleChange}/>
+                    <TimerInput value={timer.timerValue} disabled={!timer.isEditing} onChange={timer.handleChange}/>
 
-            <ControlButton onClick={timer.handlePlayPause}>
-                {timer.isPaused ? (<PlayArrowIcon/>):(<PauseIcon/>)}
-            </ControlButton>
+                    <ControlButton onClick={timer.handleReset}>
+                        <RestartAltIcon/>
+                    </ControlButton>
+                </TimerTile>
+                <PlayerTile>
+                    <ControlButton>
+                        <SkipPreviousIcon onClick={handlePreviousPhoto}/>
+                    </ControlButton>
 
-            <ControlButton onClick={timer.handleReset}>
-                <RestartAltIcon/>
-            </ControlButton>
+                    <ControlButton $play={true} $paused={timer.isPaused} onClick={timer.handlePlayPause}>
+                        {timer.isPaused ? (<PlayArrowIcon/>):(<PauseIcon/>)}
+                    </ControlButton>
 
-            <ControlButton>
-                <SkipPreviousIcon onClick={handlePreviousPhoto}/>
-            </ControlButton>
-
-            <ControlButton onClick={handleNextPhoto}>
-                <SkipNextIcon/>
-            </ControlButton>
-        </TimerTile>
+                    <ControlButton onClick={handleNextPhoto}>
+                        <SkipNextIcon/>
+                    </ControlButton>
+                </PlayerTile>
+            <Divider/>
+        </ControlsDiv>
     )
 }
 
-const TimerTile = styled.div`
-    height: 70px;
-    width: 100%;
-    border: solid 1px black;
+const ControlsDiv = styled.div`
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    padding: 50px 20px;
 `
 
-const ControlButton = styled.div`
+const Tile = styled.div`
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+`
+
+const TimerTile = styled(Tile)`
+    margin: 20px 0 0 0;
+`
+
+const PlayerTile = styled(Tile)`
+    margin: 10px 0;
+`
+
+const ControlButton = styled.div<{$play ?: boolean, $paused ?: boolean}>`
+    display: flex;
     cursor: pointer;
-    display: inline;
+    padding: 5px;
 
     &:active {
         background-color: rgba(0,0,0,.5);
         color: white;
     }
+
+    ${props => props.$play && "color: white; border-radius: 50%;"}
+    ${props => props.$paused ? "background-color: #00c468;" : (props.$play ? "background-color: #fc0000;" : "")}
 `
 
 const TimerInput = styled.input`

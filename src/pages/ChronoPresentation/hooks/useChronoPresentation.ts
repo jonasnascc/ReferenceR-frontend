@@ -14,74 +14,59 @@ export const useChronoPresentation = (album : Album | null) => {
     const [currentHistoryIndex, setCurrentHistoryIndex] = useState<number>(-2);
     const [currentPhoto, setCurrentPhoto] = useState<Deviation|null>(null);
 
-    const [isLoading, setLoading] = useState(false);
+    const [bufferingIndex, setBufferingIndex] = useState<number>(0)
+    const [isBuffering, setIsBuffering] = useState(false);
+
+    const {isLoading, isFetching} = useQuery([`album-photo-${history[currentHistoryIndex]}`, currentHistoryIndex], () => fetchAlbumPhotos(
+        album,
+        album?.author??null,
+        album?.provider??"",
+        history[currentHistoryIndex],
+        1
+    ),{
+        enabled: photosMap[history[currentHistoryIndex]] === undefined,
+        refetchOnWindowFocus : false,
+        onSuccess: (data) => {
+            if(data.length > 0) {
+                photosMap[history[isBuffering ? bufferingIndex : currentHistoryIndex]] = data[0];
+                if(isBuffering) setIsBuffering(false);
+                else setCurrentPhoto(data[0]);
+            }
+        }
+    })
 
     useEffect(() => {
         handleNextPhoto();
     }, [])
 
-    useEffect(() => {
-        if(history.length > 0 && history.length-1 === currentHistoryIndex) {
-            handleChangeCurrentPhoto(currentHistoryIndex);
-        }
-    }, [currentHistoryIndex])
-    
-
-    const fetchPhoto = async (index : number) => {
-        setLoading(true);
-        await queryClient.fetchQuery("album-photo", () => fetchAlbumPhotos(
-            album,
-            album?.author??null,
-            album?.provider??"",
-            history[index],
-            1
-        )).then((data) => {
-            if(data.length > 0) {
-                photosMap[history[index]] = data[0];
-            }
-            setLoading(false);
-        });
-    }
-
-    const handleChangeCurrentPhoto = (index : number) => {
-        if(photosMap[history[index]] === undefined){
-            fetchPhoto(currentHistoryIndex)
-            .then(()=>setCurrentPhoto(photosMap[history[index]]));
-        } else setCurrentPhoto(photosMap[history[index]]);
-        
-    }
-
     const handleNextPhoto = () => {
         const emptyHistory = history.length == 0;
         const indexIsTheLast = history.length-1 === currentHistoryIndex;
 
+        let newIndex = 0;
         if(emptyHistory || indexIsTheLast) {
             const num = getRandomPhotoNumber();
             setHistory([...history, num]);
-            setCurrentHistoryIndex((index) => emptyHistory ? 0 : (index + 1));
+            newIndex = emptyHistory ? 0 : (currentHistoryIndex + 1);
         } else{
-            const newIndex = currentHistoryIndex + 1;
-            setCurrentHistoryIndex(newIndex);
-            handleChangeCurrentPhoto(newIndex);
+            newIndex = currentHistoryIndex + 1;
+            setCurrentPhoto(photosMap[history[currentHistoryIndex + 1]]);
         }
+        setCurrentHistoryIndex(newIndex);
     }
 
     const handlePreviousPhoto = () => {
-        if(history[currentHistoryIndex - 1] !== undefined) {
+        if(photosMap[history[currentHistoryIndex - 1]] !== undefined) {
             setCurrentHistoryIndex(currentHistoryIndex - 1);
-            handleChangeCurrentPhoto(currentHistoryIndex - 1);
+            setCurrentPhoto(photosMap[history[currentHistoryIndex - 1]]);
         }
     }
 
     const getRandomPhotoNumber = () : number => {
         let num = generateRandomNumber();
 
-        let run = true;
-        while(run) {
-            if(!history.includes(num)) {
-                setHistory([...history, num]);
-                run = false;
-            } else num = generateRandomNumber();
+        while(history.includes(num)) {
+            num = generateRandomNumber();
         }
 
         return num;
@@ -94,6 +79,15 @@ export const useChronoPresentation = (album : Album | null) => {
         return Math.floor(Math.random() * (max - min + 1)) + min;
     };
 
+    const loadBuffer = () => {
+        const nums : number[] = [];
+        for(let i=0; i<3; i++){
+            const num = getRandomPhotoNumber();
+            nums.push(num);
+        }
+        setHistory([...history, ...nums]);
+    }
+
     return {
         history,
         album,
@@ -101,6 +95,7 @@ export const useChronoPresentation = (album : Album | null) => {
         currentHistoryIndex,
         handleNextPhoto,
         handlePreviousPhoto,
-        isLoading
+        isLoading,
+        isFetching
     };
 }

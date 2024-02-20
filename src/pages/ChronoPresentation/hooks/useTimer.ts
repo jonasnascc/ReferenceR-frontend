@@ -5,7 +5,7 @@ export const useTimer = (initialSecondsValue: number, onTimerReset?:() => void, 
     const [seconds, setSeconds] = useState(initialSecondsValue)
 
     const [isZero, setIsZero] = useState(false);
-    const [isPaused, setIsPaused] = useState(false);
+    const [isPaused, setIsPaused] = useState(true);
     const [isBlocked, setIsBlocked] = useState(false);
     const [isEditing, setIsEditing] = useState(false);
 
