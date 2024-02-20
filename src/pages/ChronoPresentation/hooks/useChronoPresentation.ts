@@ -21,10 +21,11 @@ export const useChronoPresentation = (album : Album | null) => {
     }, [])
 
     useEffect(() => {
-        if(history.length > 0 || history.length-1 === currentHistoryIndex) {
-            fetchPhoto(currentHistoryIndex);
+        if(history.length > 0 && history.length-1 === currentHistoryIndex) {
+            handleChangeCurrentPhoto(currentHistoryIndex);
         }
-    }, [history])
+    }, [currentHistoryIndex])
+    
 
     const fetchPhoto = async (index : number) => {
         setLoading(true);
@@ -36,11 +37,18 @@ export const useChronoPresentation = (album : Album | null) => {
             1
         )).then((data) => {
             if(data.length > 0) {
-                setCurrentPhoto(data[0]);
                 photosMap[history[index]] = data[0];
             }
             setLoading(false);
         });
+    }
+
+    const handleChangeCurrentPhoto = (index : number) => {
+        if(photosMap[history[index]] === undefined){
+            fetchPhoto(currentHistoryIndex)
+            .then(()=>setCurrentPhoto(photosMap[history[index]]));
+        } else setCurrentPhoto(photosMap[history[index]]);
+        
     }
 
     const handleNextPhoto = () => {
@@ -54,15 +62,14 @@ export const useChronoPresentation = (album : Album | null) => {
         } else{
             const newIndex = currentHistoryIndex + 1;
             setCurrentHistoryIndex(newIndex);
-            setCurrentPhoto(photosMap[history[newIndex]])
+            handleChangeCurrentPhoto(newIndex);
         }
-        loadBuffer();
     }
 
     const handlePreviousPhoto = () => {
         if(history[currentHistoryIndex - 1] !== undefined) {
             setCurrentHistoryIndex(currentHistoryIndex - 1);
-            setCurrentPhoto(photosMap[history[currentHistoryIndex - 1]]);
+            handleChangeCurrentPhoto(currentHistoryIndex - 1);
         }
     }
 
@@ -86,12 +93,6 @@ export const useChronoPresentation = (album : Album | null) => {
     
         return Math.floor(Math.random() * (max - min + 1)) + min;
     };
-
-    const loadBuffer = () => {
-        if((history.length - currentHistoryIndex) > 3) {
-            console.log("buffering...")
-        }
-    }
 
     return {
         history,
