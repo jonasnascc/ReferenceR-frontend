@@ -20,7 +20,7 @@ type TimerProps = {
 }
 
 export const Timer = ({onNextPhoto, onPreviousPhoto, onTimerReset, onTimerIsZero, block = false} : TimerProps) => {
-    const timer = useTimer(30, onTimerReset, onTimerIsZero);
+    const timer = useTimer(10, onTimerReset, onTimerIsZero);
 
     useEffect(()=>{
         timer.handleBlock(block);
@@ -117,4 +117,8 @@ const TimerInput = styled.input`
     padding: 0 10px;
     border: none;
     border-radius: 10px;
+
+    &:disabled {
+        color: black;
+    }
 `

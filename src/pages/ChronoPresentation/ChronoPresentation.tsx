@@ -18,8 +18,7 @@ export const ChronoPresentation = () => {
         history,
         handleNextPhoto,
         handlePreviousPhoto,
-        isLoading,
-        isFetching
+        isLoading
     } = useChronoPresentation(location.state);
 
     const handleNext = () => {
@@ -33,11 +32,11 @@ export const ChronoPresentation = () => {
     
     return (
         <Container>
-            <PageHeader>{(isLoading || isFetching) ? "" : `${currentPhoto !== null ? `${currentPhoto.title} - ` : ""}${album?.name??""}`}</PageHeader>
+            <PageHeader>{isLoading ? "" : `${currentPhoto !== null ? `${currentPhoto.title} - ` : ""}${album?.name??""}`}</PageHeader>
             <FunctionalArea>
                 <Grid container sx={{height:"100%"}}  spacing={"15px"}>
                     <Grid item xs={9}>
-                        <PhotoArea photo={currentPhoto} loading={(isLoading || isFetching)} handleImageLoaded={handleLoaded}/>
+                        <PhotoArea photo={currentPhoto} loading={isLoading} handleImageLoaded={handleLoaded}/>
                     </Grid>
 
                     <Grid item xs={3}>

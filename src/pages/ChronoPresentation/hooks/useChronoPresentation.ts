@@ -11,54 +11,80 @@ export const useChronoPresentation = (album : Album | null) => {
     const queryClient = useQueryClient();
 
     const [history, setHistory] = useState<number[]>([]);
-    const [currentHistoryIndex, setCurrentHistoryIndex] = useState<number>(-2);
+    const [currentHistoryIndex, setCurrentHistoryIndex] = useState<number>(0);
     const [currentPhoto, setCurrentPhoto] = useState<Deviation|null>(null);
 
     const [bufferingIndex, setBufferingIndex] = useState<number>(0)
     const [isBuffering, setIsBuffering] = useState(false);
 
-    const {isLoading, isFetching} = useQuery([`album-photo-${history[currentHistoryIndex]}`, currentHistoryIndex], () => fetchAlbumPhotos(
+    const [isLoading, setIsLoading] = useState(false);
+
+    const {isLoading:loading, isFetching:fetching} = useQuery([`album-photo-${history[bufferingIndex]}`, isBuffering, history], () => fetchAlbumPhotos(
         album,
         album?.author??null,
         album?.provider??"",
-        history[currentHistoryIndex],
+        history[bufferingIndex],
         1
     ),{
-        enabled: photosMap[history[currentHistoryIndex]] === undefined,
+        enabled: isBuffering,
         refetchOnWindowFocus : false,
         onSuccess: (data) => {
-            if(data.length > 0) {
-                photosMap[history[isBuffering ? bufferingIndex : currentHistoryIndex]] = data[0];
-                if(isBuffering) setIsBuffering(false);
-                else setCurrentPhoto(data[0]);
+            
+            if(history.length - 1 - currentHistoryIndex >= 5){
+                setIsBuffering(false);
+            } else {
+                photosMap[history[bufferingIndex]] = data[0];
+                if(bufferingIndex===0) setCurrentPhoto(photosMap[history[bufferingIndex]]);
+                
+
+                setHistory((hist) => [...hist, getRandomPhotoNumber()]);
+                setBufferingIndex(history.length - 1);
+                
+            }
+            if(isLoading && bufferingIndex === currentHistoryIndex) {
+                setIsLoading(false);
+                handleNextPhoto();
             }
         }
     })
 
     useEffect(() => {
-        handleNextPhoto();
+        setHistory([getRandomPhotoNumber()])
+        setBufferingIndex(0);
     }, [])
 
-    const handleNextPhoto = () => {
-        const emptyHistory = history.length == 0;
-        const indexIsTheLast = history.length-1 === currentHistoryIndex;
-
-        let newIndex = 0;
-        if(emptyHistory || indexIsTheLast) {
-            const num = getRandomPhotoNumber();
-            setHistory([...history, num]);
-            newIndex = emptyHistory ? 0 : (currentHistoryIndex + 1);
-        } else{
-            newIndex = currentHistoryIndex + 1;
-            setCurrentPhoto(photosMap[history[currentHistoryIndex + 1]]);
+    useEffect(() => {
+        if((history.length == 0 && bufferingIndex == 0)) {
+            setIsBuffering(true);
         }
-        setCurrentHistoryIndex(newIndex);
+    }, [history, bufferingIndex, currentHistoryIndex])
+
+    useEffect(() => {
+        if(!isBuffering) {
+            setIsLoading(loading || fetching);
+        }
+        console.log(history)
+    }, [isBuffering, loading, fetching])
+
+    useEffect(() => {
+        setIsBuffering(true);
+        console.log(currentHistoryIndex, history.length, photosMap[history[currentHistoryIndex]])
+        if(photosMap[history[currentHistoryIndex]] !== undefined)
+            setCurrentPhoto(photosMap[history[currentHistoryIndex]]);
+    } , [currentHistoryIndex])
+
+    const handleNextPhoto = () => {
+        if(photosMap[history[currentHistoryIndex + 1]] !== undefined) {
+            setCurrentHistoryIndex(currentHistoryIndex + 1);
+        } else {
+            console.log(photosMap);
+            setIsLoading(true);
+        }
     }
 
     const handlePreviousPhoto = () => {
         if(photosMap[history[currentHistoryIndex - 1]] !== undefined) {
             setCurrentHistoryIndex(currentHistoryIndex - 1);
-            setCurrentPhoto(photosMap[history[currentHistoryIndex - 1]]);
         }
     }
 
@@ -95,7 +121,6 @@ export const useChronoPresentation = (album : Album | null) => {
         currentHistoryIndex,
         handleNextPhoto,
         handlePreviousPhoto,
-        isLoading,
-        isFetching
+        isLoading
     };
 }
