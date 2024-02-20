@@ -4,15 +4,21 @@ import { Timer } from "./Timer";
 
 
 type ControlPanelProps = {
-    onTimerReset : () => void,
+    onTimerReset ?: () => void,
+    onTimerIsZero ?: () => void,
+    onNextPhoto ?: () => void,
+    onPreviousPhoto ?: () => void,
     blockTimer ?: boolean
 }
 
-export const ControlPanel = ({onTimerReset, blockTimer} : ControlPanelProps) => {
+export const ControlPanel = ({onPreviousPhoto, onNextPhoto, onTimerReset, onTimerIsZero, blockTimer} : ControlPanelProps) => {
     return (
         <Panel>
             <Timer 
                 onTimerReset={onTimerReset}
+                onTimerIsZero={onTimerIsZero}
+                onNextPhoto={onNextPhoto}
+                onPreviousPhoto={onPreviousPhoto}
                 block={blockTimer}
             />
         </Panel>

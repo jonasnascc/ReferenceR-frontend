@@ -17,6 +17,7 @@ export const ChronoPresentation = () => {
         currentPhoto,
         history,
         handleNextPhoto,
+        handlePreviousPhoto,
         isLoading:fetching
     } = useChronoPresentation(location.state);
 
@@ -40,8 +41,10 @@ export const ChronoPresentation = () => {
 
                     <Grid item xs={3}>
                         <ControlPanel
-                            onTimerReset={handleNext}
+                            onTimerIsZero={handleNext}
                             blockTimer={blockTimer}
+                            onNextPhoto={handleNext}
+                            onPreviousPhoto={handlePreviousPhoto}
                         />
                     </Grid>
                 </Grid>
