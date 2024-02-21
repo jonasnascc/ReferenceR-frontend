@@ -55,8 +55,8 @@ export const Timer = ({onNextPhoto, onPreviousPhoto, onTimerReset, onTimerIsZero
                     </ControlButton>
                 </TimerTile>
                 <PlayerTile>
-                    <ControlButton>
-                        <SkipPreviousIcon onClick={handlePreviousPhoto}/>
+                    <ControlButton onClick={handlePreviousPhoto}>
+                        <SkipPreviousIcon/>
                     </ControlButton>
 
                     <ControlButton $play={true} $paused={timer.isPaused} onClick={timer.handlePlayPause}>
