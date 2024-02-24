@@ -32,7 +32,13 @@ export const UserCollections = () => {
             </SectionHeader>
             {
                 !fetchingAlbums ? (
-                    <AlbumsCarousel albums={albums} onSelect={handleAlbumSelect} selectedAlbum={selectedAlbum} fullView={expandFavorites}/>
+                    <AlbumsCarousel 
+                        albums={albums} 
+                        onSelect={handleAlbumSelect} 
+                        selectedAlbum={selectedAlbum} 
+                        fullView={expandFavorites}
+                        idAsidentifier
+                    />
                 ) : (<LinearProgress/>)
             }
             <SectionHeader label="My Collections"/>

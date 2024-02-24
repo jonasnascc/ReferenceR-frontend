@@ -27,13 +27,15 @@ export const useAlbums = (favoritedAlbums ?: boolean) => {
     });
 
 
-    const handleAlbumSelect = (albumId : string) => {
-        const selAlbum : Album[] = albums.filter(alb => alb.code === albumId);
+    const handleAlbumSelect = (album : Album) => {
+        let selAlbum : Album[];
+        if(favoritedAlbums) selAlbum = albums.filter(alb => alb.id === album.id);
+        else selAlbum = albums.filter(alb => alb.code === album.code);
 
         if(selAlbum) {
             setSelectedAlbum(selAlbum[0]);
             if(changeAlbumId)  {
-                changeAlbumId(albumId);
+                changeAlbumId(album.code);
                 if(changePage) changePage(1)
             }
         }

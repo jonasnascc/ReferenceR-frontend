@@ -13,23 +13,33 @@ const MOVE_CONSTANT = 200;
 
 type AlbumsCarouselProps = {
     albums : Album[],
-    onSelect : (code : string) => void,
+    onSelect : (album : Album) => void,
     selectedAlbum : Album | null,
-    fullView ?: boolean
+    fullView ?: boolean,
+    idAsidentifier ?: boolean
 }
 
-export const AlbumsCarousel = ({albums, onSelect, selectedAlbum, fullView=false} : AlbumsCarouselProps) =>{
+export const AlbumsCarousel = ({albums, onSelect, selectedAlbum, fullView=false, idAsidentifier=false} : AlbumsCarouselProps) =>{
     const listRef = useRef<HTMLUListElement>(null);
 
-    const formatAlbumLabel = (label : string) : string => {
+    const formatAlbumLabel = (album : Album) : string => {
+        let label = album.name;
+
+        if(album.code === "all" || album.code === "scraps" || album.name.toLocaleLowerCase() === "featured") {
+            label = `${album.name} - ${album.author}`;
+        }
+
         if(label.length >= 44)
             return label.substring(0, 43) + "...";
         else return label;
     }
 
     const isAlbumSelected = (album : Album) => {
-        if(selectedAlbum)
+        if(selectedAlbum) {
+            if(idAsidentifier) return selectedAlbum.id === album.id;
             return selectedAlbum.code === album.code;
+        }
+            
         return false;
     }
 
@@ -75,7 +85,7 @@ export const AlbumsCarousel = ({albums, onSelect, selectedAlbum, fullView=false}
                                     <AlbumThumb $selected={isAlbumSelected(album)}>
                                         <CarouselImage album={album} onSelect={onSelect}/>
                                         <ThumbLabel>
-                                            <LabelText>{formatAlbumLabel(album.name)}</LabelText>
+                                            <LabelText>{formatAlbumLabel(album)}</LabelText>
                                         </ThumbLabel>
                                     </AlbumThumb>
                                 </Thumbnail>
@@ -91,7 +101,7 @@ export const AlbumsCarousel = ({albums, onSelect, selectedAlbum, fullView=false}
     )
 }
 
-const CarouselImage = ({album, onSelect} : {album: Album, onSelect: (code:string) => void}) => {
+const CarouselImage = ({album, onSelect} : {album: Album, idAsIdentifier?:boolean, onSelect: (album:Album) => void}) => {
 
     const [url, setUrl] = useState(album.thumbnail?.url??"");
     const [error, setError] = useState(false);
@@ -111,11 +121,11 @@ const CarouselImage = ({album, onSelect} : {album: Album, onSelect: (code:string
             {
                 (isLoading || error) ? 
                 (
-                    <Skeleton variant="rectangular" width="100%" height="100%" onClick={() => onSelect(album.code)}/>
+                    <Skeleton variant="rectangular" width="100%" height="100%" onClick={() => onSelect(album)}/>
                 ) 
                 : 
                 (
-                    <ThumbImage src={url} alt={album.name} onClick={() => onSelect(album.code)} onError={handleError}/>
+                    <ThumbImage src={url} alt={album.name} onClick={() => onSelect(album)} onError={handleError}/>
                 )
             }
         </>

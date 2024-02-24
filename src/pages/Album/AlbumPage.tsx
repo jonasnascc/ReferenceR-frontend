@@ -11,6 +11,7 @@ import { AlbumsCarousel } from "../../shared/components/AlbumsCarousel";
 import { NavigationBar } from "./components/NavigationBar/NavigationBar";
 import { AlbumTitle } from "./components/AlbumTitle";
 import { useLocation } from "react-router-dom";
+import { Album } from "../../types/album";
 
 export const AlbumPage = ({favorites = false} : {favorites?:boolean}) => {
     const {author, provider} = useContext(SearchContext);
@@ -42,13 +43,13 @@ export const AlbumPage = ({favorites = false} : {favorites?:boolean}) => {
     
     useEffect(() => {
         if(albums.length > 0) {
-            handleAlbumSelect(albums[0].code);
+            handleAlbumSelect(albums[0]);
         }
     }, [albums])
 
-    const handleSelectAlbum = (albumCode : string) => {
+    const handleSelectAlbum = (album : Album) => {
         handleExitView();
-        handleAlbumSelect(albumCode);
+        handleAlbumSelect(album);
     }
 
     const handleExitView = () => {
