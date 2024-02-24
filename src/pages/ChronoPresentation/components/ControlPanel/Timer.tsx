@@ -31,6 +31,7 @@ export const Timer = ({onNextPhoto, onPreviousPhoto, onTimerReset, onTimerIsZero
     } = useTimerInput();
 
     const {
+        defaultInterval,
         handleEdit,
         handleSave,
         handlePlayPause,
@@ -38,6 +39,7 @@ export const Timer = ({onNextPhoto, onPreviousPhoto, onTimerReset, onTimerIsZero
         handleBlock,
         isPaused,
         isEditing,
+        formatSecondsToTime
     } = useTimer(10, handleTimerValueChange, onTimerReset, onTimerIsZero);
 
     useEffect(()=>{
@@ -61,48 +63,49 @@ export const Timer = ({onNextPhoto, onPreviousPhoto, onTimerReset, onTimerIsZero
     return (
         <ControlsDiv>
             <Divider/>
-                <TimerTile>
-                    {isEditing ? (
-                            <ControlButton onClick={() => handleSave(timerValue)}>
-                                <SaveIcon/>
-                            </ControlButton>
-                        ) : (
-                            <ControlButton onClick={() => handleEdit()}>
-                                <EditIcon/>
-                            </ControlButton>
-                        )
-                    }
-                    <TimerInput 
-                        ref={inputRef}
-                        value={timerValue} 
-                        disabled={!isEditing}
-                        onKeyDown={handleKeyDown}
-                        $isEditing={isEditing}
-                    />
-
-                    {isEditing ? (
-                        <ControlButton onClick={() => handleEdit({cancel:true})}>
-                            <CloseIcon/>
+            <TimerTile>
+                {isEditing ? (
+                        <ControlButton onClick={() => handleSave(timerValue)}>
+                            <SaveIcon/>
                         </ControlButton>
-                    ):(
-                        <ControlButton onClick={handleReset}>
-                            <RestartAltIcon/>
+                    ) : (
+                        <ControlButton onClick={() => handleEdit()}>
+                            <EditIcon/>
                         </ControlButton>
-                    )}
-                </TimerTile>
-                <PlayerTile>
-                    <ControlButton onClick={handlePreviousPhoto}>
-                        <SkipPreviousIcon/>
-                    </ControlButton>
+                    )
+                }
+                <TimerInput 
+                    ref={inputRef}
+                    value={timerValue} 
+                    disabled={!isEditing}
+                    onKeyDown={handleKeyDown}
+                    $isEditing={isEditing}
+                />
 
-                    <ControlButton $play={true} $paused={isPaused} onClick={() => handlePlayPause(timerValue)}>
-                        {isPaused ? (<PlayArrowIcon/>):(<PauseIcon/>)}
+                {isEditing ? (
+                    <ControlButton onClick={() => handleEdit({cancel:true})}>
+                        <CloseIcon/>
                     </ControlButton>
+                ):(
+                    <ControlButton onClick={handleReset}>
+                        <RestartAltIcon/>
+                    </ControlButton>
+                )}
+            </TimerTile>
+            <IntervalLimit>{`${formatSecondsToTime(defaultInterval)}`}</IntervalLimit>
+            <PlayerTile>
+                <ControlButton onClick={handlePreviousPhoto}>
+                    <SkipPreviousIcon/>
+                </ControlButton>
 
-                    <ControlButton onClick={handleNextPhoto}>
-                        <SkipNextIcon/>
-                    </ControlButton>
-                </PlayerTile>
+                <ControlButton $play={true} $paused={isPaused} onClick={() => handlePlayPause(timerValue)}>
+                    {isPaused ? (<PlayArrowIcon/>):(<PauseIcon/>)}
+                </ControlButton>
+
+                <ControlButton onClick={handleNextPhoto}>
+                    <SkipNextIcon/>
+                </ControlButton>
+            </PlayerTile>
             <Divider/>
         </ControlsDiv>
     )
@@ -120,6 +123,16 @@ const Tile = styled.div`
     align-items: center;
     justify-content: center;
     width: 100%;
+`
+
+const IntervalLimit = styled.div`
+display: block;
+    margin: 0;
+    padding: 0;
+    text-align: center;
+    font-size: 16px;
+    font-weight: 100;
+    color:#818181;
 `
 
 const TimerTile = styled(Tile)`

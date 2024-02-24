@@ -98,6 +98,7 @@ export const useTimer = (initialSecondsValue: number, onSecondsChange: (value: s
 
     return {
         seconds,
+        defaultInterval,
         handleEdit,
         handleSave,
         handlePlayPause,
@@ -106,6 +107,7 @@ export const useTimer = (initialSecondsValue: number, onSecondsChange: (value: s
         isZero,
         isPaused,
         isEditing,
-        convertTimerValueToSeconds
+        convertTimerValueToSeconds,
+        formatSecondsToTime
     };
 }
