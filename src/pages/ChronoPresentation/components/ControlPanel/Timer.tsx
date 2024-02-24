@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 import styled from "styled-components";
 import { useTimer } from "../../hooks/useTimer";
 
@@ -9,7 +9,10 @@ import EditIcon from '@mui/icons-material/Edit';
 import SaveIcon from '@mui/icons-material/Save';
 import SkipPreviousIcon from '@mui/icons-material/SkipPrevious';
 import SkipNextIcon from '@mui/icons-material/SkipNext';
+import CloseIcon from '@mui/icons-material/Close';
+
 import { Divider } from "@mui/material";
+import { useTimerInput } from "../../hooks/useTimerInput";
 
 type TimerProps = {
     onTimerReset ?: () => void,
@@ -20,23 +23,38 @@ type TimerProps = {
 }
 
 export const Timer = ({onNextPhoto, onPreviousPhoto, onTimerReset, onTimerIsZero, block = false} : TimerProps) => {
-    const timer = useTimer(10, onTimerReset, onTimerIsZero);
+    const {
+        inputRef,
+        timerValue,
+        handleKeyDown,
+        handleTimerValueChange
+    } = useTimerInput();
+
+    const {
+        handleEdit,
+        handleSave,
+        handlePlayPause,
+        handleReset,
+        handleBlock,
+        isPaused,
+        isEditing,
+    } = useTimer(10, handleTimerValueChange, onTimerReset, onTimerIsZero);
 
     useEffect(()=>{
-        timer.handleBlock(block);
+        handleBlock(block);
     },[block])
 
     const handleNextPhoto = () => {
         if(onNextPhoto) {
             onNextPhoto();
-            timer.handleReset();
+            handleReset();
         }
     }
 
     const handlePreviousPhoto = () => {
         if(onPreviousPhoto) {
             onPreviousPhoto();
-            timer.handleReset();
+            handleReset();
         }
     }
 
@@ -44,23 +62,41 @@ export const Timer = ({onNextPhoto, onPreviousPhoto, onTimerReset, onTimerIsZero
         <ControlsDiv>
             <Divider/>
                 <TimerTile>
-                    <ControlButton onClick={timer.handleEdit}>
-                        {timer.isEditing ? (<SaveIcon/>) : (<EditIcon/>)}
-                    </ControlButton>
+                    {isEditing ? (
+                            <ControlButton onClick={() => handleSave(timerValue)}>
+                                <SaveIcon/>
+                            </ControlButton>
+                        ) : (
+                            <ControlButton onClick={() => handleEdit()}>
+                                <EditIcon/>
+                            </ControlButton>
+                        )
+                    }
+                    <TimerInput 
+                        ref={inputRef}
+                        value={timerValue} 
+                        disabled={!isEditing}
+                        onKeyDown={handleKeyDown}
+                        $isEditing={isEditing}
+                    />
 
-                    <TimerInput value={timer.timerValue} disabled={!timer.isEditing} onChange={timer.handleChange}/>
-
-                    <ControlButton onClick={timer.handleReset}>
-                        <RestartAltIcon/>
-                    </ControlButton>
+                    {isEditing ? (
+                        <ControlButton onClick={() => handleEdit({cancel:true})}>
+                            <CloseIcon/>
+                        </ControlButton>
+                    ):(
+                        <ControlButton onClick={handleReset}>
+                            <RestartAltIcon/>
+                        </ControlButton>
+                    )}
                 </TimerTile>
                 <PlayerTile>
                     <ControlButton onClick={handlePreviousPhoto}>
                         <SkipPreviousIcon/>
                     </ControlButton>
 
-                    <ControlButton $play={true} $paused={timer.isPaused} onClick={timer.handlePlayPause}>
-                        {timer.isPaused ? (<PlayArrowIcon/>):(<PauseIcon/>)}
+                    <ControlButton $play={true} $paused={isPaused} onClick={() => handlePlayPause(timerValue)}>
+                        {isPaused ? (<PlayArrowIcon/>):(<PauseIcon/>)}
                     </ControlButton>
 
                     <ControlButton onClick={handleNextPhoto}>
@@ -98,17 +134,18 @@ const ControlButton = styled.div<{$play ?: boolean, $paused ?: boolean}>`
     display: flex;
     cursor: pointer;
     padding: 5px;
+    margin: 0 4px;
 
     &:active {
-        background-color: rgba(0,0,0,.5);
-        color: white;
+        background-color: #c3c3c3;
+        border-radius: 50%;
     }
 
     ${props => props.$play && "color: white; border-radius: 50%;"}
     ${props => props.$paused ? "background-color: #00c468;" : (props.$play ? "background-color: #fc0000;" : "")}
 `
 
-const TimerInput = styled.input`
+const TimerInput = styled.input<{$isEditing?:boolean}>`
     font-family: Arial, Helvetica, sans-serif;
     font-size: 35px;
     background-color: white;
@@ -117,6 +154,7 @@ const TimerInput = styled.input`
     padding: 0 10px;
     border: none;
     border-radius: 10px;
+    color : ${props => props.$isEditing ? "#00c468" : "black"};
 
     &:disabled {
         color: black;

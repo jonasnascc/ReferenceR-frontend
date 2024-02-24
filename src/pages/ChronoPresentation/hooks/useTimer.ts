@@ -1,15 +1,13 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 
-export const useTimer = (initialSecondsValue: number, onTimerReset?:() => void, onTimerIsZero?:() => void) => {
+export const useTimer = (initialSecondsValue: number, onSecondsChange: (value: string) => void, onTimerReset?:() => void, onTimerIsZero?:() => void) => {
+    const [defaultInterval, setDefaultInterval] = useState(initialSecondsValue);
     const [seconds, setSeconds] = useState(initialSecondsValue)
-
     const [isZero, setIsZero] = useState(false);
     const [isPaused, setIsPaused] = useState(true);
     const [isBlocked, setIsBlocked] = useState(false);
     const [isEditing, setIsEditing] = useState(false);
-
-    const [timerValue, setTimerValue] = useState("");
 
     useEffect(() => {
         const interval = setInterval(() => {
@@ -23,7 +21,7 @@ export const useTimer = (initialSecondsValue: number, onTimerReset?:() => void, 
     }, [seconds])
     
     const handleSeconds = () => {
-        setTimerValue(`${formatSecondsToTime(seconds)}`)
+        onSecondsChange(formatSecondsToTime(seconds))
         if(seconds == 0) {
             setIsZero(true);
             if(onTimerIsZero) onTimerIsZero();
@@ -42,12 +40,17 @@ export const useTimer = (initialSecondsValue: number, onTimerReset?:() => void, 
         }
     }
 
-    const handlePlayPause = () => {
-        setIsPaused((state) => !state);
+    const handlePlayPause = (timerValue:string) => {
+        const newState = !isPaused;
+        setIsPaused(() => newState);
+        if(isEditing) {
+            handleSave(timerValue, true);
+        }
+
     }
 
     const handleReset = () => {
-        setSeconds(initialSecondsValue);
+        setSeconds(defaultInterval);
         if(onTimerReset) onTimerReset();
     }
 
@@ -55,26 +58,34 @@ export const useTimer = (initialSecondsValue: number, onTimerReset?:() => void, 
         setIsBlocked(state);
     }
 
-    const handleEdit = () => {
-        const state = !isEditing;
-        setIsEditing(state);
-        setIsPaused(state);
+    const handleEdit = (args ?: {cancel:boolean}) => {
+        const stop = args ? args.cancel : false;
+
+        console.log(stop)
+        setIsEditing(!stop);
+        setIsPaused(!stop);
+        if(!stop)
+            onSecondsChange(formatSecondsToTime(defaultInterval));
     }
 
-    const handleChange = (event:any) => {
-        let inputValue = event.target.value;
+    const handleSave = (timerValue : string, preserveSecs ?: boolean) => {
+        const secs =  convertTimerValueToSeconds(timerValue);
 
-        inputValue = inputValue.replace(/\D/g, '');
-
-        inputValue = inputValue.substring(0, 4);
-
-        if (inputValue.length > 1) {
-            inputValue = inputValue.substring(0, 2) + ':' + inputValue.substring(2);
+        if(secs !== 0) {
+            setDefaultInterval(secs);
+            if(!preserveSecs) setSeconds(secs);
         }
 
-        setTimerValue(inputValue);
+        setIsEditing(false);
+        setIsPaused(false);
     }
 
+    const convertTimerValueToSeconds = (value: string) => {
+        const times = value.split(":");
+        const minutes = Number(times[0]) * 60;
+        return  minutes + Number(times[1]);
+    }
+    
     const formatSecondsToTime = (seconds: number): string => {
         const minutes = Math.floor(seconds / 60);
         const remainingSeconds = seconds % 60;
@@ -87,14 +98,14 @@ export const useTimer = (initialSecondsValue: number, onTimerReset?:() => void, 
 
     return {
         seconds,
-        timerValue,
         handleEdit,
+        handleSave,
         handlePlayPause,
         handleReset,
         handleBlock,
-        handleChange,
         isZero,
         isPaused,
-        isEditing
+        isEditing,
+        convertTimerValueToSeconds
     };
 }
