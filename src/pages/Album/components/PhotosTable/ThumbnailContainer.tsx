@@ -7,15 +7,18 @@ import styled from 'styled-components';
 import { FavoriteStar } from '../../../../shared/components/FavoriteStar';
 import { Deviation } from '../../../../types/photo';
 
+import VisibilityOffOutlinedIcon from '@mui/icons-material/VisibilityOffOutlined';
+
 type ThumbnailContainerProps = {
     url : string,
     title : string,
     onSelect ?: () => any,
     selected ?: boolean,
-    photo : Deviation
+    photo : Deviation,
+    matureContent ?: "hidden" | "exclude" | "show"
 }
 
-export const ThumbnailContainer = ({ photo, onSelect = () => null, selected = false} : ThumbnailContainerProps) => {
+export const ThumbnailContainer = ({ photo, onSelect = () => null, selected = false, matureContent = "show"} : ThumbnailContainerProps) => {
     const [open, setOpen] = useState(false);
     const [selectedPhoto, setSelectedPhoto] = useState(false);
 
@@ -27,6 +30,28 @@ export const ThumbnailContainer = ({ photo, onSelect = () => null, selected = fa
     const handleOpen = () => {
         setOpen(true);
     };
+
+    const getThumbContent = () => {
+        if(photo.mature){
+            if(matureContent === "hidden") {
+                return (<VisibilityOffOutlinedIcon style={{color:"#8f8f8f"}}/>)
+            } else if(matureContent === "exclude"){
+                return (null);
+            }
+        } 
+        if(!photo.mature || matureContent === "show") {
+            return (
+                <ThumbImage
+                    src={`${photo.thumbUrl ? photo.thumbUrl : photo.url}`} 
+                    alt={photo.title} 
+                    loading='lazy' 
+                    srcSet={`${photo.thumbUrl ? photo.thumbUrl : photo.url}`}
+                    onClick={handleOpen}
+                />
+            )
+        }
+        
+    }
     
     return (
         <CentralizedDiv>
@@ -36,13 +61,7 @@ export const ThumbnailContainer = ({ photo, onSelect = () => null, selected = fa
                         <FavoriteStar photo={photo} active/>
                     </StarContainer>
                 }
-                <ThumbImage
-                    src={`${photo.thumbUrl ? photo.thumbUrl : photo.url}`} 
-                    alt={photo.title} 
-                    loading='lazy' 
-                    srcSet={`${photo.thumbUrl ? photo.thumbUrl : photo.url}`}
-                    onClick={handleOpen}
-                />
+                {getThumbContent()}
             </ThumbContainer>
         </CentralizedDiv>
 

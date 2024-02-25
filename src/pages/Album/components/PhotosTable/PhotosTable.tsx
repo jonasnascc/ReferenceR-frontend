@@ -13,10 +13,11 @@ type PhotosTableProps = {
     onSelectPhoto ?: (photo : Deviation) => any,
     selectedPhotos ?: Deviation[],
     viewMode ?: boolean,
-    currentPhoto : Deviation | null
+    currentPhoto : Deviation | null,
+    matureContent ?: "hidden" | "exclude" | "show"
 }
 
-export const PhotosTable = ({album, photos, loading=false, selectMode=false, onSelectPhoto = (photo : Deviation) => null, selectedPhotos = [], viewMode=false, currentPhoto} : PhotosTableProps) => {
+export const PhotosTable = ({matureContent = "show", album, photos, loading=false, selectMode=false, onSelectPhoto = (photo : Deviation) => null, selectedPhotos = [], viewMode=false, currentPhoto} : PhotosTableProps) => {
 
     const handleSelect = (photo : Deviation) => {
         onSelectPhoto(photo);
@@ -33,7 +34,7 @@ export const PhotosTable = ({album, photos, loading=false, selectMode=false, onS
             ) : (
                 <>
                 <ImageList cols={viewMode ? 3 : 5} rowHeight={250} sx={{width: "100%", height: "100%", overflow:"auto"}} variant="quilted" gap={20} > 
-                {photos!==undefined && photos.map((deviation : Deviation) => {
+                {photos!==undefined && photos.filter(({mature}) => mature ? (matureContent!=="exclude" ? true : false) : true).map((deviation : Deviation) => {
                     return (
                         <ImageListItem key={deviation.code}>
                             <ThumbnailContainer 
@@ -44,6 +45,7 @@ export const PhotosTable = ({album, photos, loading=false, selectMode=false, onS
                                 onSelect={() => {
                                     handleSelect(deviation)
                                 }}
+                                matureContent={matureContent}
                             />
                         </ImageListItem>
                     )
