@@ -17,7 +17,7 @@ type PhotosTableProps = {
     matureContent ?: "hidden" | "exclude" | "show"
 }
 
-export const PhotosTable = ({matureContent = "show", album, photos, loading=false, selectMode=false, onSelectPhoto = (photo : Deviation) => null, selectedPhotos = [], viewMode=false, currentPhoto} : PhotosTableProps) => {
+export const PhotosTable = ({matureContent = "exclude", album, photos, loading=false, selectMode=false, onSelectPhoto = (photo : Deviation) => null, selectedPhotos = [], viewMode=false, currentPhoto} : PhotosTableProps) => {
 
     const handleSelect = (photo : Deviation) => {
         onSelectPhoto(photo);

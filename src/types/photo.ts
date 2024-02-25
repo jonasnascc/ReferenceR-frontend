@@ -17,7 +17,8 @@ export type SimplePhoto = {
     id : number,
     code : string,
     title : string,
-    url : string
+    url : string,
+    mature ?: boolean,
 }
 
 export type Tag = {

@@ -1,13 +1,12 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef } from "react";
 import styled from "styled-components";
 
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import { Album } from "../../types/album";
-import { useQuery } from "react-query";
-import { fetchAlbumThumbnail } from "../../api/services/Album";
-import { Skeleton } from "@mui/material";
 import { FavoriteStar } from "./FavoriteStar";
+import { truncate } from "fs";
+import { CarouselImage } from "./CarouselImage";
 
 const MOVE_CONSTANT = 200;
 
@@ -16,10 +15,11 @@ type AlbumsCarouselProps = {
     onSelect : (album : Album) => void,
     selectedAlbum : Album | null,
     fullView ?: boolean,
-    idAsidentifier ?: boolean
+    idAsidentifier ?: boolean,
+    hideMatureThumbnail ?: boolean
 }
 
-export const AlbumsCarousel = ({albums, onSelect, selectedAlbum, fullView=false, idAsidentifier=false} : AlbumsCarouselProps) =>{
+export const AlbumsCarousel = ({albums, onSelect, selectedAlbum, hideMatureThumbnail = true, fullView=false, idAsidentifier=false} : AlbumsCarouselProps) =>{
     const listRef = useRef<HTMLUListElement>(null);
 
     const formatAlbumLabel = (album : Album) : string => {
@@ -75,15 +75,14 @@ export const AlbumsCarousel = ({albums, onSelect, selectedAlbum, fullView=false,
                     {
                         albums.map(album => (
                             <Item key={album.url}>
-                                <Thumbnail>
+                                <Thumbnail onClick={() => onSelect(album)}>
                                     <Star>
                                         <FavoriteStar 
                                             album={album}
-                                            
                                         />
                                     </Star>
                                     <AlbumThumb $selected={isAlbumSelected(album)}>
-                                        <CarouselImage album={album} onSelect={onSelect}/>
+                                        <CarouselImage album={album} hideIfMature={hideMatureThumbnail}/>
                                         <ThumbLabel>
                                             <LabelText>{formatAlbumLabel(album)}</LabelText>
                                         </ThumbLabel>
@@ -98,38 +97,6 @@ export const AlbumsCarousel = ({albums, onSelect, selectedAlbum, fullView=false,
                 <ArrowButton><ArrowForwardIosIcon/></ArrowButton>
             </ArrowButtonContainer>    
         </Carousel>
-    )
-}
-
-const CarouselImage = ({album, onSelect} : {album: Album, idAsIdentifier?:boolean, onSelect: (album:Album) => void}) => {
-
-    const [url, setUrl] = useState(album.thumbnail?.url??"");
-    const [error, setError] = useState(false);
-
-    const {isLoading} = useQuery(`album-${album.id}-thumbnail-url`, () => fetchAlbumThumbnail(album.id), {
-        enabled: url === "",
-        refetchOnWindowFocus:false,
-        onSuccess: (resp) => setUrl(resp)
-    });
-
-    const handleError = () => {
-        setError(false);
-    }
-
-    return(
-        <>
-            {
-                (isLoading || error) ? 
-                (
-                    <Skeleton variant="rectangular" width="100%" height="100%" onClick={() => onSelect(album)}/>
-                ) 
-                : 
-                (
-                    <ThumbImage src={url} alt={album.name} onClick={() => onSelect(album)} onError={handleError}/>
-                )
-            }
-        </>
-        
     )
 }
 
@@ -191,12 +158,7 @@ const AlbumThumb = styled.div<{$selected ?: boolean}>`
     border: ${props => props.$selected ? "2px solid black" : "none"};
 `
 
-const ThumbImage = styled.img`
-    text-decoration : none;
-    object-fit: cover;
-    width: 100%;
-    height: 100%;
-`
+
 
 const ThumbLabel = styled.div`
     position : absolute;

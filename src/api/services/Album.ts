@@ -33,5 +33,5 @@ export const fetchAlbumThumbnail = async (albumId : number) => {
     return await axios.get(`albums/${albumId}/thumbnail`, {
         sendToken:true
     })
-    .then((response) => response.data.url)
+    .then((response) => response.data)
 }
