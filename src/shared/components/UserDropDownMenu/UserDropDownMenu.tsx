@@ -26,6 +26,10 @@ export const UserDropdownMenu = ({user, collapse} : UserDropdownMenuProps) => {
         setIsCollapsed((state) => !state);
     }
 
+    const handleCollapse = (value:boolean) => {
+        setIsCollapsed(value);
+    }
+
     if(user === null) return (null);
     return (
         <RequireAuth>
@@ -35,7 +39,7 @@ export const UserDropdownMenu = ({user, collapse} : UserDropdownMenuProps) => {
                     <Name>{user.name}</Name>
                 </DropdownButton>
                 <DropdownMenuTile $collapsed={isCollapsed} $width={totalWidth}>
-                    <DropdownContent display={!isCollapsed}/>
+                    <DropdownContent display={!isCollapsed} handleCollapse={handleCollapse}/>
                 </DropdownMenuTile>
             </ButtonContainer>
         </RequireAuth>
@@ -60,19 +64,16 @@ const DropdownButton = styled.div`
         cursor: pointer;
     }
 `
-
-//height: ${props => props.$collapsed ? "0px" : "500px"};
 const DropdownMenuTile = styled.div<{$collapsed : boolean, $width:string}>`
     position: fixed;
+    visibility: ${props => props.$collapsed ? "hidden" : "visible"};
+    //height: ${props => props.$collapsed ? "0px" : "500px"};
     top: 70px;
     right : 10px;
-    width: ${props => props.$width};
+    width: 200px;
     background-color: white;
     transition: height linear 0.2s;
     overflow: hidden;
-    border-width: 0 3px 3px 3px;
-    border-style: solid;
-    border-color: #4f5157;
     box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
     z-index: 100;
 `
