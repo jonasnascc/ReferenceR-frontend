@@ -19,7 +19,7 @@ export const useAuth = () => ({
         return response.data;
     },
     logout : async () => {
-        const response = await api.post("users/logout");
+        const response = await api.post("users/logout", null, {sendToken:true});
         return response.data;
     }
 })

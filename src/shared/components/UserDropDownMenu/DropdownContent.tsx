@@ -15,7 +15,7 @@ export const DropdownContent = ({display, handleCollapse} : DropdownContentProps
 
     const handleLogout = () => {
         handleCollapse(false);
-        //signout();
+        signout();
     }
 
     const handleProfile = () => {
