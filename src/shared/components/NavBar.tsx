@@ -38,11 +38,6 @@ export const NavBar = () => {
                                 <LoginButton onClick={handleLoginClick}>Entrar</LoginButton>
                             </LoginButtonContainer>
                         </RequireNoAuth>
-                        {/* <RequireAuth>
-                            <LoginButtonContainer>
-                                <LogoutButton onClick={handleLogout}>Sair</LogoutButton>
-                            </LoginButtonContainer>
-                        </RequireAuth> */}
                         <UserDropdownMenu user={auth.user}/>
                     </Grid>
                 </Grid>
@@ -90,14 +85,10 @@ const LoginButton = styled.button`
     width : 113px;
     height : 40px;
     border-radius : 15px;
-    background-color : #1D2C51;
+    background-color : #3b3b3b;
     color : white;
     border : none;
     font-family : "Inknut Antiqua";
     font-size : 18px;
     cursor : pointer;
-`
-
-const LogoutButton = styled(LoginButton)`
-    background-color : #c32828;
 `

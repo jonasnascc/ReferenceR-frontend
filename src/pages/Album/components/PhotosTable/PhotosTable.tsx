@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { ImageList, ImageListItem, LinearProgress } from "@mui/material";
 import { Deviation } from "../../../../types/photo";
 import { ThumbnailContainer } from "./ThumbnailContainer";
@@ -18,6 +18,17 @@ type PhotosTableProps = {
 }
 
 export const PhotosTable = ({matureContent = "exclude", album, photos, loading=false, selectMode=false, onSelectPhoto = (photo : Deviation) => null, selectedPhotos = [], viewMode=false, currentPhoto} : PhotosTableProps) => {
+    const [mature, setMature] = useState<"hidden" | "exclude" | "show">(matureContent);
+
+    useEffect(() => {
+        const storedValue = localStorage.getItem("mature");
+
+        if (storedValue) {
+            const parsedValue = JSON.parse(storedValue);
+            if (typeof parsedValue === 'boolean') 
+                setMature(parsedValue ? "show" : "hidden");
+        }
+    },[])
 
     const handleSelect = (photo : Deviation) => {
         onSelectPhoto(photo);
@@ -34,7 +45,7 @@ export const PhotosTable = ({matureContent = "exclude", album, photos, loading=f
             ) : (
                 <>
                 <ImageList cols={viewMode ? 3 : 5} rowHeight={250} sx={{width: "100%", height: "100%", overflow:"auto"}} variant="quilted" gap={20} > 
-                {photos!==undefined && photos.filter(({mature}) => mature ? (matureContent!=="exclude" ? true : false) : true).map((deviation : Deviation) => {
+                {photos!==undefined && photos.filter((photo) => photo.mature ? (mature !=="exclude" ? true : false) : true).map((deviation : Deviation) => {
                     return (
                         <ImageListItem key={deviation.code}>
                             <ThumbnailContainer 
@@ -45,7 +56,7 @@ export const PhotosTable = ({matureContent = "exclude", album, photos, loading=f
                                 onSelect={() => {
                                     handleSelect(deviation)
                                 }}
-                                matureContent={matureContent}
+                                matureContent={mature}
                             />
                         </ImageListItem>
                     )

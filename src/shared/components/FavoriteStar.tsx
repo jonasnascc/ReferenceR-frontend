@@ -8,6 +8,7 @@ import styled from "styled-components";
 import { Album } from "../../types/album";
 import { useMutation } from "react-query";
 import { favoriteAlbum, unfavoriteAlbum } from "../../api/services/Album";
+import { RequireAuth } from "../../context/Auth/RequireAuth";
 
 
 type FavoriteStarProps = {
@@ -70,13 +71,15 @@ export const FavoriteStar = ({album, sx, active=false, color="yellow", blocked =
     }
 
     return (
+        <RequireAuth>
         <>
-        {(disableInactive && !favorited) ? null : (
-            <Star onClick={handleClick} $color={color}>
-                {favorited ? <StarRateRoundedIcon sx={sx}/> : <StarBorderRoundedIcon sx={sx}/>}
-            </Star>
-        )}
+            {(disableInactive && !favorited) ? null : (
+                <Star onClick={handleClick} $color={color}>
+                    {favorited ? <StarRateRoundedIcon sx={sx}/> : <StarBorderRoundedIcon sx={sx}/>}
+                </Star>
+            )}
         </>
+        </RequireAuth>
     )
 }
 

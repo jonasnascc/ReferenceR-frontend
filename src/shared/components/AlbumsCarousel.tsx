@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
@@ -21,6 +21,18 @@ type AlbumsCarouselProps = {
 
 export const AlbumsCarousel = ({albums, onSelect, selectedAlbum, hideMatureThumbnail = true, fullView=false, idAsidentifier=false} : AlbumsCarouselProps) =>{
     const listRef = useRef<HTMLUListElement>(null);
+
+    const [hideMature, setHideMature] = useState(hideMatureThumbnail);
+    
+    useEffect(() => {
+        const storedValue = localStorage.getItem("mature");
+
+        if (storedValue) {
+            const parsedValue = JSON.parse(storedValue);
+            if (typeof parsedValue === 'boolean') 
+                setHideMature(!parsedValue);
+        }
+    },[])
 
     const formatAlbumLabel = (album : Album) : string => {
         let label = album.name;
@@ -82,7 +94,7 @@ export const AlbumsCarousel = ({albums, onSelect, selectedAlbum, hideMatureThumb
                                         />
                                     </Star>
                                     <AlbumThumb $selected={isAlbumSelected(album)}>
-                                        <CarouselImage album={album} hideIfMature={hideMatureThumbnail}/>
+                                        <CarouselImage album={album} hideIfMature={hideMature}/>
                                         <ThumbLabel>
                                             <LabelText>{formatAlbumLabel(album)}</LabelText>
                                         </ThumbLabel>

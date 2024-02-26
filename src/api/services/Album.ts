@@ -14,7 +14,6 @@ export const favoriteAlbum = async (album : Album) => {
     }).then((resp) => resp.data)
 }
 
-
 export const unfavoriteAlbum = async (album : Album) => {
     return await axios.delete(`author/${album.author}/albums/${album.code}`, {
         provider: album.provider,
