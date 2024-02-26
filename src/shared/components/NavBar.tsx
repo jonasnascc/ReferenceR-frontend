@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { RequireAuth } from "../../context/Auth/RequireAuth";
 import { RequireNoAuth } from "../../context/Auth/RequireNoAuth";
 import { AuthContext } from "../../context/Auth/AuthContext";
+import { UserDropdownMenu } from "./UserDropDownMenu/UserDropDownMenu";
 
 export const NavBar = () => {
     const auth = useContext(AuthContext);
@@ -37,11 +38,12 @@ export const NavBar = () => {
                                 <LoginButton onClick={handleLoginClick}>Entrar</LoginButton>
                             </LoginButtonContainer>
                         </RequireNoAuth>
-                        <RequireAuth>
+                        {/* <RequireAuth>
                             <LoginButtonContainer>
                                 <LogoutButton onClick={handleLogout}>Sair</LogoutButton>
                             </LoginButtonContainer>
-                        </RequireAuth>
+                        </RequireAuth> */}
+                        <UserDropdownMenu user={auth.user}/>
                     </Grid>
                 </Grid>
             </NavBarContainer>
