@@ -1,16 +1,15 @@
 import React from "react";
-import { NavBar } from "./NavBar";
+import { NavBar } from "./NavBar/NavBar";
 import { Outlet } from "react-router-dom";
 import styled from "styled-components";
 import { MenuBar } from "./MenuBar";
 
-
-
 export const Layout = () => {
     return (
         <BodyContainer>
-            <NavBar/>
-            <MenuBar/>
+            <NavBarContainer>
+                <NavBar/>
+            </NavBarContainer>
             
             <Content>
                 <Outlet/>
@@ -18,6 +17,9 @@ export const Layout = () => {
         </BodyContainer>
     )
 }
+const NavBarContainer = styled.div`
+    height: 130px;
+`
 
 const BodyContainer = styled.div`
     height: 100%;

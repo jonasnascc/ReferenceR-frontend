@@ -60,7 +60,7 @@ const DropdownButton = styled.div`
     border-radius: 10px;
 
     &:hover {
-        background-color: #3c3d43;
+        background-color: rgba(0,0,0,0.1);
         cursor: pointer;
     }
 `
@@ -85,7 +85,6 @@ const AvatarTile = styled(Avatar)<{$size : string}>`
 
 const Name = styled.span`
     margin-left: 10px;
-    color: white;
     padding: 0;
 `
 

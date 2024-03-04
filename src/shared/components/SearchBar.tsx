@@ -23,24 +23,44 @@ export const SearchBar = () =>{
             selectProvider(providerValue)
     }
     return(
-        <Container>
-            <SearchForm action="/author" method="GET">
-                <Selector name="provider" defaultValue="deviantart">
-                    <option value="deviantart" id="deviantart" onClick={handleProviderSelectorClick} defaultValue={"deviantart"}>DeviantArt</option>
-                </Selector>
-                <Input type="text" id="author" name="author" value={searchValue} onChange={handleSearchValueChange}/>
-                <SearchButton type="submit" onClick={handleSearchButtonClick}>Ir</SearchButton>
-            </SearchForm>
-        </Container>
+        <div className="align-vert">
+            <Container>
+                <SearchForm action="/author" method="GET">
+                    <Selector 
+                        name="provider" 
+                        defaultValue="deviantart"
+                    >
+                        <option value="deviantart" id="deviantart" onClick={handleProviderSelectorClick} defaultValue={"deviantart"}>DeviantArt</option>
+                    </Selector>
+
+                    <Input 
+                        type="text" 
+                        id="author-search" 
+                        name="author" 
+                        value={searchValue} 
+                        onChange={handleSearchValueChange}
+                        placeholder="Search for an author username"
+                    />
+                    
+                    <SearchButton 
+                        type="submit"
+                        onClick={handleSearchButtonClick}
+                    >
+                        Ir
+                    </SearchButton>
+                </SearchForm>
+            </Container>
+        </div>
+        
     )
 } 
 
 const Container = styled.div`
     display:flex;
     background-color : white;
-    border-radius : 15px;
+    border-radius : 10px;
     width : 100%;
-    height : 43px;
+    height : 40px;
 `
 
 const Selector = styled.select`
@@ -60,6 +80,7 @@ const SearchForm = styled.form`
     justify-content : space-between;
     align-items : center;
     width : 100%;
+    overflow: hidden;
 `
 
 const Input = styled.input`
@@ -70,6 +91,8 @@ const Input = styled.input`
     outline : none;
     font-size : 15px;
     height: 90%;
+    width: 100%;
+    background-color: transparent;
 `
 
 const SearchButton = styled.button`
