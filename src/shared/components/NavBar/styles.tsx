@@ -16,7 +16,6 @@ export const NavBarDiv = styled.div`
     background-color: #D9EFFF;
 `
 
-
 export const Logo = styled.img`
     height: 65px;
 `

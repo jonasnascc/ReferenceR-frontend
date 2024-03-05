@@ -1,7 +1,7 @@
 import { Container, LinearProgress } from "@mui/material";
 import React, { useState } from "react";
 import { SectionHeader } from "../../shared/components/SectionHeader";
-import { AlbumsCarousel } from "../../shared/components/AlbumsCarousel";
+import { AlbumsCarousel } from "../../shared/components/AlbumsCarousel/AlbumsCarousel";
 import { Album } from "../../types/album";
 import { HeaderControlButtons } from "./components/HeaderControlButtons/HeaderControlButtons";
 import { useQuery } from "react-query";

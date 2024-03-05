@@ -7,7 +7,7 @@ import usePhotos from "../../shared/hooks/usePhotos";
 import { useAlbums } from "../../shared/hooks/useAlbums";
 import styled from "styled-components";
 import { PhotoView } from "./components/PhotoView/PhotoView";
-import { AlbumsCarousel } from "../../shared/components/AlbumsCarousel";
+import { AlbumsCarousel } from "../../shared/components/AlbumsCarousel/AlbumsCarousel";
 import { NavigationBar } from "./components/NavigationBar/NavigationBar";
 import { AlbumTitle } from "./components/AlbumTitle";
 import { useLocation } from "react-router-dom";

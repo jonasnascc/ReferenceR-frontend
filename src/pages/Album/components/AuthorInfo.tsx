@@ -1,7 +1,7 @@
 import { Avatar, Box, Container, Grid, Stack, Typography } from "@mui/material";
 import React, { useEffect } from "react";
 import styled from "styled-components";
-import { AlbumsCarousel } from "../../../shared/components/AlbumsCarousel";
+import { AlbumsCarousel } from "../../../shared/components/AlbumsCarousel/AlbumsCarousel";
 
 export const AuthorInfo = ({albums, author, provider} : {author:string, provider:string, albums : any[]}) => {   
     return (
