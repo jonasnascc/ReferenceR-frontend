@@ -5,8 +5,9 @@ import { HomePage } from './pages/index';
 import { AuthorPage } from './pages/author/authorPage';
 import { UserProfilePage } from './pages/userProfile/userProfile';
 import { UserCollectionsPage } from './pages/userCollections/userCollections';
-import { LoginPage } from './pages/auth/login';import { GalleryPage } from './pages/gallery/GalleryPage';
-;
+import { LoginPage } from './pages/auth/login';
+import { GalleryPage } from './pages/gallery/GalleryPage';
+
 
 function App() {
   return (
