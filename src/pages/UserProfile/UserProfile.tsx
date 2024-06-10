@@ -1,31 +1,8 @@
-import { Box, Container, Switch } from "@mui/material";
-import React, { useEffect, useState } from "react";
+import React from "react";
+import { useParams } from "react-router-dom";
 
-export const UserProfile = () => {
-    const[checked, setChecked] = useState(false);
+export const UserProfilePage = () => {
+    const {userId} = useParams();
 
-    useEffect(() => {
-        const storedValue = localStorage.getItem("mature");
-
-        if (storedValue) {
-            const parsedValue = JSON.parse(storedValue);
-            if (typeof parsedValue === 'boolean') 
-                setChecked(parsedValue);
-        }
-    },[])
-
-    const handleMature = (event : any) => {
-        const state = event.target.checked;
-        localStorage.setItem("mature", JSON.stringify(state));
-        setChecked(state);
-    }
-
-    return (
-        <Container>
-            <Box>
-                Mature Content:
-                <Switch checked={checked} onClick={handleMature}/>
-            </Box>
-        </Container>
-    )
+    return (<h1>User Profile (id={userId})</h1>)
 }

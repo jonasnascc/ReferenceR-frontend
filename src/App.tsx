@@ -1,36 +1,29 @@
-
 import React from 'react';
+import './App.css';
 import { Route, Routes } from 'react-router-dom';
-import { Layout } from './shared/components/Layout';
-import { LoginPage } from './pages/Login/LoginPage';
-import { RequireNoAuth } from './context/Auth/RequireNoAuth';
-import { AlbumPage } from './pages/Album/AlbumPage';
-import { AuthorPage } from './pages/Author/AuthorPage';
-import { UserCollections } from './pages/UserCollections/UserCollections';
-import { ChronoPresentation } from './pages/ChronoPresentation/ChronoPresentation';
-import { UserProfile } from './pages/UserProfile/UserProfile';
-
+import { HomePage } from './pages/index';
+import { AuthorPage } from './pages/author/authorPage';
+import { UserProfilePage } from './pages/userProfile/userProfile';
+import { UserCollectionsPage } from './pages/userCollections/userCollections';
+import { LoginPage } from './pages/auth/login';import { GalleryPage } from './pages/gallery/GalleryPage';
+;
 
 function App() {
   return (
-      <div className="App">
-        <Routes>
-          <Route path='/' element={<Layout/>}>
-            <Route path="/authors" element={<AuthorPage/>}/>
-            <Route path="/author" element={<AlbumPage/>}/>
-            <Route path='/user'>
-              <Route index element={<UserProfile/>}/>
-              <Route path="collections">
-                <Route index element={<UserCollections/>}/>
-                <Route path="albums" element={<AlbumPage favorites/>}/>
-                <Route path="chrono-presentation" element={<ChronoPresentation/>}/>
-              </Route>
-            </Route>
-            
-            <Route path="/login" element={<RequireNoAuth><LoginPage/></RequireNoAuth>}/>
-          </Route>
-        </Routes>
-      </div>
+    <div className="App">
+      <Routes>
+        <Route path='/' element={<HomePage/>} />
+        <Route path='/author/:authorName'>
+          <Route index element={<AuthorPage/>}/>
+          <Route path='gallery' element={<GalleryPage/>}/>
+        </Route>
+        <Route path='/user/:userId'>
+          <Route index element={<UserProfilePage/>}/>
+          <Route path='collections' element={<UserCollectionsPage/>}/>
+        </Route>
+        <Route path='/login' element={<LoginPage/>}/>
+      </Routes>
+    </div>
   );
 }
 

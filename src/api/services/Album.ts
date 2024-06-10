@@ -1,5 +1,5 @@
 import axios from "../axios"
-import {Album} from "../../types/album"
+import {Album} from "../../model/album"
 
 export const fetchAuthorAlbums = async (author : string, provider: string) => {
     return axios.get(`author/${author}/albums`, {

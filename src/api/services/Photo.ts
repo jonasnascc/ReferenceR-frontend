@@ -1,5 +1,5 @@
-import { Album } from "../../types/album";
-import { Deviation } from "../../types/photo";
+import { Album } from "../../model/album";
+import { Deviation } from "../../model/photo";
 import axios from "../axios";
 
 export const fetchAlbumPhotos = async (album: Album | null, author: string | null, provider: string, page:number, photosPerPage: number) => {
