@@ -24,13 +24,16 @@ export const GalleryPage = () => {
         }
     })
 
-    const seePhotosQuery = (album:Album, authorName:string) => queryClient.fetchQuery([`album-${album.code}-photos`], () => fetchAlbumPhotos(
+    const seePhotosQuery = (album:Album, authorName:string, pg:number) => queryClient.fetchQuery([`album-${album.code}-photos`], () => fetchAlbumPhotos(
         album,
         authorName,
         "deviantart",
-        page,
+        pg,
         30
-    ))
+    )).then((data) => {
+        if(data) setPhotos(data)
+        else setPhotos([])
+    }).catch((err) => setPhotos([]))
 
     const handleAlbumClick = (index : number) => {
         setSelectedAlbum(index)
@@ -44,12 +47,7 @@ export const GalleryPage = () => {
     const handleSeePhotosClick = (album : Album) => {
         if(!authorName) return;
 
-        seePhotosQuery(album, authorName).then((data) => {
-            if(data) setPhotos(data)
-            else setPhotos([])
-        }).catch((err) => {
-            setPhotos([])
-        })
+        seePhotosQuery(album, authorName, 1)
     }
 
     if(!authorName) {
@@ -100,5 +98,5 @@ export const GalleryPage = () => {
 
             
         </div>
-    ) 
+    )
 }
