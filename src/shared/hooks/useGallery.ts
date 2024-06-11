@@ -2,7 +2,7 @@ import { useQuery, useQueryClient } from "react-query"
 import { fetchAuthorAlbums } from "../../api/services/Album"
 import { Album } from "../../model/album"
 import { useEffect, useState } from "react"
-import { SimplePhoto } from "../../model/photo"
+import { Deviation } from "../../model/photo"
 import { fetchAlbumPhotos } from "../../api/services/Photo"
 
 export const useGallery = (authorName:string, provider: string) => {
@@ -17,9 +17,11 @@ export const useGallery = (authorName:string, provider: string) => {
     
     const [selectedPhotos, setSelectedPhotos] = useState<string[]>([])
 
+    const [showingPhoto, setShowingPhoto] = useState<Deviation|null>(null)
+
 
     const [isLoadingPhotos, setLoadingPhotos] = useState(false)
-    const [photos, setPhotos] = useState<SimplePhoto[]>([])
+    const [photos, setPhotos] = useState<Deviation[]>([])
 
 
     const {isLoading:loadingAlbums, isFetching:fetchingAlbums} = useQuery<Album[]>(["albums"], () => fetchAuthorAlbums(authorName, provider), {
@@ -88,6 +90,8 @@ export const useGallery = (authorName:string, provider: string) => {
                 const filtered = selectedPhotos.filter(ph => ph !== photoCode);
                 setSelectedPhotos(filtered)
             }
+        } else {
+            handleViewPhoto(photoCode)
         }
     }
 
@@ -108,12 +112,23 @@ export const useGallery = (authorName:string, provider: string) => {
         const mapped = photos.map(ph => ph.code);
         setSelectedPhotos(mapped)
     }
+
+    const handleViewPhoto = (photoCode : string) => {
+        const photo = photos.filter(ph => ph.code === photoCode)
+        if(photo.length===0) return;
+        setShowingPhoto(photo[0])
+    }
+
+    const handleClosePhotoView = () => {
+        setShowingPhoto(null)
+    }
     
     return {
         albums,
         isLoadingAlbums,
         selectedAlbum,
         photos,
+        showingPhoto,
         isLoadingPhotos,
         selectMode,
         selectedPhotos,
@@ -121,8 +136,10 @@ export const useGallery = (authorName:string, provider: string) => {
         handleSeePhotosClick,
         handleSelectMode,
         handleSelectPhoto,
+        handleViewPhoto,
         handleSelectAllPhotos,
         handleAddToCollection,
+        handleClosePhotoView,
         getAlbumByIndex
     }
 }

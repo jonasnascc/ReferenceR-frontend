@@ -1,6 +1,7 @@
 import { useNavigate, useParams } from "react-router-dom"
 import { useGallery } from "../../shared/hooks/useGallery";
 import { PhotosGrid } from "./components/photosGrid/PhotosGrid";
+import { PhotoView } from "./components/photoView/PhotoView";
 
 export const GalleryPage = () => {
     const {authorName} = useParams()
@@ -9,6 +10,7 @@ export const GalleryPage = () => {
     const {
         albums,
         photos,
+        showingPhoto,
         selectedAlbum,
         selectMode,
         selectedPhotos,
@@ -19,6 +21,7 @@ export const GalleryPage = () => {
         handleAddToCollection,
         handleSelectPhoto,
         handleSelectAllPhotos,
+        handleClosePhotoView,
         isLoadingPhotos,
         isLoadingAlbums
     } = useGallery(authorName??"", "deviantart")
@@ -64,6 +67,15 @@ export const GalleryPage = () => {
                 onSelectAll={handleSelectAllPhotos}
                 loading={isLoadingPhotos}
             />
+            {
+                showingPhoto!==null&&(
+                    <PhotoView
+                        open={true}
+                        onClose={handleClosePhotoView}
+                        photo={showingPhoto}
+                    />
+                )
+            }
         </div>
     )
 }

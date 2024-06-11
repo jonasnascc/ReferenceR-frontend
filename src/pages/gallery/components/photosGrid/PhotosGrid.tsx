@@ -1,8 +1,8 @@
-import { SimplePhoto } from "../../../../model/photo";
+import { Deviation } from "../../../../model/photo";
 import { SelectedPhotosActions } from "../selectedPhotosActions/SelectedPhotosActions";
 
 type PhotosGridProps = {
-    photos: SimplePhoto[],
+    photos: Deviation[],
     selectedPhotos: string[],
     selectMode ?: boolean,
     onSelectPhoto : (photoCode : string) => void,
@@ -12,8 +12,6 @@ type PhotosGridProps = {
 }
 
 export const PhotosGrid = ({photos, selectedPhotos, selectMode=false, onSelectPhoto, onAddToCollection, onSelectAll, loading} : PhotosGridProps) => {
-
-
     if(photos.length === 0) return null
     else if(loading) return (<p>loading...</p>)
     return(
@@ -33,7 +31,7 @@ export const PhotosGrid = ({photos, selectedPhotos, selectMode=false, onSelectPh
                 photos.map((photo, index) => (
                     <img 
                         key={index} 
-                        src={photo.url} 
+                        src={photo.thumbUrl} 
                         alt={photo.title}
                         style={{
                             height:"250px",
