@@ -35,10 +35,11 @@ export const PhotoView = ({open=false, photo, onClose} : PhotoViewProps) => {
             <img
               src={photo.url}
               alt={photo.title}
-              height="100%"
-              width="auto"
+              
               style={{
-                objectFit: "contain"
+                objectFit: "contain",
+                maxWidth: "100%",
+                maxHeight: "100%"
               }}
             />
             <button onClick={onClose} style={{

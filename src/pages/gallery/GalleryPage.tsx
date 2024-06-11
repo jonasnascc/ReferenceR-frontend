@@ -15,17 +15,16 @@ export const GalleryPage = () => {
         selectMode,
         selectedPhotos,
         handleAlbumClick,
-        handleSeePhotosClick,
-        getAlbumByIndex,
+        handleLoadMorePhotos,
         handleSelectMode,
         handleAddToCollection,
         handleSelectPhoto,
         handleSelectAllPhotos,
         handleClosePhotoView,
         isLoadingPhotos,
-        isLoadingAlbums
+        isLoadingAlbums,
+        hasNextPage
     } = useGallery(authorName??"", "deviantart")
-
 
     if(!authorName) {
         navigate("/");
@@ -47,17 +46,17 @@ export const GalleryPage = () => {
             }
             <hr/>
             {
-                albums&&albums.filter(alb => alb.code === getAlbumByIndex(selectedAlbum)?.code??"").map((alb,index) => (
+                albums&&albums.filter(alb => alb.code === selectedAlbum?.code??"").map((alb,index) => (
                     <div key={index}>
                         <img src={alb.thumbnail.url} alt={alb.thumbnail.title} style={{width: "auto", height: "200px"}}/>
                         <h2>{alb.name}</h2>
                         <p>{`${alb.size} photos`}</p>
-                        <button onClick={() => handleSeePhotosClick(alb)}>See photos</button>
                         {photos.length > 0 && <button onClick={() => handleSelectMode()}>{`${selectMode ? "Clear selection" : "Select"}`}</button>}
                         <hr/>
                     </div>
                 ))
             }
+            
             <PhotosGrid 
                 photos={photos} 
                 selectedPhotos = {selectedPhotos}
@@ -76,6 +75,8 @@ export const GalleryPage = () => {
                     />
                 )
             }
+
+            {hasNextPage&&<button onClick={handleLoadMorePhotos}>Load more</button>}
         </div>
     )
 }

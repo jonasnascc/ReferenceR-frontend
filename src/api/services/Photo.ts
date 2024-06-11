@@ -6,7 +6,7 @@ export const fetchAlbumPhotos = async (album: Album | null, author: string | nul
     if(album && author){
         return await axios.get(`author/${author}/albums/${album.code}/photos?page=${page}&limit=${photosPerPage}&maxThumbSize=300`, {
             sendToken : true, provider : provider}
-        ).then((response) => response.data)
+        ).then((response) => response.data.sort((a:Deviation, b:Deviation) => b.code.localeCompare(a.code)))
     }
 }
 
