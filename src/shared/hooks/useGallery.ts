@@ -40,9 +40,8 @@ export const useGallery = (config : {
             enabled: Boolean(config?.authorName) && !Boolean(config.userFavourites),
             refetchOnWindowFocus: false,
             retry: 3,
-            onSuccess: (data) => {
-                handleSetAlbums(data)
-            }
+            onSuccess: (data) => handleSetAlbums(data)
+            
         })
 
     const {isLoading:loadingFavAlbums, isFetching:fetchingFavAlbums} = useQuery<Album[]>(["albums-fav"], 
@@ -51,9 +50,8 @@ export const useGallery = (config : {
             enabled: Boolean(config?.userFavourites),
             refetchOnWindowFocus: false,
             retry: 3,
-            onSuccess: (data) => {
-                handleSetAlbums(data)
-            }
+            onSuccess: (data) =>  handleSetAlbums(data)
+            
         })
 
     const favouriteMutation = useMutation([`album-${selectedAlbum?.code}-favourite`], (favAlbum:FavouriteAlbum) => favoriteAlbum(favAlbum))
@@ -64,7 +62,7 @@ export const useGallery = (config : {
         hasNextPage,
     } = useInfiniteQuery<Page>({
         enabled: Boolean(selectedAlbum)&&(Boolean(config?.authorName)||Boolean(config?.userFavourites)),
-        queryKey: [`album-${selectedAlbum?.code??""}-photos`],
+        queryKey: [`album-${selectedAlbum?.code??""}-${selectedAlbum?.author??""}-photos`],
         queryFn: async ({ pageParam = currentPage }) => {
             if(!selectedAlbum) return {data:[], page:pageParam}
             setLoadingPhotos(true)
@@ -125,12 +123,14 @@ export const useGallery = (config : {
     const handleSetAlbums = (data:Album[]) => {
         setAlbums(data)
         const paramAlb = searchParams.get("album")
-        if(paramAlb) {
+        if(paramAlb && config?.authorName) {
             const alb = findAlbumByCode(paramAlb, data)
             if(alb) setSelectedAlbum(alb)
             else setSelectedAlbum(data[0])
+            return;
         }
-        else setSelectedAlbum(data[0])
+
+        setSelectedAlbum(data[0])
     }
 
     const handleAlbumClick = (index : number) => {
