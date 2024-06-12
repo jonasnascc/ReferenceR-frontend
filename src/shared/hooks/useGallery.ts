@@ -45,7 +45,7 @@ export const useGallery = (config : {
             }
         })
 
-    const {isLoading:loadingFavAlbums, isFetching:fetchingFavAlbums} = useQuery<Album[]>(["albums"], 
+    const {isLoading:loadingFavAlbums, isFetching:fetchingFavAlbums} = useQuery<Album[]>(["albums-fav"], 
         () => fetchFavoritedAlbums(), 
         {
             enabled: Boolean(config?.userFavourites),
@@ -63,14 +63,14 @@ export const useGallery = (config : {
         fetchNextPage,
         hasNextPage,
     } = useInfiniteQuery<Page>({
-        enabled: Boolean(selectedAlbum)&&Boolean(config?.authorName),
+        enabled: Boolean(selectedAlbum)&&(Boolean(config?.authorName)||Boolean(config?.userFavourites)),
         queryKey: [`album-${selectedAlbum?.code??""}-photos`],
         queryFn: async ({ pageParam = currentPage }) => {
             if(!selectedAlbum) return {data:[], page:pageParam}
             setLoadingPhotos(true)
             const resp = await fetchAlbumPhotos(
                 selectedAlbum,
-                config?.authorName??"",
+                config?.authorName ? config.authorName : selectedAlbum.author,
                 config.provider,
                 pageParam,
                 30
@@ -93,7 +93,6 @@ export const useGallery = (config : {
         }
     });
 
-    
     useEffect(() => {
         if(loadingAlbums || fetchingAlbums || loadingFavAlbums || fetchingFavAlbums) {
             setLoadingAlbums(true)
