@@ -11,3 +11,8 @@ export type Album = {
     size : number,
     favorited ?: boolean;
 }
+
+export type FavouriteAlbum = {
+    album : Album,
+    except: string[] | null
+}

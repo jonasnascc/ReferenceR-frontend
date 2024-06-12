@@ -1,5 +1,5 @@
 import axios from "../axios"
-import {Album} from "../../model/album"
+import {Album, FavouriteAlbum} from "../../model/album"
 
 export const fetchAuthorAlbums = async (author : string, provider: string) => {
     return axios.get(`author/${author}/albums`, {
@@ -8,7 +8,7 @@ export const fetchAuthorAlbums = async (author : string, provider: string) => {
     }).then((response) => response.data);
 }
 
-export const favoriteAlbum = async (album : Album) => {
+export const favoriteAlbum = async (album : FavouriteAlbum) => {
     return await axios.post(`albums/favorite`, album, {
         sendToken : true
     }).then((resp) => resp.data)

@@ -1,6 +1,6 @@
-import { useInfiniteQuery, useQuery } from "react-query"
-import { fetchAuthorAlbums } from "../../api/services/Album"
-import { Album } from "../../model/album"
+import { useInfiniteQuery, useMutation, useQuery, useQueryClient } from "react-query"
+import { favoriteAlbum, fetchAuthorAlbums } from "../../api/services/Album"
+import { Album, FavouriteAlbum } from "../../model/album"
 import { useEffect, useState } from "react"
 import { Deviation } from "../../model/photo"
 import { fetchAlbumPhotos } from "../../api/services/Photo"
@@ -11,6 +11,7 @@ interface Page {
   }
 
 export const useGallery = (authorName:string, provider: string) => {
+    const queryClient = useQueryClient()
 
     const [isLoadingAlbums, setLoadingAlbums] = useState(false)
     const [albums, setAlbums] = useState<Album[]>([])
@@ -18,7 +19,7 @@ export const useGallery = (authorName:string, provider: string) => {
     const [selectMode, setSelectMode] = useState(false)
     const [selectedAlbum, setSelectedAlbum] = useState<Album>()
 
-    
+    const [isSelectingAll, setSelectingAll] = useState(false)
     const [selectedPhotos, setSelectedPhotos] = useState<string[]>([])
 
     const [showingPhoto, setShowingPhoto] = useState<Deviation|null>(null)
@@ -38,6 +39,8 @@ export const useGallery = (authorName:string, provider: string) => {
             setSelectedAlbum(data[0])
         }
     })
+
+    const favouriteMutation = useMutation([`album-${selectedAlbum?.code}-favourite`], (favAlbum:FavouriteAlbum) => favoriteAlbum(favAlbum))
 
     useEffect(() => {
         if(loadingAlbums || fetchingAlbums) {
@@ -71,7 +74,6 @@ export const useGallery = (authorName:string, provider: string) => {
         },
         getNextPageParam: (lastPage:Page, pages: Page[]) => {
             if (!selectedAlbum || !lastPage.page) {
-                console.log(selectedAlbum, lastPage.page)
                 return;
             }
             const size = selectedAlbum.size;
@@ -88,7 +90,6 @@ export const useGallery = (authorName:string, provider: string) => {
     useEffect(() => {
         const extractPagesData = () : Deviation[] => {
             let finalData : Deviation[]= []
-            console.log(photosPages?.pages)
             photosPages?.pages.forEach(page => {
                 page.data.forEach(photo => {
                     finalData = [...finalData, photo]
@@ -103,6 +104,9 @@ export const useGallery = (authorName:string, provider: string) => {
         
     }, [photosPages])
 
+    useEffect(()=> {
+        console.log(isSelectingAll, selectedPhotos)
+    },[selectedPhotos])
     const handleAlbumClick = (index : number) => {
         setSelectedAlbum(() => {
             setCurrentPage(() => 1)
@@ -119,25 +123,47 @@ export const useGallery = (authorName:string, provider: string) => {
         const newState = state ? state : !selectMode;
         if(!newState) {
             setSelectedPhotos([])
+            setSelectingAll(false)
         }
         setSelectMode(newState)
     }
 
     const handleSelectPhoto = (photoCode : string) => {
-        if(selectMode) {
-            if(!selectedPhotos.includes(photoCode))
-                setSelectedPhotos((prev) => [...prev, photoCode])
-            else {
-                const filtered = selectedPhotos.filter(ph => ph !== photoCode);
-                setSelectedPhotos(filtered)
-            }
-        } else {
+        if(selectMode) changePhotoSelected(photoCode, !selectedPhotos.includes(photoCode))
+        else {
             handleViewPhoto(photoCode)
         }
     }
 
+    const changePhotoSelected = (photoCode:string, selected:boolean) => {
+        if(selected) selectPhoto(photoCode)
+        else unselectPhoto(photoCode)
+    }
+
+    const selectPhoto = (photoCode:string) => {
+        setSelectedPhotos((prev) => [...prev, photoCode])
+    }
+
+    const unselectPhoto = (photoCode:string) => {
+        const filtered = selectedPhotos.filter(ph => ph !== photoCode);
+        setSelectedPhotos(filtered)
+    }
+
     const handleAddToCollection = () => {
-        const toAdd = selectedPhotos
+        if(!selectedAlbum) return;
+        if(isSelectingAll){
+            if(selectedPhotos.length===0) 
+                favouriteMutation.mutate({album:selectedAlbum, except:null})
+            
+            else
+                favouriteMutation.mutate({album:selectedAlbum, except:selectedPhotos})
+            
+        }
+        else{
+            //favourite selected
+        }
+
+
         handleClearSelection()
 
         //add service 
@@ -145,13 +171,16 @@ export const useGallery = (authorName:string, provider: string) => {
 
     const handleClearSelection = () => {
         setSelectedPhotos([])
+        setSelectingAll(false)
     }
 
 
     const handleSelectAllPhotos = () => {
+        if(isSelectingAll){
+            setSelectedPhotos([])
+        }
         setSelectMode(true)
-        const mapped = photos.map(ph => ph.code);
-        setSelectedPhotos(mapped)
+        setSelectingAll(true)
     }
 
     const handleViewPhoto = (photoCode : string) => {
@@ -177,6 +206,7 @@ export const useGallery = (authorName:string, provider: string) => {
         photos,
         showingPhoto,
         isLoadingPhotos,
+        isSelectingAll,
         selectMode,
         currentPage,
         selectedPhotos,

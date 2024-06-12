@@ -22,6 +22,7 @@ export const GalleryPage = () => {
         handleSelectAllPhotos,
         handleClosePhotoView,
         isLoadingPhotos,
+        isSelectingAll,
         isLoadingAlbums,
         hasNextPage
     } = useGallery(authorName??"", "deviantart")
@@ -62,6 +63,7 @@ export const GalleryPage = () => {
                 photos={photos} 
                 selectedPhotos = {selectedPhotos}
                 selectMode={selectMode}
+                selectingAll={isSelectingAll}
                 onAddToCollection={handleAddToCollection}
                 onSelectPhoto={handleSelectPhoto}
                 onSelectAll={handleSelectAllPhotos}

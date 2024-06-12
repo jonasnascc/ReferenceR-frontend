@@ -10,9 +10,9 @@ type SelectedPhotosActionsProps = {
 export const SelectedPhotosActions = ({selected, onAddToCollection, onSelectAll, selectingAll=false} : SelectedPhotosActionsProps) => {
     return (
         <div>
-            <button onClick={onSelectAll} disabled={selectingAll}>Select all</button>
+            <button onClick={onSelectAll} disabled={selectingAll&&selected.length===0}>Select all</button>
             {
-                selected.length > 0 &&(
+                (selected.length > 0 || selectingAll) && (
                     <>
                     <button onClick={onAddToCollection}>Add to collection</button>
                     </>

@@ -8,10 +8,11 @@ type PhotosGridProps = {
     onSelectPhoto : (photoCode : string) => void,
     onAddToCollection: () => void,
     onSelectAll: () => void,
-    loading ?: boolean;
+    loading ?: boolean,
+    selectingAll ?: boolean,
 }
 
-export const PhotosGrid = ({photos, selectedPhotos, selectMode=false, onSelectPhoto, onAddToCollection, onSelectAll, loading} : PhotosGridProps) => {
+export const PhotosGrid = ({photos, selectedPhotos, selectMode=false, onSelectPhoto, onAddToCollection, onSelectAll, loading, selectingAll} : PhotosGridProps) => {
     if(photos.length === 0) return null
     else if(loading) return (<p>loading...</p>)
     return(
@@ -20,7 +21,7 @@ export const PhotosGrid = ({photos, selectedPhotos, selectMode=false, onSelectPh
                 selected={selectedPhotos}
                 onAddToCollection={onAddToCollection}
                 onSelectAll={onSelectAll}
-                selectingAll={photos.length === selectedPhotos.length}
+                selectingAll={selectingAll}
             />
             <div
                 style={{
@@ -37,7 +38,7 @@ export const PhotosGrid = ({photos, selectedPhotos, selectMode=false, onSelectPh
                             height:"250px",
                             width: "auto",
                             objectFit: "cover",
-                            border: selectedPhotos.includes(photo.code) ? "solid 3px red" : "none",
+                            border: (!selectingAll&&selectedPhotos.includes(photo.code)) || (selectingAll&&!selectedPhotos.includes(photo.code)) ? "solid 3px red" : "none",
                             cursor: "pointer"
                         }}
                         onClick={() => onSelectPhoto(photo.code)}
