@@ -15,7 +15,7 @@ export const UserCollectionsPage = () => {
                 <div key={index}>
                     {/* <img src={alb.thumbnail.url} alt={alb.thumbnail.title} style={{width: "auto", height: "200px"}}/> */}
                     <h2>{alb.name}</h2>
-                    <p>{alb.author}</p>
+                    <a href={`/author/${alb.author}/gallery?album=${alb.code}`}>{alb.author}</a>
                     <p>{`${alb.size} photos`}</p>
                     <hr/>
                 </div>

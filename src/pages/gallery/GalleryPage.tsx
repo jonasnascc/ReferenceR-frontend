@@ -1,4 +1,4 @@
-import { useNavigate, useParams } from "react-router-dom"
+import { useNavigate, useParams, useSearchParams } from "react-router-dom"
 import { useGallery } from "../../shared/hooks/useGallery";
 import { PhotosGrid } from "./components/photosGrid/PhotosGrid";
 import { PhotoView } from "./components/photoView/PhotoView";

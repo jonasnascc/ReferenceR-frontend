@@ -4,6 +4,7 @@ import { Album, FavouriteAlbum } from "../../model/album"
 import { useEffect, useState } from "react"
 import { Deviation } from "../../model/photo"
 import { fetchAlbumPhotos } from "../../api/services/Photo"
+import { useSearchParams } from "react-router-dom"
 
 interface Page {
     data: Deviation[];
@@ -11,7 +12,7 @@ interface Page {
   }
 
 export const useGallery = (authorName:string, provider: string) => {
-    const queryClient = useQueryClient()
+    const [searchParams, setSearchParams] = useSearchParams()
 
     const [isLoadingAlbums, setLoadingAlbums] = useState(false)
     const [albums, setAlbums] = useState<Album[]>([])
@@ -30,13 +31,18 @@ export const useGallery = (authorName:string, provider: string) => {
 
     const [currentPage, setCurrentPage] = useState(1)
 
-
     const {isLoading:loadingAlbums, isFetching:fetchingAlbums} = useQuery<Album[]>(["albums"], () => fetchAuthorAlbums(authorName, provider), {
         refetchOnWindowFocus: false,
         retry: 3,
         onSuccess: (data) => {
             setAlbums(data)
-            setSelectedAlbum(data[0])
+            const paramAlb = searchParams.get("album")
+            if(paramAlb) {
+                const alb = findAlbumByCode(paramAlb, data)
+                if(alb) setSelectedAlbum(alb)
+                else setSelectedAlbum(data[0])
+            }
+            else setSelectedAlbum(data[0])
         }
     })
 
@@ -107,16 +113,31 @@ export const useGallery = (authorName:string, provider: string) => {
     useEffect(()=> {
         console.log(isSelectingAll, selectedPhotos)
     },[selectedPhotos])
+
     const handleAlbumClick = (index : number) => {
         setSelectedAlbum(() => {
             setCurrentPage(() => 1)
             return albums[index]
         })
+        setParam("album", albums[index].code)
+    }
+
+    const setParam = (prop:string, value:string) => {
+        const newSearchParams = new URLSearchParams(searchParams);
+        newSearchParams.set(prop, value)
+        setSearchParams(newSearchParams);
     }
 
     const getAlbumByIndex = (index:number) => {
         if(albums) return albums[index]
         else return null;
+    }
+
+    const  findAlbumByCode = (code : string, albumsArray:Album[]) => {
+        const result = albumsArray.filter(alb => alb.code.trim() === code.trim())
+        if(result.length>0) {
+            return result[0]
+        }
     }
 
     const handleSelectMode = (state ?: boolean) => {
