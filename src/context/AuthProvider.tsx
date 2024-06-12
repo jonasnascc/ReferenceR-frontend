@@ -4,7 +4,7 @@ import { AuthContext } from "./AuthContext";
 import { useAuth } from "../api/useAuth";
 
 export const AuthProvider = ({children} : {children : JSX.Element}) => {
-    const [authenticated, setAuthenticated] = useState(false);
+    const [authenticated, setAuthenticated] = useState<boolean>();
     const [user, setUser] = useState<User | null>(null);
     const api = useAuth();
 
@@ -16,6 +16,7 @@ export const AuthProvider = ({children} : {children : JSX.Element}) => {
                 if(await validateToken(token)) {
                     setAuthenticated(true);
                 }
+                else setAuthenticated(false)
             }
         }
         validate();
