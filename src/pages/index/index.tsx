@@ -48,7 +48,7 @@ export const HomePage = () => {
                     onChange={handleSearchChange}
                     value={search}
                 />
-                <button type="submit" onClick={handleSearch}>Search</button>
+                <button type="submit" onClick={handleSearch} disabled={loading}>Search</button>
                 <br/>
                 {
                     notFoundMsg&&(<span>Author not found</span>)

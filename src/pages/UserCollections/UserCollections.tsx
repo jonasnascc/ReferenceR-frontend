@@ -4,9 +4,11 @@ import { fetchFavoritedAlbums } from "../../api/services/Album";
 import { Album } from "../../model/album";
 
 export const UserCollectionsPage = () => {
-    const req = useQuery<Album[]>(["user-collections"], () => fetchFavoritedAlbums())
+    const req = useQuery<Album[]>(["user-collections"], 
+        () => fetchFavoritedAlbums())
 
     const albums = req?.data??[]
+
     return (
         <>
         <h1>User Collections</h1>

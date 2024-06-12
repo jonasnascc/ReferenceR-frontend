@@ -25,7 +25,7 @@ export const GalleryPage = () => {
         isSelectingAll,
         isLoadingAlbums,
         hasNextPage
-    } = useGallery(authorName??"", "deviantart")
+    } = useGallery({authorName:authorName??"", provider:"deviantart"})
 
     if(!authorName) {
         navigate("/");

@@ -1,17 +1,21 @@
-import { useInfiniteQuery, useMutation, useQuery, useQueryClient } from "react-query"
-import { favoriteAlbum, fetchAuthorAlbums } from "../../api/services/Album"
+import { useInfiniteQuery, useMutation, useQuery } from "react-query"
+import { favoriteAlbum, fetchAuthorAlbums, fetchFavoritedAlbums } from "../../api/services/Album"
 import { Album, FavouriteAlbum } from "../../model/album"
 import { useEffect, useState } from "react"
 import { Deviation } from "../../model/photo"
 import { fetchAlbumPhotos } from "../../api/services/Photo"
 import { useSearchParams } from "react-router-dom"
 
-interface Page {
+export interface Page {
     data: Deviation[];
     page?: number;
   }
 
-export const useGallery = (authorName:string, provider: string) => {
+export const useGallery = (config : {
+    authorName?: string,
+    provider : string,
+    userFavourites ?: boolean
+}) => {
     const [searchParams, setSearchParams] = useSearchParams()
 
     const [isLoadingAlbums, setLoadingAlbums] = useState(false)
@@ -25,53 +29,49 @@ export const useGallery = (authorName:string, provider: string) => {
 
     const [showingPhoto, setShowingPhoto] = useState<Deviation|null>(null)
 
-
     const [isLoadingPhotos, setLoadingPhotos] = useState(false)
     const [photos, setPhotos] = useState<Deviation[]>([])
 
     const [currentPage, setCurrentPage] = useState(1)
 
-    const {isLoading:loadingAlbums, isFetching:fetchingAlbums} = useQuery<Album[]>(["albums"], () => fetchAuthorAlbums(authorName, provider), {
-        refetchOnWindowFocus: false,
-        retry: 3,
-        onSuccess: (data) => {
-            setAlbums(data)
-            const paramAlb = searchParams.get("album")
-            if(paramAlb) {
-                const alb = findAlbumByCode(paramAlb, data)
-                if(alb) setSelectedAlbum(alb)
-                else setSelectedAlbum(data[0])
+    const {isLoading:loadingAlbums, isFetching:fetchingAlbums} = useQuery<Album[]>(["albums"], 
+        () => fetchAuthorAlbums(config?.authorName??"", config.provider), 
+        {
+            enabled: Boolean(config?.authorName) && !Boolean(config.userFavourites),
+            refetchOnWindowFocus: false,
+            retry: 3,
+            onSuccess: (data) => {
+                handleSetAlbums(data)
             }
-            else setSelectedAlbum(data[0])
-        }
-    })
+        })
+
+    const {isLoading:loadingFavAlbums, isFetching:fetchingFavAlbums} = useQuery<Album[]>(["albums"], 
+        () => fetchFavoritedAlbums(), 
+        {
+            enabled: Boolean(config?.userFavourites),
+            refetchOnWindowFocus: false,
+            retry: 3,
+            onSuccess: (data) => {
+                handleSetAlbums(data)
+            }
+        })
 
     const favouriteMutation = useMutation([`album-${selectedAlbum?.code}-favourite`], (favAlbum:FavouriteAlbum) => favoriteAlbum(favAlbum))
-
-    useEffect(() => {
-        if(loadingAlbums || fetchingAlbums) {
-            setLoadingAlbums(true)
-        }
-        else if(!loadingAlbums && !fetchingAlbums)
-            setLoadingAlbums(false)
-    }, [loadingAlbums, fetchingAlbums])
-
-
 
     const {
         data:photosPages,
         fetchNextPage,
         hasNextPage,
     } = useInfiniteQuery<Page>({
-        enabled: Boolean(selectedAlbum),
+        enabled: Boolean(selectedAlbum)&&Boolean(config?.authorName),
         queryKey: [`album-${selectedAlbum?.code??""}-photos`],
         queryFn: async ({ pageParam = currentPage }) => {
             if(!selectedAlbum) return {data:[], page:pageParam}
             setLoadingPhotos(true)
             const resp = await fetchAlbumPhotos(
                 selectedAlbum,
-                authorName,
-                provider,
+                config?.authorName??"",
+                config.provider,
                 pageParam,
                 30
             )
@@ -93,6 +93,15 @@ export const useGallery = (authorName:string, provider: string) => {
         }
     });
 
+    
+    useEffect(() => {
+        if(loadingAlbums || fetchingAlbums || loadingFavAlbums || fetchingFavAlbums) {
+            setLoadingAlbums(true)
+        }
+        else if(!loadingAlbums && !fetchingAlbums && !loadingFavAlbums && !fetchingFavAlbums)
+            setLoadingAlbums(false)
+    }, [loadingAlbums, fetchingAlbums, loadingFavAlbums, fetchingFavAlbums])
+
     useEffect(() => {
         const extractPagesData = () : Deviation[] => {
             let finalData : Deviation[]= []
@@ -110,9 +119,20 @@ export const useGallery = (authorName:string, provider: string) => {
         
     }, [photosPages])
 
-    useEffect(()=> {
-        console.log(isSelectingAll, selectedPhotos)
-    },[selectedPhotos])
+    // useEffect(()=> {
+    //     console.log(isSelectingAll, selectedPhotos)
+    // },[isSelectingAll, selectedPhotos])
+
+    const handleSetAlbums = (data:Album[]) => {
+        setAlbums(data)
+        const paramAlb = searchParams.get("album")
+        if(paramAlb) {
+            const alb = findAlbumByCode(paramAlb, data)
+            if(alb) setSelectedAlbum(alb)
+            else setSelectedAlbum(data[0])
+        }
+        else setSelectedAlbum(data[0])
+    }
 
     const handleAlbumClick = (index : number) => {
         setSelectedAlbum(() => {
