@@ -54,7 +54,8 @@ export const useGallery = (authorName:string, provider: string) => {
         fetchNextPage,
         hasNextPage,
     } = useInfiniteQuery<Page>({
-        queryKey: [`album-${selectedAlbum?.code??""}-photos[${currentPage}]`],
+        enabled: Boolean(selectedAlbum),
+        queryKey: [`album-${selectedAlbum?.code??""}-photos`],
         queryFn: async ({ pageParam = currentPage }) => {
             if(!selectedAlbum) return {data:[], page:pageParam}
             setLoadingPhotos(true)
@@ -68,9 +69,9 @@ export const useGallery = (authorName:string, provider: string) => {
             setLoadingPhotos(false)
             return {data:resp, page:pageParam}
         },
-        getNextPageParam: (lastPage:Page) => {
+        getNextPageParam: (lastPage:Page, pages: Page[]) => {
             if (!selectedAlbum || !lastPage.page) {
-                console.log(selectedAlbum, lastPage); 
+                console.log(selectedAlbum, lastPage.page)
                 return;
             }
             const size = selectedAlbum.size;
@@ -87,6 +88,7 @@ export const useGallery = (authorName:string, provider: string) => {
     useEffect(() => {
         const extractPagesData = () : Deviation[] => {
             let finalData : Deviation[]= []
+            console.log(photosPages?.pages)
             photosPages?.pages.forEach(page => {
                 page.data.forEach(photo => {
                     finalData = [...finalData, photo]
@@ -96,7 +98,7 @@ export const useGallery = (authorName:string, provider: string) => {
         }
 
         if(photosPages&&photosPages.pages.length > 0) {
-            setPhotos(extractPagesData)
+            setPhotos(extractPagesData())
         }
         
     }, [photosPages])
