@@ -57,6 +57,7 @@ export const HomePage = () => {
             <br/>
             {loading&&(<p>Loading...</p>)}
             {profile&&!notFoundMsg&&!loading&&<div>
+                <img src={profile.iconUrl} alt={profile.userTagline} width="120px" height="auto"/>
                 <h2>@{profile.userName}</h2> 
                 <h4>{profile.userTagline}</h4>
                 <p>{`deviations: ${profile.deviations}`}</p>

@@ -32,6 +32,7 @@ export const GalleryPage = () => {
     }
     else return (
         <div>
+            <button onClick={() => navigate("/")}>Back to search</button>
             <h1>{authorName}'s gallery</h1>
             {
                 isLoadingAlbums ? (
