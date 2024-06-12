@@ -54,10 +54,10 @@ export const useGallery = (authorName:string, provider: string) => {
         fetchNextPage,
         hasNextPage,
     } = useInfiniteQuery<Page>({
-        enabled:Boolean(selectedAlbum),
-        queryKey: [`data`],
+        queryKey: [`album-${selectedAlbum?.code??""}-photos[${currentPage}]`],
         queryFn: async ({ pageParam = currentPage }) => {
             if(!selectedAlbum) return {data:[], page:pageParam}
+            setLoadingPhotos(true)
             const resp = await fetchAlbumPhotos(
                 selectedAlbum,
                 authorName,
@@ -65,10 +65,10 @@ export const useGallery = (authorName:string, provider: string) => {
                 pageParam,
                 30
             )
-
+            setLoadingPhotos(false)
             return {data:resp, page:pageParam}
         },
-        getNextPageParam: (lastPage:Page, pages:Page[]) => {
+        getNextPageParam: (lastPage:Page) => {
             if (!selectedAlbum || !lastPage.page) {
                 console.log(selectedAlbum, lastPage); 
                 return;
@@ -102,8 +102,10 @@ export const useGallery = (authorName:string, provider: string) => {
     }, [photosPages])
 
     const handleAlbumClick = (index : number) => {
-        setSelectedAlbum(albums[index])
-        setCurrentPage(1)
+        setSelectedAlbum(() => {
+            setCurrentPage(() => 1)
+            return albums[index]
+        })
     }
 
     const getAlbumByIndex = (index:number) => {

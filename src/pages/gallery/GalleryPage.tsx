@@ -64,7 +64,6 @@ export const GalleryPage = () => {
                 onAddToCollection={handleAddToCollection}
                 onSelectPhoto={handleSelectPhoto}
                 onSelectAll={handleSelectAllPhotos}
-                loading={isLoadingPhotos}
             />
             {
                 showingPhoto!==null&&(
