@@ -1,7 +1,7 @@
 import { Backdrop, Slide } from "@mui/material";
 import { TransitionProps } from "@mui/material/transitions";
 import React from "react";
-import { SimplePhoto } from "../../../../model/photo";
+import { Deviation, SimplePhoto } from "../../../../model/photo";
 import { ContentArea } from "./styles";
 
 const Transition = React.forwardRef(function Transition(
@@ -14,12 +14,13 @@ const Transition = React.forwardRef(function Transition(
   });
 type PhotoViewProps = {
     open ?: boolean,
-    photo : SimplePhoto,
+    currentPhoto: Deviation,
     onClose : () => void
 }
 
-export const PhotoView = ({open=false, photo, onClose} : PhotoViewProps) => {
+export const PhotoView = ({open=false, currentPhoto, onClose} : PhotoViewProps) => {
 
+    console.log(currentPhoto)
     return(
         <>
         <Backdrop
@@ -33,8 +34,8 @@ export const PhotoView = ({open=false, photo, onClose} : PhotoViewProps) => {
         >
           <ContentArea onClick={(event)=>{event.stopPropagation()}}>
             <img
-              src={photo.url}
-              alt={photo.title}
+              src={currentPhoto.url}
+              alt={currentPhoto.title}
               
               style={{
                 objectFit: "contain",
@@ -47,6 +48,18 @@ export const PhotoView = ({open=false, photo, onClose} : PhotoViewProps) => {
               top:0,
               right:0
             }}>close</button>
+            <div style={{
+              position:"absolute",
+              width: "100%",
+              display: "flex",
+              justifyContent: "center",
+              flexDirection: "row",
+              bottom:"50px"
+            }}>
+              <button>save to collection</button>
+              <button>previous</button>
+              <button>next</button>
+            </div>
           </ContentArea>
         </Backdrop>
         </>

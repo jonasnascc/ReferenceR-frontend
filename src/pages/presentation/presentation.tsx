@@ -22,7 +22,8 @@ export const PresentationPage = () => {
     const {
         currentPhoto,
         handleNextPhoto,
-        handlePreviousPhoto
+        handlePreviousPhoto,
+        hasNextPhoto
     } = usePresentation(stateAlbums)
 
 
@@ -32,8 +33,8 @@ export const PresentationPage = () => {
     }
     return(<>
         <div>
-            <button onClick={handlePreviousPhoto}>previous</button>
-            <button onClick={handleNextPhoto}>next</button>
+            <button onClick={handlePreviousPhoto} >previous</button>
+            <button onClick={handleNextPhoto} >next</button>
         </div>
         {
             currentPhoto&&(

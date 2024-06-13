@@ -4,14 +4,23 @@ import { fetchAlbumPhotos } from "../../../api/services/Photo"
 import { Deviation } from "../../../model/photo"
 import { useEffect, useState } from "react"
 
+type PresentationPhoto= {
+    photo: Deviation | null,
+    albumCode:string,
+    albumAuthor:string,
+    page: number
+}
 interface Page {
-    data: Deviation[],
+    data: PresentationPhoto,
     page ?: number
 }
 
-export const usePresentation = (albums : Album[]) => {
-    const [currentPage, setCurrentPage] = useState(1)
+export const usePresentation = (albums ?: Album[]) => {
+
+    const [currentPage, setCurrentPage] = useState(0)
     const [currentPhoto, setCurrentPhoto] = useState<Deviation|null>(null)
+
+    const [photos, setPhotos] = useState<PresentationPhoto[]>([])
     const [uniqueKey] = useState(Date.now())
     
 
@@ -20,15 +29,25 @@ export const usePresentation = (albums : Album[]) => {
     }
 
     const getRandomPage = () => {
+        if(!albums) return;
         const sizes = albums.map(alb => alb.size);
         const sizesSum = sizes.reduce((previousValue: number, currentValue: number) => previousValue + currentValue, 0);
         return getRandomNumberInRange(1, sizesSum - 1)
     }
 
-    const fetchRandomPhotoFn = async ({pageParam = currentPage}) => {
+    const fetchRandomPhotoFn = async ({pageParam = currentPage+1}) : Promise<Page> => {
         let selAlbum: Album | undefined;
         let cumulativeSize = 0;
     
+        const emptyResp = { data: {
+            photo : null,
+            albumCode: "",
+            albumAuthor:"",
+            page : pageParam
+        }, page: pageParam };
+
+        if(!albums) return emptyResp
+
         for (let album of albums) {
             cumulativeSize += album.size;
             if (pageParam < cumulativeSize) {
@@ -36,8 +55,7 @@ export const usePresentation = (albums : Album[]) => {
                 break;
             }
         }
-        if (!selAlbum) return { data: [], page: pageParam };
-
+        if (!selAlbum) return emptyResp;
     
         const resp = await fetchAlbumPhotos(
             selAlbum,
@@ -47,90 +65,69 @@ export const usePresentation = (albums : Album[]) => {
             1
         );
     
-        return { data: resp, page: pageParam };
+        return { data: {
+            photo : resp[0]??null,
+            albumCode: selAlbum.code,
+            albumAuthor: selAlbum.author,
+            page : pageParam
+        }, page: pageParam };
     }
 
     const {
-        data,
+        data:infPages,
         hasNextPage:hasNextPhoto,
-        hasPreviousPage:hasPreviousPhoto,
         fetchNextPage:fetchNextPhoto,
         fetchPreviousPage:fetchPreviousPhoto,
 
     } = useInfiniteQuery<Page>({
-        enabled: albums.length > 0,
+        enabled: albums&&albums.length > 0,
         queryKey: [`presentation-${uniqueKey}`],
         queryFn: fetchRandomPhotoFn,
-        getNextPageParam: (lastPage: Page, pages:Page[]) => {
-            const filtered = pages.filter(pg => pg.page === currentPage)
-            if(filtered.length===0)
-                return currentPage
-            else
-                return filtered[0].page
-
-        },
-        getPreviousPageParam: (lastPage:Page, pages:Page[]) => {
-            return lastPage?.page
+        getNextPageParam: () => {
+            return getRandomPage();
         }
     })
 
     useEffect(() => {
-        if(data?.pages){
-            if(data.pages.length>0){
-                const page = data.pages.filter(pg => pg.page === currentPage)
-                if(page.length > 0){
-                    setCurrentPhoto(page[0]?.data[0]??null)
-                }
-            }
-        }
-        console.log(data)
-    }, [currentPage, data])
+        if(!albums) return;
+        const pgs = infPages?.pages
+        if(!pgs) return;
+
+        const mappedData = pgs.map(pg => pg.data);
+        setPhotos(mappedData)
+    }, [albums, infPages])
+
+    useEffect(() => {
+        if(albums) setCurrentPhoto(photos[currentPage]?.photo??null)
+    }, [photos, currentPage, albums])
+
 
     const handleNextPhoto = () => {
-        const pages = data?.pages
-        if(!pages) return;
-
-        if(pages[pages.length -1].page === currentPage) {
-            const randomPage = getRandomPage()
-            setCurrentPage(() => randomPage)
-            fetchNextPhoto({pageParam : randomPage})
-        }else{
-            const currentPgIndx = getCurrentPhotoPgIndex()
-            const nextPage = pages[currentPgIndx + 1]?.page;
-            if(!nextPage) return;
-            setCurrentPage(() => nextPage)
-            fetchNextPhoto({pageParam: nextPage})
-        }
+        fetchNextPhoto()
+        setCurrentPage((current) => current+1)
     }
 
     const handlePreviousPhoto = () => {
-        const pages = data?.pages
-        if(!pages) return;
-
-        const currentPgIdx = getCurrentPhotoPgIndex()
-        if(currentPgIdx - 1 < 0) return;
-
-        const prevPage = pages[currentPgIdx - 1]?.page;
-        if(!prevPage) return;
-
-        setCurrentPage(() => prevPage)
+        if(photos.length <= 1) return; 
         fetchPreviousPhoto()
+        setCurrentPage((current) => current-1)
     }
 
-    const getCurrentPhotoPgIndex = () => {
-        const pages = data?.pages
-        if(!pages) return -1;
-
-        const pgs = pages.map(pg => pg.page)
-
-        return pgs.indexOf(currentPage)
+    const setPresentationPhoto = (photoCode : string|null) => {
+        if(!photoCode) setCurrentPhoto(null)
+        const result = photos.filter(ph => ph.photo?.code===photoCode)
+        if(result.length===0) return;
+        setCurrentPhoto(result[0].photo)
     }
 
     return {
         currentPhoto,
+        photos,
+        setPhotos,
+        setPresentationPhoto,
         handleNextPhoto,
         handlePreviousPhoto,
-        hasNextPhoto,
+        hasNextPhoto
     }
 
 }

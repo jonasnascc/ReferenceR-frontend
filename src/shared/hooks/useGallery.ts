@@ -113,7 +113,6 @@ export const useGallery = (config : {
         if(photosPages&&photosPages.pages.length > 0) {
             setPhotos(extractPagesData())
         }
-        console.log(photosPages)
     }, [photosPages])
 
     // useEffect(()=> {
