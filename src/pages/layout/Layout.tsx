@@ -18,6 +18,7 @@ export const Layout = () => {
     return(
         <>
         <div>
+            <button onClick={() => navigate("/")}>Home</button>
             <RequireNoAuth>
                 <button onClick={() => navigate("/login")}>Login</button>
             </RequireNoAuth>

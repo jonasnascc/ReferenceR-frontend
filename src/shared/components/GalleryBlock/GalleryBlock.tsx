@@ -1,7 +1,9 @@
-import { useParams, useNavigate } from "react-router-dom";
+/* eslint-disable jsx-a11y/anchor-is-valid */
+import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { PhotoView } from "../../../pages/gallery/components/photoView/PhotoView";
 import { PhotosGrid } from "../../../pages/gallery/components/photosGrid/PhotosGrid";
 import { useGallery } from "../../hooks/useGallery";
+import { RequireAuth } from "../../../context/RequireAuth";
 
 type GalleryBlockProps = {
     userFavs ?: boolean
@@ -10,6 +12,7 @@ type GalleryBlockProps = {
 export const GalleryBlock = ({userFavs} : GalleryBlockProps) => {
     const {authorName} = useParams()
     const navigate = useNavigate();
+    const location = useLocation()
     
     const {
         albums,
@@ -40,7 +43,6 @@ export const GalleryBlock = ({userFavs} : GalleryBlockProps) => {
     }
     return (
         <div>
-            <button onClick={() => navigate("/")}>Back to search</button>
             {
                 authorName&&(<h1>{authorName}'s gallery</h1>)
             }
@@ -48,15 +50,17 @@ export const GalleryBlock = ({userFavs} : GalleryBlockProps) => {
                 isLoadingAlbums ? (
                     <p>Loading...</p>
                 ) : (
-                    <ol>
+                    <ul>
                         {albums&&albums.map((album, index) => (
-                            // eslint-disable-next-line jsx-a11y/anchor-is-valid
-                            <li key={index}><a href="#" onClick={() => handleAlbumClick(index)}>
-                                    {`${album.name}${userFavs ? " - " + album.author : ""}`}
-                                </a>
+                            <li key={index}>
+                                <div>
+                                    <a href="#" onClick={() => handleAlbumClick(index)}>
+                                        {`${album.name}${userFavs ? " - " + album.author : ""}`}
+                                    </a>
+                                </div>
                             </li>
                         ))}
-                    </ol>
+                    </ul>
                 )
             }
             <hr/>
@@ -70,7 +74,20 @@ export const GalleryBlock = ({userFavs} : GalleryBlockProps) => {
                         }
                         <h2>{alb.name}</h2>
                         <p>{`${alb.size} photos`}</p>
-                        {photos.length > 0 && <button onClick={() => handleSelectMode()}>{`${selectMode ? "Clear selection" : "Select"}`}</button>}
+                        <button onClick={() => navigate(location.pathname + "/presentation", {state:{albums:[alb]}, replace:true})}>Start presentation</button>
+                        <br/>
+                        <RequireAuth>
+                            {
+                            userFavs&&(
+                                <>
+                                <button>Delete from collection</button>
+                                <br/><br/>
+                                </>
+                            )
+                            }
+                            {photos.length > 0 && <button onClick={() => handleSelectMode()}>{`${selectMode ? "Clear selection" : "Select"}`}</button>}
+                        </RequireAuth>
+                        
                         <hr/>
                     </div>
                 ))

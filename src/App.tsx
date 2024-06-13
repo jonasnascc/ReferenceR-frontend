@@ -10,6 +10,7 @@ import { GalleryPage } from './pages/gallery/GalleryPage';
 import { Layout } from './pages/layout/Layout';
 import { RequireAuth } from './context/RequireAuth';
 import { RequireNoAuth } from './context/RequireNoAuth';
+import { PresentationPage } from './pages/presentation/presentation';
 
 
 function App() {
@@ -23,9 +24,12 @@ function App() {
           <Route index element={<AuthorPage/>}/>
           <Route path='gallery' element={<GalleryPage/>}/>
         </Route>
-        <Route path='/user/:userId' element={<Layout/>}>
+        <Route path='/user' element={<Layout/>}>
           <Route index element={<UserProfilePage/>}/>
-          <Route path='collections' element={<UserCollectionsPage/>}/>
+          <Route path='collections'>
+            <Route index  element={<UserCollectionsPage/>}/>
+            <Route path='presentation' element={<PresentationPage/>}/>
+          </Route>
         </Route>
         <Route path='/login' element={<RequireNoAuth redirect='/'><LoginPage/></RequireNoAuth>}/>
         <Route path='/user' element={<RequireAuth redirect='/login'><Layout/></RequireAuth>}>

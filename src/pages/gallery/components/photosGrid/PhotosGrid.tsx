@@ -1,3 +1,4 @@
+import { RequireAuth } from "../../../../context/RequireAuth";
 import { Deviation } from "../../../../model/photo";
 import { SelectedPhotosActions } from "../selectedPhotosActions/SelectedPhotosActions";
 
@@ -17,12 +18,14 @@ export const PhotosGrid = ({photos, selectedPhotos, selectMode=false, onSelectPh
     else if(loading) return (<p>loading...</p>)
     return(
         <div>
-            <SelectedPhotosActions 
-                selected={selectedPhotos}
-                onAddToCollection={onAddToCollection}
-                onSelectAll={onSelectAll}
-                selectingAll={selectingAll}
-            />
+            <RequireAuth>
+                <SelectedPhotosActions 
+                    selected={selectedPhotos}
+                    onAddToCollection={onAddToCollection}
+                    onSelectAll={onSelectAll}
+                    selectingAll={selectingAll}
+                />
+            </RequireAuth>
             <div
                 style={{
                     display:"flex",
