@@ -1,6 +1,6 @@
-import { Backdrop, Slide } from "@mui/material";
+import { Backdrop, CircularProgress, Slide } from "@mui/material";
 import { TransitionProps } from "@mui/material/transitions";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Deviation, SimplePhoto } from "../../../../model/photo";
 import { ContentArea } from "./styles";
 
@@ -21,8 +21,11 @@ type PhotoViewProps = {
 }
 
 export const PhotoView = ({open=false, currentPhoto, onClose, onNextPhoto, onPreviousPhoto} : PhotoViewProps) => {
+    const [loading, setLoading] = useState(false);
 
-    console.log(currentPhoto)
+    useEffect(() => {
+      setLoading(true)
+    }, [currentPhoto])
 
     const handleNextPhoto = () => {
       if(onNextPhoto) onNextPhoto()
@@ -31,6 +34,11 @@ export const PhotoView = ({open=false, currentPhoto, onClose, onNextPhoto, onPre
     const handlePreviousPhoto = () => {
       if(onPreviousPhoto) onPreviousPhoto()
     }
+
+    const handleLoad = () => {
+      setLoading(false)
+    }
+
     return(
         <>
         <Backdrop
@@ -43,16 +51,20 @@ export const PhotoView = ({open=false, currentPhoto, onClose, onNextPhoto, onPre
             TransitionComponent={Transition}
         >
           <ContentArea onClick={(event)=>{event.stopPropagation()}}>
+            {loading&&<CircularProgress sx={{color:"white"}}/>}
             <img
               src={currentPhoto.url}
               alt={currentPhoto.title}
+              onLoad={handleLoad}
               
               style={{
                 objectFit: "contain",
                 maxWidth: "100%",
-                maxHeight: "100%"
+                maxHeight: "100%",
+                display: loading ? "none" : ""
               }}
             />
+            
             <button onClick={onClose} style={{
               position:"absolute",
               top:0,

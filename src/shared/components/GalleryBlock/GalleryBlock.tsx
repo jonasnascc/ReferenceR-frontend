@@ -40,7 +40,6 @@ export const GalleryBlock = ({userFavs} : GalleryBlockProps) => {
         currentPhoto, 
         setPresentationPhoto,
         setPhotos : setPstnPhotos,
-        photos:pstnPhotos,
         handleNextPhoto,
         handlePreviousPhoto
     } = usePresentation()
