@@ -17,7 +17,7 @@ interface Page {
 
 export const usePresentation = (albums ?: Album[]) => {
 
-    const [currentPage, setCurrentPage] = useState(0)
+    const [currentPage, setCurrentPage] = useState(albums ? 0 : -1)
     const [currentPhoto, setCurrentPhoto] = useState<Deviation|null>(null)
 
     const [photos, setPhotos] = useState<PresentationPhoto[]>([])
@@ -98,19 +98,30 @@ export const usePresentation = (albums ?: Album[]) => {
     }, [albums, infPages])
 
     useEffect(() => {
-        if(albums) setCurrentPhoto(photos[currentPage]?.photo??null)
+        if(currentPage!==-1) setCurrentPhoto(photos[currentPage]?.photo??null)
     }, [photos, currentPage, albums])
 
 
     const handleNextPhoto = () => {
-        fetchNextPhoto()
-        setCurrentPage((current) => current+1)
+        if(albums) {
+            fetchNextPhoto()
+            setCurrentPage((current) => current+1)
+        }
+        else if(currentPage < photos.length-1)
+            setCurrentPage((current) => current+1)
+            
+    
     }
 
     const handlePreviousPhoto = () => {
-        if(photos.length <= 1) return; 
-        fetchPreviousPhoto()
-        setCurrentPage((current) => current-1)
+        if(albums) {
+            if(photos.length <= 1) return; 
+            fetchPreviousPhoto()
+            setCurrentPage((current) => current-1)
+        }
+        else if(currentPage >= 1){
+            setCurrentPage((current) => current-1)
+        }
     }
 
     const setPresentationPhoto = (photoCode : string|null) => {

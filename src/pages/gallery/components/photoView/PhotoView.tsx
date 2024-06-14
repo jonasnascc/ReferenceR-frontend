@@ -15,12 +15,22 @@ const Transition = React.forwardRef(function Transition(
 type PhotoViewProps = {
     open ?: boolean,
     currentPhoto: Deviation,
-    onClose : () => void
+    onClose : () => void,
+    onNextPhoto?:() => void,
+    onPreviousPhoto?:() => void
 }
 
-export const PhotoView = ({open=false, currentPhoto, onClose} : PhotoViewProps) => {
+export const PhotoView = ({open=false, currentPhoto, onClose, onNextPhoto, onPreviousPhoto} : PhotoViewProps) => {
 
     console.log(currentPhoto)
+
+    const handleNextPhoto = () => {
+      if(onNextPhoto) onNextPhoto()
+    }
+
+    const handlePreviousPhoto = () => {
+      if(onPreviousPhoto) onPreviousPhoto()
+    }
     return(
         <>
         <Backdrop
@@ -57,8 +67,8 @@ export const PhotoView = ({open=false, currentPhoto, onClose} : PhotoViewProps) 
               bottom:"50px"
             }}>
               <button>save to collection</button>
-              <button>previous</button>
-              <button>next</button>
+              <button onClick={handlePreviousPhoto}>previous</button>
+              <button onClick={handleNextPhoto}>next</button>
             </div>
           </ContentArea>
         </Backdrop>

@@ -7,6 +7,7 @@ export type Deviation = {
     mature: boolean,
     type: string,
     matureLevel: string | null,
+    publishedTime : Date,
     photoPage: string,
     license: string,
     tags : {name:string, url:string} [],

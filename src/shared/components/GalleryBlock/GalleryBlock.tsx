@@ -19,7 +19,6 @@ export const GalleryBlock = ({userFavs} : GalleryBlockProps) => {
     const {
         albums,
         photos,
-        showingPhoto,
         selectedAlbum,
         selectMode,
         selectedPhotos,
@@ -27,7 +26,6 @@ export const GalleryBlock = ({userFavs} : GalleryBlockProps) => {
         handleLoadMorePhotos,
         handleSelectMode,
         handleAddToCollection,
-        handleSelectPhoto,
         handleSelectAllPhotos,
         isSelectingAll,
         isLoadingAlbums,
@@ -42,7 +40,9 @@ export const GalleryBlock = ({userFavs} : GalleryBlockProps) => {
         currentPhoto, 
         setPresentationPhoto,
         setPhotos : setPstnPhotos,
-        photos:pstnPhotos
+        photos:pstnPhotos,
+        handleNextPhoto,
+        handlePreviousPhoto
     } = usePresentation()
 
     useEffect(() => {
@@ -138,6 +138,8 @@ export const GalleryBlock = ({userFavs} : GalleryBlockProps) => {
                         open={true}
                         onClose={handleClosePhotoView}
                         currentPhoto={currentPhoto}
+                        onNextPhoto={handleNextPhoto}
+                        onPreviousPhoto={handlePreviousPhoto}
                     />
                 )
             }
