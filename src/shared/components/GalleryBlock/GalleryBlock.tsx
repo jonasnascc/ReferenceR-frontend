@@ -23,15 +23,12 @@ export const GalleryBlock = ({userFavs} : GalleryBlockProps) => {
         albums,
         photos,
         selectedAlbum,
-        selectMode,
         selectedPhotos,
         handleAlbumClick,
         handleLoadMorePhotos,
-        handleSelectMode,
         handleAddToCollection,
         handleSelectAllPhotos,
         isSelectingAll,
-        isLoadingAlbums,
         hasNextPage
     } = useGallery({
         authorName: authorName, 

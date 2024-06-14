@@ -1,12 +1,11 @@
-import React from "react";
 import { Album } from "../../../model/album";
 import {Swiper, SwiperSlide } from "swiper/react";
 
 import "swiper/css"
 import "swiper/css/navigation"
 import "swiper/css/pagination"
-import { AlbumCarouselImage, AlbumCarouselItemDescription, AlbumCarouselSlideItem, DescriptionAlbumName, DescriptionAlbumSize } from "./styles";
 import configuration from "./config";
+import { AlbumsCarouselItem } from "./AlbumsCarouselItem";
 
 
 type AlbumsCarouselProps = {
@@ -15,7 +14,9 @@ type AlbumsCarouselProps = {
     handleAlbumSelect: (index: number) => void
 }
 
-export const AlbumsCarousel = ({albums, selectedAlbum, handleAlbumSelect} : AlbumsCarouselProps) => {
+export const AlbumsCarousel = (props : AlbumsCarouselProps) => {
+    const {albums, selectedAlbum, handleAlbumSelect} = props;
+
     return (
         <>
         <Swiper {...configuration}>
@@ -23,23 +24,11 @@ export const AlbumsCarousel = ({albums, selectedAlbum, handleAlbumSelect} : Albu
                 albums.map((alb, index) => (
                     <SwiperSlide key={index}>
                     { ({isActive}) => (
-
-                        <AlbumCarouselSlideItem 
+                        <AlbumsCarouselItem
                             selected={selectedAlbum && ((selectedAlbum.code === alb.code) && (selectedAlbum?.author === alb.author))}
-                            onClick={() => handleAlbumSelect(index)}
-                        >
-                            {alb?.thumbnail && (
-                                <AlbumCarouselImage
-                                    src={alb.thumbnail.url}
-                                    alt={`slide-item#${alb.name}`}
-                                />
-                            )}
-                            <AlbumCarouselItemDescription>
-                                <DescriptionAlbumName>{(alb.name!=="All") ? (alb.name !== "Scraps" ? alb.name : `${alb.author} - Scraps`) : alb.author}</DescriptionAlbumName>
-                                <DescriptionAlbumSize>{`${alb.size} photos`}</DescriptionAlbumSize>
-                            </AlbumCarouselItemDescription>
-                        </AlbumCarouselSlideItem>
-
+                            onSelect={() => handleAlbumSelect(index)}
+                            album={alb}
+                        />
                     )}
                     </SwiperSlide>
                 ))
