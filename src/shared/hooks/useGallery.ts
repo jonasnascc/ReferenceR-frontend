@@ -71,7 +71,7 @@ export const useGallery = (config : {
                 config?.authorName ? config.authorName : selectedAlbum.author,
                 config.provider,
                 pageParam,
-                30
+                50
             )
             setLoadingPhotos(false)
             return {data:resp, page:pageParam}
@@ -81,7 +81,7 @@ export const useGallery = (config : {
                 return;
             }
             const size = selectedAlbum.size;
-            const pagesCount = Math.ceil(size / 30);
+            const pagesCount = Math.ceil(size / 50);
             if(lastPage.page < pagesCount) {
                 return (lastPage.page + 1);
             }

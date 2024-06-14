@@ -4,7 +4,7 @@ import axios from "../axios";
 
 export const fetchAlbumPhotos = async (album: Album | null, author: string | null, provider: string, page:number, photosPerPage: number) => {
     if(album && author){
-        return await axios.get(`author/${author}/albums/${album.code}/photos?page=${page}&limit=${photosPerPage}&maxThumbSize=300`, {
+        return await axios.get(`author/${author}/albums/${album.code}/photos?page=${page}&limit=${photosPerPage}&maxThumbSize=500`, {
             sendToken : true, provider : provider}
         ).then((response) => response.data
         .sort((a:Deviation, b:Deviation) => {

@@ -6,6 +6,9 @@ import { useGallery } from "../../hooks/useGallery";
 import { RequireAuth } from "../../../context/RequireAuth";
 import { usePresentation } from "../../hooks/presentation/usePresentation";
 import { useEffect } from "react";
+import { AlbumsCarousel } from "../AlbumsCarousel/AlbumsCarousel";
+
+
 
 type GalleryBlockProps = {
     userFavs ?: boolean
@@ -76,23 +79,11 @@ export const GalleryBlock = ({userFavs} : GalleryBlockProps) => {
             {
                 authorName&&(<h1>{authorName}'s gallery</h1>)
             }
-            {
-                isLoadingAlbums ? (
-                    <p>Loading...</p>
-                ) : (
-                    <ul>
-                        {albums&&albums.map((album, index) => (
-                            <li key={index}>
-                                <div>
-                                    <a href="#" onClick={() => handleAlbumClick(index)}>
-                                        {`${album.name}${userFavs ? " - " + album.author : ""}`}
-                                    </a>
-                                </div>
-                            </li>
-                        ))}
-                    </ul>
-                )
-            }
+            <AlbumsCarousel 
+                albums={albums}
+                selectedAlbum={selectedAlbum}
+                handleAlbumSelect={handleAlbumClick}
+            />
             <hr/>
             {
                 albums&&albums.filter(alb => (alb.code === selectedAlbum?.code??"")&&(alb.author===selectedAlbum?.author)).map((alb,index) => (
