@@ -32,7 +32,16 @@ export const AlbumsCarouselItem = ({album, onSelect, selected=false} : AlbumsCar
                 />
             )}
             <AlbumCarouselItemDescription>
-                <DescriptionAlbumName>{(album.name!=="All") ? (album.name !== "Scraps" ? album.name : `${album.author} - Scraps`) : album.author}</DescriptionAlbumName>
+                {
+                album.name==="All" || album.name==="Scraps" ? (
+                    <DescriptionAlbumName>{(album.name !== "Scraps" ? album.author : `${album.author} - Scraps`)}</DescriptionAlbumName>
+                    ) : (
+                        <>
+                        <DescriptionAlbumName>{album.name}</DescriptionAlbumName>
+                        <p>{album.author}</p>
+                        </>
+                    )}
+                {}
                 <DescriptionAlbumSize>{`${album.size} photos`}</DescriptionAlbumSize>
             </AlbumCarouselItemDescription>
         </AlbumCarouselSlideItem>
