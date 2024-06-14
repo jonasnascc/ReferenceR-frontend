@@ -126,11 +126,12 @@ export const GalleryBlock = ({userFavs} : GalleryBlockProps) => {
             <PhotosGrid 
                 photos={photos} 
                 selectedPhotos = {selectedPhotos}
-                selectMode={selectMode}
                 selectingAll={isSelectingAll}
                 onAddToCollection={handleAddToCollection}
                 onSelectPhoto={handlePhotoClick}
                 onSelectAll={handleSelectAllPhotos}
+                onLoadMore={handleLoadMorePhotos}
+                hasMore={Boolean(hasNextPage)}
             />
             {
                 currentPhoto!==null&&(

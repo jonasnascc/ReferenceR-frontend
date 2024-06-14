@@ -1,3 +1,4 @@
+import InfiniteScroll from "react-infinite-scroll-component";
 import { RequireAuth } from "../../../../context/RequireAuth";
 import { Deviation } from "../../../../model/photo";
 import { SelectedPhotosActions } from "../selectedPhotosActions/SelectedPhotosActions";
@@ -5,19 +6,26 @@ import { SelectedPhotosActions } from "../selectedPhotosActions/SelectedPhotosAc
 type PhotosGridProps = {
     photos: Deviation[],
     selectedPhotos: string[],
-    selectMode ?: boolean,
     onSelectPhoto : (photoCode : string) => void,
+    hasMore:boolean,
+    onLoadMore:() => void,
     onAddToCollection: () => void,
     onSelectAll: () => void,
     loading ?: boolean,
     selectingAll ?: boolean,
 }
 
-export const PhotosGrid = ({photos, selectedPhotos, selectMode=false, onSelectPhoto, onAddToCollection, onSelectAll, loading, selectingAll} : PhotosGridProps) => {
+export const PhotosGrid = ({photos, selectedPhotos, hasMore,onLoadMore, onSelectPhoto, onAddToCollection, onSelectAll, loading, selectingAll} : PhotosGridProps) => {
     if(photos.length === 0) return null
     else if(loading) return (<p>loading...</p>)
     return(
-        <div>
+        <InfiniteScroll
+            dataLength={photos.length}
+            next={onLoadMore}
+            hasMore={hasMore}
+            loader={<p>Loading...</p>}
+            endMessage={<p>No more data to load.</p>}
+        >
             <RequireAuth>
                 <SelectedPhotosActions 
                     selected={selectedPhotos}
@@ -48,6 +56,6 @@ export const PhotosGrid = ({photos, selectedPhotos, selectMode=false, onSelectPh
                     />
                 ))
             }</div>
-        </div>
+        </InfiniteScroll>
     )
 }
