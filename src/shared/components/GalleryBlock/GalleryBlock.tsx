@@ -85,34 +85,7 @@ export const GalleryBlock = ({userFavs} : GalleryBlockProps) => {
                 handleAlbumSelect={handleAlbumClick}
             />
             <hr/>
-            {
-                albums&&albums.filter(alb => (alb.code === selectedAlbum?.code??"")&&(alb.author===selectedAlbum?.author)).map((alb,index) => (
-                    <div key={index}>
-                        {
-                            alb?.thumbnail&&(
-                                <img src={alb.thumbnail.url} alt={alb.thumbnail.title} style={{width: "auto", height: "200px"}}/>
-                            )
-                        }
-                        <h2>{alb.name}</h2>
-                        <p>{`${alb.size} photos`}</p>
-                        <button onClick={() => navigate(location.pathname + "/presentation", {state:{albums:[alb]}, replace:true})}>Start presentation</button>
-                        <br/>
-                        <RequireAuth>
-                            {
-                            userFavs&&(
-                                <>
-                                <button>Delete from collection</button>
-                                <br/><br/>
-                                </>
-                            )
-                            }
-                            {photos.length > 0 && <button onClick={() => handleSelectMode()}>{`${selectMode ? "Clear selection" : "Select"}`}</button>}
-                        </RequireAuth>
-                        
-                        <hr/>
-                    </div>
-                ))
-            }
+            <button onClick={() => navigate(location.pathname + "/presentation", {state:{albums:[selectedAlbum]}, replace:true})}>Start presentation</button>
             
             <PhotosGrid 
                 photos={photos} 

@@ -1,11 +1,12 @@
 import React from "react";
 import { Album } from "../../../model/album";
 import {Swiper, SwiperSlide } from "swiper/react";
-import {Navigation, Pagination} from "swiper/modules"
 
 import "swiper/css"
 import "swiper/css/navigation"
 import "swiper/css/pagination"
+import { AlbumCarouselImage, AlbumCarouselItemDescription, AlbumCarouselSlideItem, DescriptionAlbumName, DescriptionAlbumSize } from "./styles";
+import configuration from "./config";
 
 
 type AlbumsCarouselProps = {
@@ -17,64 +18,34 @@ type AlbumsCarouselProps = {
 export const AlbumsCarousel = ({albums, selectedAlbum, handleAlbumSelect} : AlbumsCarouselProps) => {
     return (
         <>
-        <Swiper 
-            spaceBetween={"10vw"} 
-            slidesPerView={1}
-            navigation
-            slideToClickedSlide
-            initialSlide={0}
-            breakpoints={{
-                500 : {
-                    slidesPerView: 2.5
-                },
-                980: {
-                    slidesPerView: 3.5
-                },
-                1200:{
-                    slidesPerView: 4.5
-                },
-                1700: {
-                    slidesPerView: 6.5
-                }
-            }}
-            pagination={{
-                clickable:true
-            }}
-            modules={[
-                Navigation,
-                Pagination,
-            ]}
-        >
+        <Swiper {...configuration}>
             {
                 albums.map((alb, index) => (
-                    <SwiperSlide key={index} onClick={() => handleAlbumSelect(index)}>
+                    <SwiperSlide key={index}>
                     { ({isActive}) => (
-                        <div style={{
-                            height:"300px",
-                            width: "auto",
-                            border: selectedAlbum && (
-                                ((selectedAlbum.code === alb.code) && (selectedAlbum?.author === alb.author)) ? 
-                                "solid 2px red" : "solid 1px gray"
-                            )
-                        }}>
+
+                        <AlbumCarouselSlideItem 
+                            selected={selectedAlbum && ((selectedAlbum.code === alb.code) && (selectedAlbum?.author === alb.author))}
+                            onClick={() => handleAlbumSelect(index)}
+                        >
                             {alb?.thumbnail && (
-                                <img
+                                <AlbumCarouselImage
                                     src={alb.thumbnail.url}
-                                    alt="slide-item"
-                                    style={{
-                                        width: "100%",
-                                        height: "100%",
-                                        objectFit: "cover",
-                                        cursor: "pointer"
-                                    }}
+                                    alt={`slide-item#${alb.name}`}
                                 />
                             )}
-                        </div>
+                            <AlbumCarouselItemDescription>
+                                <DescriptionAlbumName>{(alb.name!=="All") ? (alb.name !== "Scraps" ? alb.name : `${alb.author} - Scraps`) : alb.author}</DescriptionAlbumName>
+                                <DescriptionAlbumSize>{`${alb.size} photos`}</DescriptionAlbumSize>
+                            </AlbumCarouselItemDescription>
+                        </AlbumCarouselSlideItem>
+
                     )}
                     </SwiperSlide>
                 ))
             }
         </Swiper>
+        
         </>
     )
 }
