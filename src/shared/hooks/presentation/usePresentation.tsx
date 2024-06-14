@@ -64,21 +64,29 @@ export const usePresentation = (albums ?: Album[]) => {
             pageParam,
             1
         );
-    
-        return { data: {
+        
+        let newCurrentPhotoIndex = currentPage;
+        if(currentPage === photos.length-1)
+            newCurrentPhotoIndex += 1
+
+        const data : Page = { data: {
             photo : resp[0]??null,
             albumCode: selAlbum.code,
             albumAuthor: selAlbum.author,
             page : pageParam
         }, page: pageParam };
+
+        const newPhotos = [...photos, data.data]
+        setPhotos((prev) => newPhotos)
+        setCurrentPhoto(newPhotos[newCurrentPhotoIndex]?.photo??null)
+
+        return data;
     }
 
     const {
-        data:infPages,
         hasNextPage:hasNextPhoto,
         fetchNextPage:fetchNextPhoto,
         fetchPreviousPage:fetchPreviousPhoto,
-
     } = useInfiniteQuery<Page>({
         enabled: albums&&albums.length > 0,
         queryKey: [`presentation-${uniqueKey}`],
@@ -88,47 +96,51 @@ export const usePresentation = (albums ?: Album[]) => {
         }
     })
 
+    
+    const changePage = (page:number) => {
+        console.log(currentPage, page, photos)
+        if(page < 0) return;
+
+        setCurrentPage(() => page)
+        setCurrentPhoto(photos[page]?.photo??null)
+    }
+
     useEffect(() => {
-        if(!albums) return;
-        const pgs = infPages?.pages
-        if(!pgs) return;
-
-        const mappedData = pgs.map(pg => pg.data);
-        setPhotos(mappedData)
-    }, [albums, infPages])
-
-    useEffect(() => {
-        if(currentPage!==-1) setCurrentPhoto(photos[currentPage]?.photo??null)
-    }, [photos, currentPage, albums])
-
+        if(albums && currentPage < photos.length) setCurrentPhoto(photos[currentPage]?.photo??null)
+    }
+    ,[currentPage, photos])
 
     const handleNextPhoto = () => {
         if(albums) {
-            fetchNextPhoto()
-            setCurrentPage((current) => current+1)
+            if(currentPage >= photos.length-4) fetchNextPhoto()
+            changePage(currentPage+1)
         }
         else if(currentPage < photos.length-1)
-            setCurrentPage((current) => current+1)
-            
-    
+            changePage(currentPage+1)
     }
 
     const handlePreviousPhoto = () => {
         if(albums) {
-            if(photos.length <= 1) return; 
-            fetchPreviousPhoto()
-            setCurrentPage((current) => current-1)
+            if(photos.length <= 1 || currentPage < 1) return; 
+            //fetchPreviousPhoto()
+            setCurrentPage(currentPage - 1)
         }
         else if(currentPage >= 1){
-            setCurrentPage((current) => current-1)
+            changePage(currentPage - 1)
         }
     }
 
+
     const setPresentationPhoto = (photoCode : string|null) => {
-        if(!photoCode) setCurrentPhoto(null)
-        const result = photos.filter(ph => ph.photo?.code===photoCode)
+        if(!photoCode) {
+            setCurrentPhoto(null)
+            setCurrentPage(0)
+            return;
+        }
+        const result = photos.map(ph => ph.photo?.code)
         if(result.length===0) return;
-        setCurrentPhoto(result[0].photo)
+
+        changePage(result.indexOf(photoCode))
     }
 
     return {
