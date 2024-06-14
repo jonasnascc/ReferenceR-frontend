@@ -2,6 +2,7 @@ import InfiniteScroll from "react-infinite-scroll-component";
 import { RequireAuth } from "../../../../context/RequireAuth";
 import { Deviation } from "../../../../model/photo";
 import { SelectedPhotosActions } from "../selectedPhotosActions/SelectedPhotosActions";
+import { ImageList, ImageListItem } from "@mui/material";
 
 type PhotosGridProps = {
     photos: Deviation[],
@@ -34,28 +35,40 @@ export const PhotosGrid = ({photos, selectedPhotos, hasMore,onLoadMore, onSelect
                     selectingAll={selectingAll}
                 />
             </RequireAuth>
-            <div
-                style={{
-                    display:"flex",
-                    flexWrap:"wrap",
-                    gap:"10px",
-            }}>{
+            <ImageList
+                sx={{
+                    height:"auto",
+                    width:"100%",
+                    gridTemplateColumns:
+                    "repeat(auto-fill, minmax(280px, 2fr))!important",
+                    // gridAutoRows:"10%"
+                }}
+                cols={6}
+                >{
                 photos.map((photo, index) => (
-                    <img 
+                    <ImageListItem 
                         key={index} 
-                        src={photo.thumbUrl} 
-                        alt={photo.title}
-                        style={{
-                            height:"250px",
-                            width: "auto",
-                            objectFit: "cover",
-                            border: (!selectingAll&&selectedPhotos.includes(photo.code)) || (selectingAll&&!selectedPhotos.includes(photo.code)) ? "solid 3px red" : "none",
-                            cursor: "pointer"
+                        sx={{
+                            width: "100%",
+                            maxHeight:"300px"
                         }}
-                        onClick={() => onSelectPhoto(photo.code)}
-                    />
+                    >
+                        <img 
+                            src={photo.thumbUrl} 
+                            alt={photo.title}
+                            style={{
+                                maxHeight:"100%",
+                                maxWidth: "100%",
+                                objectFit: "cover",
+                                border: (!selectingAll&&selectedPhotos.includes(photo.code)) || (selectingAll&&!selectedPhotos.includes(photo.code)) ? "solid 3px red" : "none",
+                                cursor: "pointer"
+                            }}
+                            onClick={() => onSelectPhoto(photo.code)}
+                            loading="lazy"
+                        />
+                    </ImageListItem>
                 ))
-            }</div>
+            }</ImageList>
         </InfiniteScroll>
     )
 }
