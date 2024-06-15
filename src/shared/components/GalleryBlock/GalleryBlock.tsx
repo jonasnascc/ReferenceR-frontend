@@ -6,12 +6,10 @@ import { useGallery } from "../../hooks/useGallery";
 import { usePresentation } from "../../hooks/presentation/usePresentation";
 import { useEffect } from "react";
 import { AlbumsCarousel } from "../AlbumsCarousel/AlbumsCarousel";
-import { GalleryAlbumHeader } from "./components/GalleryAlbumHeader";
+import { GalleryAlbumHeader } from "./components/GalleryAlbumHeader/GalleryAlbumHeader";
 import { AuthorCarouselBlock } from "./components/styles";
 import { GalleryAuthorBar } from "./components/GalleryAuthorBar/GalleryAuthorBar";
 import { PageContainer } from "../PageContainer/styles";
-
-
 
 type GalleryBlockProps = {
     userFavs ?: boolean
@@ -31,7 +29,8 @@ export const GalleryBlock = ({userFavs} : GalleryBlockProps) => {
         handleAddToCollection,
         handleSelectAllPhotos,
         isSelectingAll,
-        hasNextPage
+        hasNextPage,
+        isLoadingPhotos
     } = useGallery({
         authorName: authorName, 
         userFavourites: userFavs,
@@ -75,9 +74,7 @@ export const GalleryBlock = ({userFavs} : GalleryBlockProps) => {
     return (
         <PageContainer>
             <AuthorCarouselBlock>
-                <br/>
                 {authorName&&<GalleryAuthorBar author={authorName} provider="deviatart"/>}
-                <br/>
                 <AlbumsCarousel 
                     albums={albums}
                     selectedAlbum={selectedAlbum}
@@ -85,8 +82,6 @@ export const GalleryBlock = ({userFavs} : GalleryBlockProps) => {
                 />
             </AuthorCarouselBlock>
             <GalleryAlbumHeader album={selectedAlbum}/>
-            {/* <Button onClick={() => navigate(location.pathname + "/presentation", {state:{albums:[selectedAlbum]}, replace:true})}>Start presentation</Button> */}
-            
             <PhotosGrid 
                 photos={photos} 
                 selectedPhotos = {selectedPhotos}
@@ -96,6 +91,7 @@ export const GalleryBlock = ({userFavs} : GalleryBlockProps) => {
                 onSelectAll={handleSelectAllPhotos}
                 onLoadMore={handleLoadMorePhotos}
                 hasMore={Boolean(hasNextPage)}
+                loading={isLoadingPhotos}
             />
             {
                 currentPhoto!==null&&(
@@ -108,8 +104,6 @@ export const GalleryBlock = ({userFavs} : GalleryBlockProps) => {
                     />
                 )
             }
-
-            {hasNextPage&&<button onClick={handleLoadMorePhotos}>Load more</button>}
         </PageContainer>
     )
 }

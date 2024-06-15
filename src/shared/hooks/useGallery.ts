@@ -64,6 +64,7 @@ export const useGallery = (config : {
         enabled: Boolean(selectedAlbum)&&(Boolean(config?.authorName)||Boolean(config?.userFavourites)),
         queryKey: [`album-${selectedAlbum?.code??""}-${selectedAlbum?.author??""}-photos`],
         refetchOnWindowFocus: false,
+        retry: 3,
         queryFn: async ({ pageParam = currentPage }) => {
             if(!selectedAlbum) return {data:[], page:pageParam}
             setLoadingPhotos(true)

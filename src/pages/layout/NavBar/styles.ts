@@ -6,7 +6,6 @@ export const NavBarContainer = styled.div`
     align-items: center;
     gap: 1vw;
     min-height: 70px;
-    width: 100%;
     background-color: #141024;
     padding: 0 2vw;
     flex-wrap: wrap;
@@ -57,12 +56,6 @@ export const MenuListItemAnchor = styled.a<{selected?:boolean}>`
 
 export const RightSection = styled.div`
     display: flex;
-    padding-right: calc(50px + 2vw);
     flex-direction: row-reverse;
     flex:1;
-`
-
-export const SelectedPageSphere = styled.div<{size:string}>`
-    ${props => `height:${props.size}; width:${props.size}`};
-    background-color: #D217E2;
 `

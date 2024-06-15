@@ -1,5 +1,5 @@
 import React, { useState } from "react"
-import { AlbumCarouselSlideItem, AlbumCarouselImage, AlbumCarouselItemDescription, DescriptionAlbumName, DescriptionAlbumSize } from "./styles"
+import { AlbumCarouselSlideItem, AlbumCarouselImage, AlbumCarouselItemDescription, DescriptionAlbumName, DescriptionAlbumSize, SlideItemPhoto } from "./styles"
 import { Album } from "../../../model/album"
 import { SimplePhoto } from "../../../model/photo"
 import { useQuery } from "react-query"
@@ -33,24 +33,26 @@ export const AlbumsCarouselItem = ({album, onSelect, selected=false} : AlbumsCar
             onMouseLeave={() => handleHover(false)}
         >
             {thumbnail && (
-                <AlbumCarouselImage
-                    src={thumbnail.url}
-                    alt={`slide-item#${album.name}`}
-                />
+                <SlideItemPhoto>
+                    <AlbumCarouselImage
+                        src={thumbnail.url}
+                        alt={`slide-item#${album.name}`}
+                    />
+                </SlideItemPhoto>
             )}
-            {isHovering&&<AlbumCarouselItemDescription>
+            <AlbumCarouselItemDescription>
                 {
                 album.name==="All" || album.name==="Scraps" ? (
                     <DescriptionAlbumName>{(album.name !== "Scraps" ? album.author : `${album.author} - Scraps`)}</DescriptionAlbumName>
                     ) : (
                         <>
                         <DescriptionAlbumName>{album.name}</DescriptionAlbumName>
-                        <p>{album.author}</p>
+                        {/* <p>{album.author}</p> */}
                         </>
                     )}
                 {}
                 <DescriptionAlbumSize>{`${album.size} photos`}</DescriptionAlbumSize>
-            </AlbumCarouselItemDescription>}
+            </AlbumCarouselItemDescription>
         </AlbumCarouselSlideItem>
     )
 }

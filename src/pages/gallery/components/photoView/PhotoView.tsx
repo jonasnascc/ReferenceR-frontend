@@ -43,7 +43,7 @@ export const PhotoView = ({open=false, currentPhoto, onClose, onNextPhoto, onPre
         <>
         <Backdrop
             sx={{ 
-              color: '#fff', 
+              color: 'box-shadow: rgba(0, 0, 0, 0.19) 0px 10px 20px, rgba(0, 0, 0, 0.23) 0px 6px 6px;', 
               zIndex: (theme) => theme.zIndex.drawer + 1
             }}
             open={open}

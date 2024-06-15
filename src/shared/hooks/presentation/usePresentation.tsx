@@ -86,11 +86,11 @@ export const usePresentation = (albums ?: Album[]) => {
     const {
         hasNextPage:hasNextPhoto,
         fetchNextPage:fetchNextPhoto,
-        fetchPreviousPage:fetchPreviousPhoto,
     } = useInfiniteQuery<Page>({
         enabled: albums&&albums.length > 0,
         queryKey: [`presentation-${uniqueKey}`],
         queryFn: fetchRandomPhotoFn,
+        retry: 3,
         getNextPageParam: () => {
             return getRandomPage();
         }
