@@ -1,7 +1,7 @@
 import { Backdrop, CircularProgress, Slide } from "@mui/material";
 import { TransitionProps } from "@mui/material/transitions";
 import React, { useEffect, useState } from "react";
-import { Deviation, SimplePhoto } from "../../../../model/photo";
+import { Deviation } from "../../../../model/photo";
 import { ContentArea } from "./styles";
 
 const Transition = React.forwardRef(function Transition(

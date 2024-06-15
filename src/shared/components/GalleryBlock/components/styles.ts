@@ -12,13 +12,6 @@ export const HeaderContainer = styled(Container)`
     width: 100%;
 `
 
-export const AuthorTile = styled.div`
-    display: flex;
-    align-items: center;
-    gap: 1vw;
-    margin: 20px 3vw;
-`
-
 export const AlbumTile = styled.div`
     display: flex;
     align-items: center;
@@ -27,5 +20,5 @@ export const AlbumTile = styled.div`
 `
 
 export const AuthorCarouselBlock = styled.div`
-    padding: 5px 0 20px 0;
+    /* padding: 5px 0 20px 0; */
 `

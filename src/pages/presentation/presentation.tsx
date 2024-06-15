@@ -7,8 +7,7 @@ export const PresentationPage = () => {
     const location = useLocation()
     const navigate = useNavigate()
 
-    const [albums, setAlbums] = useState<Album[]>([])
-    const [blockTimer, setBlockTimer] = useState(false);
+    const [albums] = useState<Album[]>([])
 
     const stateAlbums = location.state?.albums??[]
     if(stateAlbums.length === 0){
@@ -22,9 +21,7 @@ export const PresentationPage = () => {
     const {
         currentPhoto,
         handleNextPhoto,
-        handlePreviousPhoto,
-        hasNextPhoto
-    } = usePresentation(stateAlbums)
+        handlePreviousPhoto    } = usePresentation(stateAlbums)
 
 
 

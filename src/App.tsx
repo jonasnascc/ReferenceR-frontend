@@ -2,15 +2,15 @@ import React from 'react';
 import './App.css';
 import { Route, Routes } from 'react-router-dom';
 import { HomePage } from './pages/index/home';
-import { AuthorPage } from './pages/author/authorPage';
-import { UserProfilePage } from './pages/userProfile/userProfile';
-import { UserCollectionsPage } from './pages/userCollections/userCollections';
 import { LoginPage } from './pages/auth/login';
 import { GalleryPage } from './pages/gallery/GalleryPage';
 import { Layout } from './pages/layout/Layout';
 import { RequireAuth } from './context/RequireAuth';
 import { RequireNoAuth } from './context/RequireNoAuth';
 import { PresentationPage } from './pages/presentation/presentation';
+import { AuthorPage } from './pages/author/AuthorPage';
+import { UserCollectionsPage } from './pages/userCollections/UserCollections';
+import { UserProfilePage } from './pages/userProfile/UserProfile';
 
 
 function App() {

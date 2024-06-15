@@ -1,4 +1,3 @@
-import React, { useState } from "react"
 import { Menu, MenuListItemAnchor, MenuListItemContent } from "./styles"
 import { MenuItem, menuItems } from "./NavBar"
 import { RequireAuth } from "../../../context/RequireAuth"

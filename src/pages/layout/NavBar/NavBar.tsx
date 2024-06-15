@@ -34,7 +34,7 @@ export const menuItems : MenuItem [] = [
 ] 
 
 export const ignorePathnames = [
-    "/",
+    // "/",
     "/login",
     "/signup"
 ]

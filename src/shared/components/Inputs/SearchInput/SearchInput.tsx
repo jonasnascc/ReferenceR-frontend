@@ -1,4 +1,4 @@
-import React, { FormEvent, HTMLProps } from "react";
+import { FormEvent } from "react";
 import { InputContainer, SearchTextField, TextFieldContainer } from "./styles";
 
 import SearchIcon from '@mui/icons-material/Search';

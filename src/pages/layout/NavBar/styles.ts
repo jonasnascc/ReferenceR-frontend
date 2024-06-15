@@ -28,6 +28,8 @@ export const LogoImage = styled.img`
 export const LogoText = styled.span`
     color: white;
     font-size: 16px;
+    font-family: "Inter", sans-serif;
+    font-style: normal;
 `
 
 export const Menu = styled.ul`

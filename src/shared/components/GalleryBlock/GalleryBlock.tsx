@@ -6,10 +6,10 @@ import { useGallery } from "../../hooks/useGallery";
 import { usePresentation } from "../../hooks/presentation/usePresentation";
 import { useEffect } from "react";
 import { AlbumsCarousel } from "../AlbumsCarousel/AlbumsCarousel";
-import { Button } from "@mui/material";
 import { GalleryAlbumHeader } from "./components/GalleryAlbumHeader";
-import { GalleryAuthorBar } from "./components/GalleryAuthorBar";
 import { AuthorCarouselBlock } from "./components/styles";
+import { GalleryAuthorBar } from "./components/GalleryAuthorBar/GalleryAuthorBar";
+import { PageContainer } from "../PageContainer/styles";
 
 
 
@@ -20,7 +20,6 @@ type GalleryBlockProps = {
 export const GalleryBlock = ({userFavs} : GalleryBlockProps) => {
     const {authorName} = useParams()
     const navigate = useNavigate();
-    const location = useLocation()
     
     const {
         albums,
@@ -74,14 +73,16 @@ export const GalleryBlock = ({userFavs} : GalleryBlockProps) => {
         return (null);
     }
     return (
-        <div>
+        <PageContainer>
             <AuthorCarouselBlock>
-            {authorName&&<GalleryAuthorBar author={authorName} provider="deviatart"/>}
-            <AlbumsCarousel 
-                albums={albums}
-                selectedAlbum={selectedAlbum}
-                handleAlbumSelect={handleAlbumClick}
-            />
+                <br/>
+                {authorName&&<GalleryAuthorBar author={authorName} provider="deviatart"/>}
+                <br/>
+                <AlbumsCarousel 
+                    albums={albums}
+                    selectedAlbum={selectedAlbum}
+                    handleAlbumSelect={handleAlbumClick}
+                />
             </AuthorCarouselBlock>
             <GalleryAlbumHeader album={selectedAlbum}/>
             {/* <Button onClick={() => navigate(location.pathname + "/presentation", {state:{albums:[selectedAlbum]}, replace:true})}>Start presentation</Button> */}
@@ -109,6 +110,6 @@ export const GalleryBlock = ({userFavs} : GalleryBlockProps) => {
             }
 
             {hasNextPage&&<button onClick={handleLoadMorePhotos}>Load more</button>}
-        </div>
+        </PageContainer>
     )
 }
