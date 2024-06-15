@@ -3,6 +3,7 @@ import { RequireAuth } from "../../../../context/RequireAuth";
 import { Deviation } from "../../../../model/photo";
 import { SelectedPhotosActions } from "../selectedPhotosActions/SelectedPhotosActions";
 import { ImageList, ImageListItem } from "@mui/material";
+import { PhotosGridContainer } from "./styles";
 
 type PhotosGridProps = {
     photos: Deviation[],
@@ -20,6 +21,7 @@ export const PhotosGrid = ({photos, selectedPhotos, hasMore,onLoadMore, onSelect
     if(photos.length === 0) return null
     else if(loading) return (<p>loading...</p>)
     return(
+        <PhotosGridContainer>
         <InfiniteScroll
             dataLength={photos.length}
             next={onLoadMore}
@@ -40,7 +42,7 @@ export const PhotosGrid = ({photos, selectedPhotos, hasMore,onLoadMore, onSelect
                     height:"auto",
                     width:"100%",
                     gridTemplateColumns:
-                    "repeat(auto-fill, minmax(280px, 2fr))!important",
+                    "repeat(auto-fill, minmax(200px, 2fr))!important",
                     // gridAutoRows:"10%"
                 }}
                 cols={6}
@@ -50,7 +52,7 @@ export const PhotosGrid = ({photos, selectedPhotos, hasMore,onLoadMore, onSelect
                         key={index} 
                         sx={{
                             width: "100%",
-                            maxHeight:"300px"
+                            maxHeight:"250px"
                         }}
                     >
                         <img 
@@ -70,5 +72,7 @@ export const PhotosGrid = ({photos, selectedPhotos, hasMore,onLoadMore, onSelect
                 ))
             }</ImageList>
         </InfiniteScroll>
+        </PhotosGridContainer>
+        
     )
 }

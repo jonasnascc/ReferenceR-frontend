@@ -2,9 +2,9 @@ import styled from "@emotion/styled";
 
 export const AlbumCarouselSlideItem = styled.div<{selected ?: boolean}>`
     position: relative;
-    height: 300px;
+    height: 200px;
     width: auto;
-    border: ${props => props.selected ? "solid 2px red" : "none"};
+    border: ${props => props.selected ? "solid 2px white" : "none"};
     
 `
 
@@ -18,11 +18,14 @@ export const AlbumCarouselItemDescription = styled.div`
     min-height: 40%;
     bottom: 0;
     left: 0;
-    background-color: white;
+    background-color: black;
+    color: white;
     overflow: auto;
     word-break: break-all;
     word-wrap: break-word;
     z-index: 5;
+    padding: 10px 0;
+    cursor: pointer;
 `
 
 export const DescriptionAlbumName = styled.h3`
@@ -39,4 +42,9 @@ export const AlbumCarouselImage = styled.img`
     height: 100%;
     object-fit: cover;
     cursor: pointer;
+`
+
+export const AlbumCarouselBackground = styled.div`
+    background-color: #120d25;
+    padding: 10px;
 `

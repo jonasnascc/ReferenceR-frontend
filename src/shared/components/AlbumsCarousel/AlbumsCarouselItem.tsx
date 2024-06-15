@@ -12,6 +12,7 @@ type AlbumsCarouselItemProps = {
 }
 export const AlbumsCarouselItem = ({album, onSelect, selected=false} : AlbumsCarouselItemProps) => {
     const [thumbnail, setThumbnail] = useState<SimplePhoto | null>(album.thumbnail)
+    const [isHovering, setIsHovering] = useState(false)
 
     useQuery<SimplePhoto>([`album-${album.code}|${album.author}-thumbnail`], () => fetchAlbumThumbnail(album.id), {
         enabled: album.id!==null && !Boolean(thumbnail),
@@ -20,10 +21,16 @@ export const AlbumsCarouselItem = ({album, onSelect, selected=false} : AlbumsCar
         }
     })
 
+    const handleHover = (state:boolean) => {
+        setIsHovering(state)
+    }
+
     return (
         <AlbumCarouselSlideItem 
             selected={selected}
             onClick={() => onSelect()}
+            onMouseEnter={() => handleHover(true)}
+            onMouseLeave={() => handleHover(false)}
         >
             {thumbnail && (
                 <AlbumCarouselImage
@@ -31,7 +38,7 @@ export const AlbumsCarouselItem = ({album, onSelect, selected=false} : AlbumsCar
                     alt={`slide-item#${album.name}`}
                 />
             )}
-            <AlbumCarouselItemDescription>
+            {isHovering&&<AlbumCarouselItemDescription>
                 {
                 album.name==="All" || album.name==="Scraps" ? (
                     <DescriptionAlbumName>{(album.name !== "Scraps" ? album.author : `${album.author} - Scraps`)}</DescriptionAlbumName>
@@ -43,7 +50,7 @@ export const AlbumsCarouselItem = ({album, onSelect, selected=false} : AlbumsCar
                     )}
                 {}
                 <DescriptionAlbumSize>{`${album.size} photos`}</DescriptionAlbumSize>
-            </AlbumCarouselItemDescription>
+            </AlbumCarouselItemDescription>}
         </AlbumCarouselSlideItem>
     )
 }

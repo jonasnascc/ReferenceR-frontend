@@ -63,6 +63,7 @@ export const useGallery = (config : {
     } = useInfiniteQuery<Page>({
         enabled: Boolean(selectedAlbum)&&(Boolean(config?.authorName)||Boolean(config?.userFavourites)),
         queryKey: [`album-${selectedAlbum?.code??""}-${selectedAlbum?.author??""}-photos`],
+        refetchOnWindowFocus: false,
         queryFn: async ({ pageParam = currentPage }) => {
             if(!selectedAlbum) return {data:[], page:pageParam}
             setLoadingPhotos(true)
@@ -107,7 +108,7 @@ export const useGallery = (config : {
                     finalData = [...finalData, photo]
                 })
             })
-            return finalData
+            return finalData.sort(sortPhotosByPublishedTime)
         }
 
         if(photosPages&&photosPages.pages.length > 0) {
@@ -149,6 +150,12 @@ export const useGallery = (config : {
     const getAlbumByIndex = (index:number) => {
         if(albums) return albums[index]
         else return null;
+    }
+
+    const sortPhotosByPublishedTime = (a:Deviation, b:Deviation) => {
+        const dateA = new Date(a.publishedTime);
+        const dateB = new Date(b.publishedTime);
+        return dateB.getTime() - dateA.getTime();
     }
 
     const  findAlbumByCode = (code : string, albumsArray:Album[]) => {

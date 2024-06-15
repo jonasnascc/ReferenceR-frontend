@@ -1,5 +1,5 @@
 import { SwiperProps } from "swiper/react";
-import {Navigation, Pagination} from "swiper/modules"
+import {Navigation, Scrollbar} from "swiper/modules"
 
 const AlbumCarouselConfiguration : SwiperProps = {
     spaceBetween:"10vw", 
@@ -7,6 +7,7 @@ const AlbumCarouselConfiguration : SwiperProps = {
     navigation:true,
     slideToClickedSlide:true,
     initialSlide:0,
+    height: 200,
     breakpoints:{
         500 : {
             slidesPerView: 2.5
@@ -21,12 +22,12 @@ const AlbumCarouselConfiguration : SwiperProps = {
             slidesPerView: 6.5
         }
     },
-    pagination:{
-        clickable:true
+    scrollbar:{
+        hide: false,
     },
     modules:[
         Navigation,
-        Pagination,
+        Scrollbar
     ]
 } 
 

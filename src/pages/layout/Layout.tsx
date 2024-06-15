@@ -1,38 +1,10 @@
-import React, { useContext } from "react";
-import { Outlet, useLocation, useNavigate } from "react-router-dom";
-import { RequireNoAuth } from "../../context/RequireNoAuth";
-import { RequireAuth } from "../../context/RequireAuth";
-import { AuthContext } from "../../context/AuthContext";
+import { Outlet } from "react-router-dom";
+import { NavBar } from "./NavBar/NavBar";
 
 export const Layout = () => {
-    const {user, signout} = useContext(AuthContext)
-    const navigate = useNavigate()
-    const location = useLocation()
-
-    const handleLogout = async () => {
-        if(await signout()) {
-            navigate(location.pathname, {replace:true})
-        }
-    }
-
     return(
         <>
-        <div>
-            <button onClick={() => navigate("/")}>Home</button>
-            <RequireNoAuth>
-                <button onClick={() => navigate("/login")}>Login</button>
-            </RequireNoAuth>
-            {
-                user&&(
-                    <RequireAuth>
-                        <div><strong>user:</strong>{user.name}</div>
-                        <button>Profile</button>
-                        <button onClick={() => navigate("/user/collections")}>Collections</button>
-                        <button onClick={handleLogout}>Logout</button>
-                    </RequireAuth>
-                )
-            }
-        </div>
+        <NavBar/>
         <Outlet/>
         </>
     )

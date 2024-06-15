@@ -3,10 +3,13 @@ import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { PhotoView } from "../../../pages/gallery/components/photoView/PhotoView";
 import { PhotosGrid } from "../../../pages/gallery/components/photosGrid/PhotosGrid";
 import { useGallery } from "../../hooks/useGallery";
-import { RequireAuth } from "../../../context/RequireAuth";
 import { usePresentation } from "../../hooks/presentation/usePresentation";
 import { useEffect } from "react";
 import { AlbumsCarousel } from "../AlbumsCarousel/AlbumsCarousel";
+import { Button } from "@mui/material";
+import { GalleryAlbumHeader } from "./components/GalleryAlbumHeader";
+import { GalleryAuthorBar } from "./components/GalleryAuthorBar";
+import { AuthorCarouselBlock } from "./components/styles";
 
 
 
@@ -72,16 +75,16 @@ export const GalleryBlock = ({userFavs} : GalleryBlockProps) => {
     }
     return (
         <div>
-            {
-                authorName&&(<h1>{authorName}'s gallery</h1>)
-            }
+            <AuthorCarouselBlock>
+            {authorName&&<GalleryAuthorBar author={authorName} provider="deviatart"/>}
             <AlbumsCarousel 
                 albums={albums}
                 selectedAlbum={selectedAlbum}
                 handleAlbumSelect={handleAlbumClick}
             />
-            <hr/>
-            <button onClick={() => navigate(location.pathname + "/presentation", {state:{albums:[selectedAlbum]}, replace:true})}>Start presentation</button>
+            </AuthorCarouselBlock>
+            <GalleryAlbumHeader album={selectedAlbum}/>
+            {/* <Button onClick={() => navigate(location.pathname + "/presentation", {state:{albums:[selectedAlbum]}, replace:true})}>Start presentation</Button> */}
             
             <PhotosGrid 
                 photos={photos} 

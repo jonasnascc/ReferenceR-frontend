@@ -6,6 +6,7 @@ import "swiper/css/navigation"
 import "swiper/css/pagination"
 import configuration from "./config";
 import { AlbumsCarouselItem } from "./AlbumsCarouselItem";
+import { AlbumCarouselBackground } from "./styles";
 
 
 type AlbumsCarouselProps = {
@@ -18,7 +19,7 @@ export const AlbumsCarousel = (props : AlbumsCarouselProps) => {
     const {albums, selectedAlbum, handleAlbumSelect} = props;
 
     return (
-        <>
+        <AlbumCarouselBackground>
         <Swiper {...configuration}>
             {
                 albums.map((alb, index) => (
@@ -35,6 +36,6 @@ export const AlbumsCarousel = (props : AlbumsCarouselProps) => {
             }
         </Swiper>
         
-        </>
+        </AlbumCarouselBackground>
     )
 }

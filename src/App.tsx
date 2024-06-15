@@ -1,7 +1,7 @@
 import React from 'react';
 import './App.css';
 import { Route, Routes } from 'react-router-dom';
-import { HomePage } from './pages/index';
+import { HomePage } from './pages/index/home';
 import { AuthorPage } from './pages/author/authorPage';
 import { UserProfilePage } from './pages/userProfile/userProfile';
 import { UserCollectionsPage } from './pages/userCollections/userCollections';
