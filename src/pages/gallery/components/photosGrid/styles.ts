@@ -22,6 +22,7 @@ export const CustomImageList = styled(ImageList)`
     width: 100%;
     margin-top: 0;
     grid-template-columns: repeat(auto-fill, minmax(200px, 2fr))!important;
+    overflow: hidden;
 `
 
 export const CustomImageListItem = styled(ImageListItem)`

@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { ReactNode, useContext } from "react";
 import { RequireAuth } from "../../../context/RequireAuth";
 import { RequireNoAuth } from "../../../context/RequireNoAuth";
 import { AuthContext } from "../../../context/AuthContext";
@@ -13,13 +13,15 @@ import { LoginButton, LogoutButton } from "../../../shared/components/Buttons/st
 export type MenuItem = {
     text:string, 
     path:string, 
-    requireAuth?: boolean
+    requireAuth?: boolean,
+    hideOnPath?: boolean
 }
 
 export const menuItems : MenuItem [] = [
     {
         text: "Home",
-        path: "/"
+        path: "/",
+        hideOnPath : true
     },
     {
         text: "Profile",
@@ -41,24 +43,34 @@ export const ignorePathnames = [
 
 export const NavBar = () => {
     const {user, signout} = useContext(AuthContext)
-    const location = useLocation()
+    const {pathname} = useLocation()
     const navigate = useNavigate()
 
     const handleLogout = async () => {
         if(await signout()) {
-            navigate(location.pathname, {replace:true})
+            navigate(pathname, {replace:true})
         }
     }
+
+    const HideInHomePage = ({children} : {children:ReactNode}) => {
+        if(pathname === "/") return null;
+
+        return <>{children}</>
+    }
     
-    if(ignorePathnames.includes(location.pathname)) return (null)
+    if(ignorePathnames.includes(pathname)) return (null)
     return(
         <NavBarContainer>
-            <Logo href="/">
-                <LogoImage src={LogoImg} alt="logo"/>
-                <LogoText>REFERENCER</LogoText>
-            </Logo>
+            <HideInHomePage>
+                <Logo href="/">
+                    <LogoImage src={LogoImg} alt="logo"/>
+                    <LogoText>REFERENCER</LogoText>
+                </Logo>
+            </HideInHomePage>
             <BarMenu/>
-            <SearchInput/>
+            <HideInHomePage>
+                <SearchInput navbar/>
+            </HideInHomePage>
             <RightSection>
                 <RequireNoAuth>
                     <LoginButton onClick={() => navigate("/login")}>Sign in</LoginButton>

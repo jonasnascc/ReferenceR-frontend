@@ -18,6 +18,9 @@ export const BarMenu = () => {
                 item={item} 
                 onClick={() => navigate(item.path)}
                 selected={(pathname!=="/")&&(pathname === item.path)}
+                visible={
+                    item.hideOnPath ? pathname!==item.path : true
+                }
             />
         ))
     }
@@ -25,7 +28,8 @@ export const BarMenu = () => {
     )
 }
 
-const MenuListItem = ({item, selected, onClick} : {item : MenuItem, selected?: boolean,onClick?: () => void}) => {
+const MenuListItem = ({item, selected, onClick, visible} : 
+    {item : MenuItem, selected?: boolean, visible?:boolean, onClick?: () => void}) => {
     const handleClick = () => {
         if(onClick) onClick()
     }
@@ -37,6 +41,8 @@ const MenuListItem = ({item, selected, onClick} : {item : MenuItem, selected?: b
         </MenuListItemContent>
     )
     
+    if(!visible) return null;
+
     if(item.requireAuth) 
         return <RequireAuth>{getListItem()}</RequireAuth>
     

@@ -3,7 +3,9 @@ import { useQueryClient } from "react-query"
 import { getAuthorProfile } from "../../api/services/Author";
 import { Author } from "../../model/Author";
 import { useNavigate } from "react-router-dom";
-
+import { HomeContainer, Logo, LogoImage, LogoText, SearchContainer } from "./styles";
+import { SearchInput } from "../../shared/components/Inputs/SearchInput/SearchInput";
+import logo from "../../logo.svg"
 export const HomePage = () => {
     const [search, setSearch] = useState("");
     const [profile, setProfile] = useState<Author|null>(null);
@@ -38,40 +40,33 @@ export const HomePage = () => {
     }
 
     return (
-        <div>
-            <h1>Search for an author</h1>
-            <form>
-                <input 
-                    id="search-author"
-                    type="text" 
-                    name="search-author" 
-                    onChange={handleSearchChange}
-                    value={search}
+        <HomeContainer>
+            <Logo>
+                <LogoImage src={logo} alt="logo"/>
+                <LogoText>REFERENCER</LogoText>
+            </Logo>
+            <SearchContainer>
+                <SearchInput 
+                    id="authorName" 
+                    name="authorName" 
+                    fullWidth
+                    pathSearch={{path:"/author/{}/gallery", placeholder:"{}"}}
                 />
-                <button type="submit" onClick={handleSearch} disabled={loading}>Search</button>
-                <br/>
-                {
-                    notFoundMsg&&(<span>Author not found</span>)
-                }
-            </form>
+            </SearchContainer>
+            
             <br/>
             {loading&&(<p>Loading...</p>)}
             {profile&&!notFoundMsg&&!loading&&<div>
                 <img src={profile.iconUrl} alt={profile.userTagline} width="120px" height="auto"/>
                 <h2>@{profile.userName}</h2> 
                 <h4>{profile.userTagline}</h4>
-                <p>{`deviations: ${profile.deviations}`}</p>
-                <p>{`favourites: ${profile.favourites}`}</p>
-                <p>{`page views: ${profile.pageviews}`}</p>
-                <p>{`watchers: ${profile.watchers}`}</p>
-                <p>{`watching: ${profile.watching}`}</p>
                 {
                     profile.deviations > 0 &&(
                         <button onClick={() => handleSeeGallery(profile.userName)}>See Gallery</button>
                     )
                 }
             </div>}
-        </div>
+        </HomeContainer>
     )
 
 }

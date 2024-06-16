@@ -1,6 +1,5 @@
 import InfiniteScroll from "react-infinite-scroll-component";
 import { Deviation } from "../../../../model/photo";
-import { CircularProgress, ImageList } from "@mui/material";
 import { CustomCircularProgress, CustomImageList, CustomImageListItem, LoadingImageBlock, PhotosGridContainer, PhotosGridImage } from "./styles";
 
 type PhotosGridProps = {

@@ -9,6 +9,7 @@ export const NavBarContainer = styled.div`
     background-color: #141024;
     padding: 0 2vw;
     flex-wrap: wrap;
+    z-index: 2;
 `
 
 export const Logo = styled.a`

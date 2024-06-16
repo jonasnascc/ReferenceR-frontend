@@ -1,21 +1,26 @@
 import styled from "@emotion/styled";
 
-export const InputContainer = styled.form`
+export const InputContainer = styled.form<{navbar?:boolean}>`
     display: flex;
-    flex: 1;
+    ${props => props.navbar&&`
+        flex: 1;
+        min-width: 200px;
+        max-width: 400px;
+    `}
     align-items: center;
     justify-content: center;
-    min-width: 200px;
-    max-width: 400px;
     padding: 1vw;
 `
 
-export const TextFieldContainer = styled.div`
+export const TextFieldContainer = styled.div<{navbar?:boolean, fullWidth?:boolean}>`
     display: flex;
     flex: 1;
     border: solid 1px rgba(255,255,255, .8);
-    border-radius: 10px;
-    max-width: 370px;
+    border-radius: 5px;
+    ${props => `
+        max-width: ${props.navbar ? "370px" : 
+            (props.fullWidth ? "100%" : "auto")};
+    `}
 `
 
 export const SearchTextField = styled.input`
