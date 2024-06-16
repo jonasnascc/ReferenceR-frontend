@@ -2,6 +2,7 @@ import styled from "@emotion/styled";
 
 export const InputContainer = styled.form<{navbar?:boolean}>`
     display: flex;
+    min-width: 100%;
     ${props => props.navbar&&`
         flex: 1;
         min-width: 200px;
@@ -20,7 +21,9 @@ export const TextFieldContainer = styled.div<{navbar?:boolean, fullWidth?:boolea
     ${props => `
         max-width: ${props.navbar ? "370px" : 
             (props.fullWidth ? "100%" : "auto")};
+        ${props.fullWidth&&"min-width:100%;"}
     `}
+    z-index: 5;
 `
 
 export const SearchTextField = styled.input`
@@ -34,7 +37,10 @@ export const SearchTextField = styled.input`
     outline: none;
     height:25px;
     padding: 0 5px 0 1vw;
-    &:focus{
+    &:focus, &:active {
         border: none;
+        background-color: transparent;
     }
+    z-index: 5;
+
 `

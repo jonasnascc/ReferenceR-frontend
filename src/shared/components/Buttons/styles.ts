@@ -12,6 +12,7 @@ export const SearchButton = styled(CustomButton)`
     color: rgba(255,255,255, .8);
     padding-right: 3px;
     text-decoration: none;
+    z-index: 5;
 `
 
 const AuthButton = styled(CustomButton)`

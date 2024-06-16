@@ -5,7 +5,6 @@ export const HomeContainer = styled.div`
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
     min-height: 100%;
     background-color: #141024;
     height: 100%;
@@ -13,17 +12,20 @@ export const HomeContainer = styled.div`
     top: 0;
     left: 0;
     z-index: 1;
+    overflow: hidden;
 `
 
 
 export const Logo = styled.div`
     display: flex;
+    flex: 1;
     align-items: center;
     gap: .5vw;
     flex-wrap: wrap;
-    justify-content: center;
+    justify-content: end;
     text-decoration: none;
     flex-direction: column;
+    max-height: 50%;
 `
 
 export const LogoImage = styled.img`
@@ -38,6 +40,12 @@ export const LogoText = styled.span`
 `
 
 export const SearchContainer = styled.div`
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: start;
+    flex: 1;
     width: 540px;
 
     @media (max-width: 540px){
