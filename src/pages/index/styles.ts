@@ -23,6 +23,7 @@ export const Logo = styled.div`
     flex-wrap: wrap;
     justify-content: center;
     text-decoration: none;
+    flex-direction: column;
 `
 
 export const LogoImage = styled.img`
@@ -38,4 +39,8 @@ export const LogoText = styled.span`
 
 export const SearchContainer = styled.div`
     width: 540px;
+
+    @media (max-width: 540px){
+        width: calc(100% - 2vw);
+    }
 `
