@@ -1,12 +1,13 @@
 import { Album } from "../../../model/album";
 import {Swiper, SwiperSlide } from "swiper/react";
+import { AlbumsCarouselItem } from "./AlbumsCarouselItem";
+import { AlbumCarouselBackground } from "./styles";
 
 import "swiper/css"
 import "swiper/css/navigation"
 import "swiper/css/pagination"
 import configuration from "./config";
-import { AlbumsCarouselItem } from "./AlbumsCarouselItem";
-import { AlbumCarouselBackground } from "./styles";
+
 
 
 type AlbumsCarouselProps = {
