@@ -1,18 +1,25 @@
 import styled from "@emotion/styled";
 
-export const CloseArea = styled.div`
-    position: absolute;
-    width: 100%;
+export const ImageContainer = styled.div`
+    display: flex;
+    align-items: center;
+    justify-content: center;
     height: 100%;
-    top: 0;
-    left: 0;
-    background-color: red;
+    width: 100%;
 `
 
-export const ContentArea = styled.div`
+export const PhotoViewImage = styled.img`
+    max-height: 100%;
+    max-width: 100%;
+    object-fit: scale-down;
+    overflow: hidden;
+    /* display: loading ? "none" : "" */
+`
+
+export const SwiperContainer = styled.div`
     display: flex;
+    align-items: center;
     justify-content: center;
-    align-items:center;
-    height:100%;
-    width:100%;
+    height: 100%;
+    width: 100%;
 `

@@ -30,7 +30,7 @@ export const GalleryBlock = ({userFavs} : GalleryBlockProps) => {
         handleSelectAllPhotos,
         isSelectingAll,
         hasNextPage,
-        isLoadingPhotos
+        isLoadingPhotos,
     } = useGallery({
         authorName: authorName, 
         userFavourites: userFavs,
@@ -41,8 +41,10 @@ export const GalleryBlock = ({userFavs} : GalleryBlockProps) => {
         currentPhoto, 
         setPresentationPhoto,
         setPhotos : setPstnPhotos,
+        handlePhotoChange,
         handleNextPhoto,
-        handlePreviousPhoto
+        handlePreviousPhoto,
+        getCurrentPhotoIndex
     } = usePresentation()
 
     useEffect(() => {
@@ -96,9 +98,11 @@ export const GalleryBlock = ({userFavs} : GalleryBlockProps) => {
             {
                 currentPhoto!==null&&(
                     <PhotoView
-                        open={true}
+                        initialPhotoIndex={getCurrentPhotoIndex()}
+                        open={Boolean(currentPhoto)}
                         onClose={handleClosePhotoView}
-                        currentPhoto={currentPhoto}
+                        photos={photos}
+                        onPhotoChange={handlePhotoChange}
                         onNextPhoto={handleNextPhoto}
                         onPreviousPhoto={handlePreviousPhoto}
                     />

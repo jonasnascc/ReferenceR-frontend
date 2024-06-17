@@ -109,6 +109,13 @@ export const usePresentation = (albums ?: Album[]) => {
     }
     ,[currentPage, photos])
 
+    const handlePhotoChange = (index:number) => {
+        if(index < photos.length) {
+            return photos[index]?.photo??null;
+        }
+        return null;
+    }
+
     const handleNextPhoto = () => {
         if(albums) {
             if(currentPage >= photos.length-4) fetchNextPhoto()
@@ -142,11 +149,20 @@ export const usePresentation = (albums ?: Album[]) => {
         changePage(result.indexOf(photoCode))
     }
 
+    const getCurrentPhotoIndex = () => {
+        if(!currentPhoto) return -1;
+        const result = photos.filter(ph => ph.photo?.code === currentPhoto?.code)
+        if(result.length === 0) return -1;
+        return photos.indexOf(result[0])
+    }
+
     return {
         currentPhoto,
         photos,
         setPhotos,
         setPresentationPhoto,
+        getCurrentPhotoIndex,
+        handlePhotoChange,
         handleNextPhoto,
         handlePreviousPhoto,
         hasNextPhoto
