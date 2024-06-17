@@ -1,10 +1,10 @@
-import { FormEvent, useState } from "react";
+import { FormEvent, useRef, useState } from "react";
 import { InputContainer, SearchTextField, TextFieldContainer } from "./styles";
 
 import SearchIcon from '@mui/icons-material/Search';
 import { SearchButton } from "../../Buttons/styles";
 import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
-import { FloatingSearchWindow } from "./FloatingSearchWindow/FloatingSearchWindow";
+import { FloatingSearchWindow, FloatingSearchWindowProps } from "./FloatingSearchWindow/FloatingSearchWindow";
 import { CircularProgress } from "@mui/material";
 import { Author } from "../../../../model/Author";
 
@@ -24,7 +24,6 @@ type SearchInputProps = {
 
 export const SearchInput = ({fullWidth, pathSearch, loading, onSubmit, authorMetadata, ...props} : SearchInputProps) => {
     const [searchParams, setSearchParams] = useSearchParams()
-    const location = useLocation()
     const navigate = useNavigate()
 
     const [search, setSearch] = useState("")
@@ -36,14 +35,13 @@ export const SearchInput = ({fullWidth, pathSearch, loading, onSubmit, authorMet
     }
 
     const handleSubmit = () => {
-        setWindowVisible(!isSearchWindowVisible)
         if(onSubmit) onSubmit(search)
-        // if(pathSearch) {
-        //     if(pathSearch.placeholder) 
-        //         navigate(pathSearch.path.replace(pathSearch.placeholder, search))
-        //     else navigate(pathSearch.path)
-        //     return;
-        // }
+        if(pathSearch) {
+            if(pathSearch.placeholder) 
+                navigate(pathSearch.path.replace(pathSearch.placeholder, search))
+            else navigate(pathSearch.path)
+            return;
+        }
         if(props.name){
             const newSearchParams = new URLSearchParams(searchParams);
             newSearchParams.set(props.name, search)
@@ -52,6 +50,17 @@ export const SearchInput = ({fullWidth, pathSearch, loading, onSubmit, authorMet
         
     }
 
+    const handleFocus = () => {
+        setWindowVisible(true)
+    }
+
+    const handleBlur = () => {
+        setWindowVisible(false)
+    }
+
+    const handleClickOnSearchWindow = () => {
+        console.log("click")
+    }
     
     return (
         <InputContainer navbar={props.navbar}>
@@ -61,10 +70,18 @@ export const SearchInput = ({fullWidth, pathSearch, loading, onSubmit, authorMet
                     onChange={handleChange}
                     value={search}
                     autoComplete="off"
+                    onBlur={handleBlur}
+                    onFocus={handleFocus}
                     {...props}
                 />
-                <SearchInputSubmitBtn onSubmit={handleSubmit} loading={loading}/>
-                <FloatingSearchWindow author={authorMetadata} visible={Boolean(authorMetadata)}/>
+                <SearchInputSubmitBtn 
+                    onSubmit={handleSubmit} 
+                    loading={loading}
+                />
+                <FloatingSearchWindow
+                    author={authorMetadata} 
+                    visible={isSearchWindowVisible}
+                />
             </TextFieldContainer>
         </InputContainer>
     )

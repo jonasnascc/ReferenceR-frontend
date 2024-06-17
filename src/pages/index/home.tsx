@@ -40,7 +40,7 @@ export const HomePage = () => {
                     id="authorName" 
                     name="authorName" 
                     fullWidth
-                    pathSearch={{path:"/author/{}/gallery", placeholder:"{}"}}
+                    // pathSearch={{path:"/author/{}/gallery", placeholder:"{}"}}
                     loading={isLoading}
                     authorMetadata={author}
                 />

@@ -3,6 +3,8 @@ import styled from "@emotion/styled";
 export const HomeContainer = styled.div`
     position: absolute;
     display: flex;
+    align-items: center;
+    justify-content: center;
     flex-direction: column;
     align-items: center;
     min-height: 100%;
@@ -18,14 +20,12 @@ export const HomeContainer = styled.div`
 
 export const Logo = styled.div`
     display: flex;
-    flex: 1;
     align-items: center;
     gap: .5vw;
     flex-wrap: wrap;
     justify-content: end;
     text-decoration: none;
     flex-direction: column;
-    max-height: 50%;
 `
 
 export const LogoImage = styled.img`
@@ -45,7 +45,6 @@ export const SearchContainer = styled.div`
     flex-direction: column;
     align-items: center;
     justify-content: start;
-    flex: 1;
     width: 540px;
 
     @media (max-width: 540px){

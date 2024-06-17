@@ -14,6 +14,7 @@ export const InputContainer = styled.form<{navbar?:boolean}>`
 `
 
 export const TextFieldContainer = styled.div<{navbar?:boolean, fullWidth?:boolean}>`
+    position: relative;
     display: flex;
     flex: 1;
     border: solid 1px rgba(255,255,255, .8);
