@@ -34,7 +34,7 @@ export const useGallery = (config : {
 
     const [currentPage, setCurrentPage] = useState(1)
 
-    const {isLoading:loadingAlbums, isFetching:fetchingAlbums} = useQuery<Album[]>(["albums"], 
+    const {isLoading:loadingAlbums, isFetching:fetchingAlbums} = useQuery<Album[]>([`albums-${config.authorName}`], 
         () => fetchAuthorAlbums(config?.authorName??"", config.provider), 
         {
             enabled: Boolean(config?.authorName) && !Boolean(config.userFavourites),
@@ -44,7 +44,7 @@ export const useGallery = (config : {
             
         })
 
-    const {isLoading:loadingFavAlbums, isFetching:fetchingFavAlbums} = useQuery<Album[]>(["albums-fav"], 
+    const {isLoading:loadingFavAlbums, isFetching:fetchingFavAlbums} = useQuery<Album[]>([`albums-fav`], 
         () => fetchFavoritedAlbums(), 
         {
             enabled: Boolean(config?.userFavourites),

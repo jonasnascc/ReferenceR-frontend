@@ -98,7 +98,6 @@ export const usePresentation = (albums ?: Album[]) => {
 
     
     const changePage = (page:number) => {
-        console.log(currentPage, page, photos)
         if(page < 0) return;
 
         setCurrentPage(() => page)

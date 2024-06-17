@@ -36,11 +36,11 @@ export const GalleryAuthorBar = ({author, provider} : {author:string, provider:s
                     />
                     <Statistic
                         text="WATCHERS"
-                        statNumber={authorProfile.watchers}
+                        statNumber={authorProfile?.watchers??0}
                     />
                     <Statistic
                         text="FAVORITES"
-                        statNumber={authorProfile.favourites}
+                        statNumber={authorProfile?.favourites??0}
                     />
                 </StatsBlock>
             </AuthorTile>

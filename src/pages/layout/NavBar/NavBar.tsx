@@ -69,7 +69,7 @@ export const NavBar = () => {
             </HideInHomePage>
             <BarMenu/>
             <HideInHomePage>
-                <SearchInput navbar/>
+                <SearchInput pathSearch={{path:"/author/{}/gallery", placeholder:"{}"}}navbar/>
             </HideInHomePage>
             <RightSection>
                 <RequireNoAuth>
