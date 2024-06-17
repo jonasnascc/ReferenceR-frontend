@@ -23,7 +23,7 @@ export const AlbumsCarousel = (props : AlbumsCarouselProps) => {
         <Swiper {...configuration}>
             {
                 albums.map((alb, index) => (
-                    <SwiperSlide key={index}>
+                    <SwiperSlide key={`${alb.author}-${alb.code}`}>
                     { ({isActive}) => (
                         <AlbumsCarouselItem
                             selected={selectedAlbum && ((selectedAlbum.code === alb.code) && (selectedAlbum?.author === alb.author))}

@@ -67,7 +67,6 @@ export const useSearch = ({name, pathSearch, onSubmit} : useSearchProps) => {
     const handleSearchSet = () =>{
         if(authorName) {
             const saved = getAuthorFromLocalStorage(authorName)
-            console.log(saved)
             if(saved) {
                 setAuthor({
                     ...saved,
