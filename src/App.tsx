@@ -28,9 +28,9 @@ function App() {
           <Route index element={<UserProfilePage/>}/>
           <Route path='collections'>
             <Route index  element={<UserCollectionsPage/>}/>
-            <Route path='presentation' element={<PresentationPage/>}/>
           </Route>
         </Route>
+        <Route path='/chronoShuffle' element={<PresentationPage/>}/>
         <Route path='/login' element={<RequireNoAuth redirect='/'><LoginPage/></RequireNoAuth>}/>
         <Route path='/user' element={<RequireAuth redirect='/login'><Layout/></RequireAuth>}>
           <Route path='collections' element={<UserCollectionsPage/>}/>

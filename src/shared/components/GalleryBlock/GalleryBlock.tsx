@@ -12,10 +12,10 @@ import { GalleryAuthorBar } from "./components/GalleryAuthorBar/GalleryAuthorBar
 import { PageContainer } from "../PageContainer/styles";
 
 type GalleryBlockProps = {
-    userFavs ?: boolean
+    userCollections ?: boolean
 }
 
-export const GalleryBlock = ({userFavs} : GalleryBlockProps) => {
+export const GalleryBlock = ({userCollections} : GalleryBlockProps) => {
     const {authorName} = useParams()
     const navigate = useNavigate();
     
@@ -33,7 +33,7 @@ export const GalleryBlock = ({userFavs} : GalleryBlockProps) => {
         isLoadingPhotos,
     } = useGallery({
         authorName: authorName, 
-        userFavourites: userFavs,
+        userFavourites: userCollections,
         provider:"deviantart"
     })
 
@@ -69,14 +69,18 @@ export const GalleryBlock = ({userFavs} : GalleryBlockProps) => {
         setPresentationPhoto(null)
     ]
 
-    if(!authorName && !userFavs) {
+    if(!authorName && !userCollections) {
         navigate("/");
         return (null);
     }
     return (
         <PageContainer>
             <AuthorCarouselBlock>
-                {authorName&&<GalleryAuthorBar author={authorName} provider="deviatart"/>}
+                {(authorName||userCollections)&&<GalleryAuthorBar 
+                    author={userCollections&&selectedAlbum?.author!==undefined ? selectedAlbum.author : (authorName ? authorName : "")} 
+                    userCollections 
+                    provider="deviatart"
+                />}
                 <AlbumsCarousel 
                     albums={albums}
                     selectedAlbum={selectedAlbum}

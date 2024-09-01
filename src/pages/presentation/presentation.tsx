@@ -2,11 +2,16 @@ import React, { useEffect, useState } from "react";
 import { Navigate, useLocation, useNavigate } from "react-router-dom";
 import { Album } from "../../model/album";
 import { usePresentation } from "../../shared/hooks/presentation/usePresentation";
+import { useTimer } from "../../shared/hooks/presentation/useTimer";
+import { useTimerInput } from "../../shared/hooks/presentation/useTimerInput";
+import { OutlinedButton } from "../../shared/components/Buttons/styles";
+import { ControlPanel } from "./components/ControlPanel/ControlPanel";
 
 export const PresentationPage = () => {
     const location = useLocation()
     const navigate = useNavigate()
 
+    const [blockTimer, setBlockTimer] = useState(false)
     const [albums] = useState<Album[]>([])
 
     const stateAlbums = location.state?.albums??[]
@@ -21,18 +26,19 @@ export const PresentationPage = () => {
     const {
         currentPhoto,
         handleNextPhoto,
-        handlePreviousPhoto    } = usePresentation(stateAlbums)
-
-
+        handlePreviousPhoto    
+    } = usePresentation(stateAlbums)
 
     if(stateAlbums.length === 0){
         return <Navigate to="/user/collections"/>
     }
     return(<>
-        <div>
-            <button onClick={handlePreviousPhoto} >previous</button>
-            <button onClick={handleNextPhoto} >next</button>
-        </div>
+        <ControlPanel
+            blockTimer={blockTimer}
+            onNextPhoto={handleNextPhoto}
+            onPreviousPhoto={handlePreviousPhoto}
+            onBlockTimer={setBlockTimer}
+        />
         {
             currentPhoto&&(
                 <div>
@@ -43,6 +49,7 @@ export const PresentationPage = () => {
                             maxWidth: "100%",
                             maxHeight: "90vh"
                         }}
+                        onLoad={() => setBlockTimer(false)}
                     />
                 </div>
             )

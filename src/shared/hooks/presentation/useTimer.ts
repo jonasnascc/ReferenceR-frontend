@@ -22,12 +22,12 @@ export const useTimer = (initialSecondsValue: number, onSecondsChange: (value: s
     
     const handleSeconds = () => {
         onSecondsChange(formatSecondsToTime(seconds))
-        if(seconds == 0) {
+        if(seconds === 0) {
             setIsZero(true);
             if(onTimerIsZero) onTimerIsZero();
         } else setIsZero(false);
 
-        if(seconds == -1) {
+        if(seconds === -1) {
             if(!isPaused) {
                 handleReset();
             }
@@ -60,8 +60,6 @@ export const useTimer = (initialSecondsValue: number, onSecondsChange: (value: s
 
     const handleEdit = (args ?: {cancel:boolean}) => {
         const stop = args ? args.cancel : false;
-
-        console.log(stop)
         setIsEditing(!stop);
         setIsPaused(!stop);
         if(!stop)
