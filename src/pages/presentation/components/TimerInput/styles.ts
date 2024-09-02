@@ -1,15 +1,6 @@
 import styled from "@emotion/styled";
 import { ButtonBase } from "@mui/material";
 
-export const TimerInputArea = styled.div`
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    height: 100%;
-    width: 100%;
-`
-
 export const Timer = styled.div`
     position: relative;
     height: 40px;
@@ -22,6 +13,10 @@ export const EditTile = styled.div<{color?:string}>`
     top: 8px;
     cursor: pointer;
     ${props => props.color ? `color:${props.color};` : ""}
+
+    &:hover {
+        color: #D217E2
+    }
 `
 
 export const TimerInputBase = styled.input`

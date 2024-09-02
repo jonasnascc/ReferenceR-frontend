@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { OutlinedButton } from "../../../../shared/components/Buttons/styles";
 import { useTimer } from "../../../../shared/hooks/presentation/useTimer";
 import { useTimerInput } from "../../../../shared/hooks/presentation/useTimerInput";
-import { EditTile, Timer, TimerInputArea, TimerInputBase } from "./styles";
+import { EditTile, Timer, TimerInputBase } from "./styles";
 
 import EditIcon from '@mui/icons-material/Edit';
 import SaveIcon from '@mui/icons-material/Save';
@@ -54,7 +54,7 @@ export const TimerInput = ({pause, blockTimer, onNextPhoto, onPreviousPhoto, onS
     }
 
     return (
-        <TimerInputArea>
+        <>
             <Timer>
                 <TimerInputBase
                     ref={inputRef}
@@ -67,6 +67,6 @@ export const TimerInput = ({pause, blockTimer, onNextPhoto, onPreviousPhoto, onS
                     {isEditing ? <SaveIcon/> : <EditIcon/>}
                 </EditTile>
             </Timer>
-        </TimerInputArea>
+        </>
     )
 }

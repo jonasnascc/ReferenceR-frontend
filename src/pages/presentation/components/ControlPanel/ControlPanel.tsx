@@ -1,8 +1,9 @@
 import { Grid, LinearProgress } from "@mui/material";
 import { ActionButtons } from "../ActionButtons/ActionButtons";
 import { TimerInput } from "../TimerInput/TimerInput";
-import { ControlPanelBlock, ControlPanelPh } from "./styles";
+import { ControlPanelBlock, ControlPanelPh, ControlPanelTheme, ControlPanelTimerBlock, LinearProgressDiv } from "./styles";
 import { useState } from "react";
+import { ThemeProvider } from "@emotion/react";
 
 export type ControlPanelProps = {
     onNextPhoto : () => void,
@@ -18,11 +19,9 @@ export const ControlPanel = ({blockTimer, onNextPhoto, onPreviousPhoto, onBlockT
     const handleNext = () => {
         onBlockTimer(true)
         onNextPhoto()
-        // handleReset()
     }
     const handlePrevious = () => {
         onPreviousPhoto()
-        // handleReset()
     }
 
     const handlePlayPause = () => {
@@ -35,29 +34,35 @@ export const ControlPanel = ({blockTimer, onNextPhoto, onPreviousPhoto, onBlockT
     }
     
     return (
+        <ThemeProvider theme={ControlPanelTheme}>
         <ControlPanelPh>
             <ControlPanelBlock>
-                <Grid container>
+                <Grid container height={"100%"}>
                     <Grid item xs={4}></Grid>
                     <Grid item xs={4}>
-                        <TimerInput
-                            pause={isPaused}
-                            blockTimer={blockTimer}
-                            onNextPhoto={handleNext}
-                            onPreviousPhoto={handlePrevious}
-                            onSecondsChange={handleProgressChange}
-                        />
-                        <ActionButtons
-                            isPaused={isPaused}
-                            onNextPhoto={handleNext}
-                            onPreviousPhoto={handlePrevious}
-                            onPlayPause={handlePlayPause}
-                        />
+                        <ControlPanelTimerBlock>
+                            <TimerInput
+                                pause={isPaused}
+                                blockTimer={blockTimer}
+                                onNextPhoto={handleNext}
+                                onPreviousPhoto={handlePrevious}
+                                onSecondsChange={handleProgressChange}
+                            />
+                            <ActionButtons
+                                isPaused={isPaused}
+                                onNextPhoto={handleNext}
+                                onPreviousPhoto={handlePrevious}
+                                onPlayPause={handlePlayPause}
+                            />
+                        </ControlPanelTimerBlock>
                     </Grid>
                     <Grid item xs={4}></Grid>
                 </Grid>
-                {progress&&<LinearProgress variant="determinate" value={progress}/>}
+                <LinearProgressDiv>{progress&&<LinearProgress variant="determinate" value={progress}/>}</LinearProgressDiv>
             </ControlPanelBlock>
         </ControlPanelPh>
+        
+        </ThemeProvider>
+        
     )
 }
