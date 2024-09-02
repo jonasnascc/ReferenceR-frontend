@@ -20,6 +20,7 @@ export const ControlPanelBlock = styled.div`
     height: 100%;
     border-radius: 10px;
     padding: 10px 10px 5px 10px;
+    z-index: 2;
 `
 
 export const ControlPanelTimerBlock = styled.div`
