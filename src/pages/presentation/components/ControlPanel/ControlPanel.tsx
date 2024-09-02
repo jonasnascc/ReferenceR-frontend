@@ -1,4 +1,4 @@
-import { Grid } from "@mui/material";
+import { Grid, LinearProgress } from "@mui/material";
 import { ActionButtons } from "../ActionButtons/ActionButtons";
 import { TimerInput } from "../TimerInput/TimerInput";
 import { ControlPanelBlock, ControlPanelPh } from "./styles";
@@ -13,6 +13,7 @@ export type ControlPanelProps = {
 
 export const ControlPanel = ({blockTimer, onNextPhoto, onPreviousPhoto, onBlockTimer} : ControlPanelProps) => {
     const [isPaused, setIsPaused] = useState(true)
+    const [progress, setProgress] = useState<number|null>(null)
 
     const handleNext = () => {
         onBlockTimer(true)
@@ -27,6 +28,11 @@ export const ControlPanel = ({blockTimer, onNextPhoto, onPreviousPhoto, onBlockT
     const handlePlayPause = () => {
         setIsPaused(state => !state)
     }
+
+    const handleProgressChange = (max:number, actualSeconds:number) => {
+        if(actualSeconds >= 0)
+            setProgress(100 - ((actualSeconds*100)/max))
+    }
     
     return (
         <ControlPanelPh>
@@ -39,6 +45,7 @@ export const ControlPanel = ({blockTimer, onNextPhoto, onPreviousPhoto, onBlockT
                             blockTimer={blockTimer}
                             onNextPhoto={handleNext}
                             onPreviousPhoto={handlePrevious}
+                            onSecondsChange={handleProgressChange}
                         />
                         <ActionButtons
                             isPaused={isPaused}
@@ -49,6 +56,7 @@ export const ControlPanel = ({blockTimer, onNextPhoto, onPreviousPhoto, onBlockT
                     </Grid>
                     <Grid item xs={4}></Grid>
                 </Grid>
+                {progress&&<LinearProgress variant="determinate" value={progress}/>}
             </ControlPanelBlock>
         </ControlPanelPh>
     )

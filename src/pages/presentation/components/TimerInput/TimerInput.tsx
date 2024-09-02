@@ -12,9 +12,10 @@ type TimerInputProps = {
     blockTimer: boolean, 
     onNextPhoto : () => void,
     onPreviousPhoto : () => void,
+    onSecondsChange ?: (max: number, progress:number) => void
 }
 
-export const TimerInput = ({pause, blockTimer, onNextPhoto, onPreviousPhoto} : TimerInputProps) => {
+export const TimerInput = ({pause, blockTimer, onNextPhoto, onPreviousPhoto, onSecondsChange} : TimerInputProps) => {
     const {
         inputRef,
         timerValue,
@@ -24,6 +25,8 @@ export const TimerInput = ({pause, blockTimer, onNextPhoto, onPreviousPhoto} : T
     } = useTimerInput()
 
     const {
+        seconds,
+        defaultInterval,
         handleEdit,
         handleSave,
         handlePlayPause,
@@ -40,6 +43,10 @@ export const TimerInput = ({pause, blockTimer, onNextPhoto, onPreviousPhoto} : T
         handlePlayPause(timerValue, pause)
     // eslint-disable-next-line react-hooks/exhaustive-deps
     },[pause])
+
+    useEffect(() => {
+        if(onSecondsChange) onSecondsChange(defaultInterval, seconds)
+    }, [seconds])
 
     const handleEditTimer = () => {
         if(isEditing) handleSave(timerValue)
