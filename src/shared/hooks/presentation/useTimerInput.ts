@@ -20,22 +20,24 @@ export const useTimerInput = () => {
 
     const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
         event.preventDefault();
+        console.log("key down", inputRef.current)
+
         if (inputRef.current) {
             let currentPosition = inputRef.current.selectionStart || 0;
             setCurrentSelectionPos(currentPosition);
 
             if (event.key === 'ArrowRight') {
-                if(currentPosition == 2) currentPosition += 1;
+                if(currentPosition === 2) currentPosition += 1;
                 inputRef.current.setSelectionRange(currentPosition + 1, currentPosition + 1);
             } else if (event.key === 'ArrowLeft') {
-                if(currentPosition == 4) currentPosition -= 1;
+                if(currentPosition === 4) currentPosition -= 1;
                 inputRef.current.setSelectionRange(currentPosition - 1, currentPosition - 1);
             } else if (event.key === 'Backspace') {
                 setTimerValue((value) => replaceTimerValueCharInPosition(value, currentPosition - 1, "0"));
                 setCurrentSelectionPos((pos) => pos - (pos==4 ? 2 : 1));
                 inputRef.current.setSelectionRange(currentPosition - 1, currentPosition - 1);
             } else if(/^\d+$/.test(event.key)){
-                if(currentPosition == 2) currentPosition += 1;
+                if(currentPosition === 2) currentPosition += 1;
                 setCurrentSelectionPos(currentPosition + 1);
                 setTimerValue((value) => replaceTimerValueCharInPosition(value, currentPosition, event.key));
                 
@@ -59,6 +61,7 @@ export const useTimerInput = () => {
     }
 
     const handleChange = (event:any) => {
+        console.log("change")
         let inputValue = event.target.value;
 
         inputValue = inputValue.replace(/\D/g, '');

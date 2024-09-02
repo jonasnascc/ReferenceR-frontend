@@ -1,7 +1,8 @@
-import React, { useEffect, useState } from "react";
-import { OutlinedButton } from "../../../../shared/components/Buttons/styles";
-import { useTimer } from "../../../../shared/hooks/presentation/useTimer";
-import { useTimerInput } from "../../../../shared/hooks/presentation/useTimerInput";
+import { Grid } from "@mui/material";
+import { ActionButtons } from "../ActionButtons/ActionButtons";
+import { TimerInput } from "../TimerInput/TimerInput";
+import { ControlPanelBlock, ControlPanelPh } from "./styles";
+import { useState } from "react";
 
 export type ControlPanelProps = {
     onNextPhoto : () => void,
@@ -11,63 +12,44 @@ export type ControlPanelProps = {
 }
 
 export const ControlPanel = ({blockTimer, onNextPhoto, onPreviousPhoto, onBlockTimer} : ControlPanelProps) => {
-    const {
-        inputRef,
-        timerValue,
-        handleKeyDown,
-        handleChange,
-        handleTimerValueChange
-    } = useTimerInput()
-
-    const {
-        seconds,
-        defaultInterval,
-        handleEdit,
-        handleSave,
-        handlePlayPause,
-        handleReset,
-        handleBlock,
-        isPaused,
-        isEditing,
-    } = useTimer(10, handleTimerValueChange, onNextPhoto)
-
-    useEffect(()=>{
-        handleBlock(blockTimer);
-    },[blockTimer])
+    const [isPaused, setIsPaused] = useState(true)
 
     const handleNext = () => {
         onBlockTimer(true)
         onNextPhoto()
-        handleReset()
+        // handleReset()
     }
     const handlePrevious = () => {
         onPreviousPhoto()
-        handleReset()
+        // handleReset()
+    }
+
+    const handlePlayPause = () => {
+        setIsPaused(state => !state)
     }
     
     return (
-        <>
-        <div style={{color: "white"}}>
-            <input 
-                ref={inputRef}
-                onKeyDown={handleKeyDown}
-                onChange={handleChange}
-                value={timerValue}
-                disabled={!isEditing}
-            />
-            {
-                isEditing ? (
-                    <OutlinedButton color="white" onClick={() => handleSave(timerValue)}>Save</OutlinedButton>
-                ) : (
-                    <OutlinedButton color="white" onClick={() => handleEdit()}>Edit</OutlinedButton>
-                )
-            }
-            <OutlinedButton color="white" onClick={() => handlePlayPause(timerValue)}>{isPaused ? "Start" : "Pause"}</OutlinedButton>
-        </div>
-        <div>
-            <OutlinedButton color="white" onClick={handlePrevious} >previous</OutlinedButton>
-            <OutlinedButton color="white" onClick={handleNext} >next</OutlinedButton>
-        </div>
-        </>
+        <ControlPanelPh>
+            <ControlPanelBlock>
+                <Grid container>
+                    <Grid item xs={4}></Grid>
+                    <Grid item xs={4}>
+                        <TimerInput
+                            pause={isPaused}
+                            blockTimer={blockTimer}
+                            onNextPhoto={handleNext}
+                            onPreviousPhoto={handlePrevious}
+                        />
+                        <ActionButtons
+                            isPaused={isPaused}
+                            onNextPhoto={handleNext}
+                            onPreviousPhoto={handlePrevious}
+                            onPlayPause={handlePlayPause}
+                        />
+                    </Grid>
+                    <Grid item xs={4}></Grid>
+                </Grid>
+            </ControlPanelBlock>
+        </ControlPanelPh>
     )
 }

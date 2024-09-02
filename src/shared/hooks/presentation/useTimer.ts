@@ -40,12 +40,13 @@ export const useTimer = (initialSecondsValue: number, onSecondsChange: (value: s
         }
     }
 
-    const handlePlayPause = (timerValue:string) => {
-        const newState = !isPaused;
+    const handlePlayPause = (timerValue:string, state?:boolean) => {
+        const newState = state? state : !isPaused;
         setIsPaused(() => newState);
         if(isEditing) {
             handleSave(timerValue, true);
         }
+        console.log({isPaused, isBlocked, isEditing})
 
     }
 

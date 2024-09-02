@@ -6,6 +6,8 @@ import { useTimer } from "../../shared/hooks/presentation/useTimer";
 import { useTimerInput } from "../../shared/hooks/presentation/useTimerInput";
 import { OutlinedButton } from "../../shared/components/Buttons/styles";
 import { ControlPanel } from "./components/ControlPanel/ControlPanel";
+import { PhotoSlide } from "./components/PhotoSlide/PhotoSlide";
+import { PresentationContainer } from "./styles";
 
 export const PresentationPage = () => {
     const location = useLocation()
@@ -29,30 +31,24 @@ export const PresentationPage = () => {
         handlePreviousPhoto    
     } = usePresentation(stateAlbums)
 
+    const handleBlock = (state:boolean) => {
+        setBlockTimer(state)
+    }
+
     if(stateAlbums.length === 0){
         return <Navigate to="/user/collections"/>
     }
-    return(<>
+    return(
+    <PresentationContainer>
         <ControlPanel
             blockTimer={blockTimer}
             onNextPhoto={handleNextPhoto}
             onPreviousPhoto={handlePreviousPhoto}
             onBlockTimer={setBlockTimer}
         />
-        {
-            currentPhoto&&(
-                <div>
-                    <img
-                        src={currentPhoto.url}
-                        alt={currentPhoto?.title}
-                        style={{
-                            maxWidth: "100%",
-                            maxHeight: "90vh"
-                        }}
-                        onLoad={() => setBlockTimer(false)}
-                    />
-                </div>
-            )
-        }
-    </>)
+
+        {currentPhoto&&<PhotoSlide currentPhoto={currentPhoto} onLoadPhoto={() => handleBlock(false)}/>}
+
+    </PresentationContainer>
+    )
 }
