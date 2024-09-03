@@ -4,7 +4,7 @@ import { fetchAlbumPhotos } from "../../../api/services/Photo"
 import { Deviation } from "../../../model/photo"
 import { useEffect, useState } from "react"
 
-type PresentationPhoto= {
+export type PresentationPhoto= {
     photo: Deviation | null,
     albumCode:string,
     albumAuthor:string,
@@ -77,7 +77,7 @@ export const usePresentation = (albums ?: Album[]) => {
         }, page: pageParam };
 
         const newPhotos = [...photos, data.data]
-        setPhotos((prev) => newPhotos)
+        setPhotos(() => newPhotos)
         setCurrentPhoto(newPhotos[newCurrentPhotoIndex]?.photo??null)
 
         return data;
@@ -91,6 +91,9 @@ export const usePresentation = (albums ?: Album[]) => {
         queryKey: [`presentation-${uniqueKey}`],
         queryFn: fetchRandomPhotoFn,
         retry: 3,
+        refetchOnMount: false,
+        refetchOnWindowFocus: false,
+        refetchOnReconnect: false,
         getNextPageParam: () => {
             return getRandomPage();
         }
@@ -107,6 +110,7 @@ export const usePresentation = (albums ?: Album[]) => {
     useEffect(() => {
         if(albums && currentPage < photos.length) setCurrentPhoto(photos[currentPage]?.photo??null)
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     ,[currentPage, photos])
 
     const handlePhotoChange = (index:number) => {
@@ -158,6 +162,7 @@ export const usePresentation = (albums ?: Album[]) => {
 
     return {
         currentPhoto,
+        currentPage,
         photos,
         setPhotos,
         setPresentationPhoto,

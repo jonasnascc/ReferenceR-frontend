@@ -2,9 +2,6 @@ import React, { useEffect, useState } from "react";
 import { Navigate, useLocation, useNavigate } from "react-router-dom";
 import { Album } from "../../model/album";
 import { usePresentation } from "../../shared/hooks/presentation/usePresentation";
-import { useTimer } from "../../shared/hooks/presentation/useTimer";
-import { useTimerInput } from "../../shared/hooks/presentation/useTimerInput";
-import { OutlinedButton } from "../../shared/components/Buttons/styles";
 import { ControlPanel } from "./components/ControlPanel/ControlPanel";
 import { PhotoSlide } from "./components/PhotoSlide/PhotoSlide";
 import { PresentationContainer } from "./styles";
@@ -14,6 +11,7 @@ export const PresentationPage = () => {
     const navigate = useNavigate()
 
     const [blockTimer, setBlockTimer] = useState(false)
+    const [reset, setReset] = useState(false)
     const [albums] = useState<Album[]>([])
 
     const stateAlbums = location.state?.albums??[]
@@ -26,7 +24,9 @@ export const PresentationPage = () => {
     }, [albums])
 
     const {
+        photos,
         currentPhoto,
+        currentPage,
         handleNextPhoto,
         handlePreviousPhoto    
     } = usePresentation(stateAlbums)
@@ -35,19 +35,41 @@ export const PresentationPage = () => {
         setBlockTimer(state)
     }
 
+    const handleNext = () => {
+        setReset(true)
+        handleNextPhoto()
+    }
+
+    const handlePrevious = () => {
+        setReset(true)
+        handlePreviousPhoto()
+    }
+
+    const handleReseted = () => {
+        setReset(false)
+    }
+
     if(stateAlbums.length === 0){
         return <Navigate to="/user/collections"/>
     }
     return(
     <PresentationContainer>
         <ControlPanel
+            reset={reset}
             blockTimer={blockTimer}
-            onNextPhoto={handleNextPhoto}
-            onPreviousPhoto={handlePreviousPhoto}
+            onNextPhoto={handleNext}
+            onPreviousPhoto={handlePrevious}
             onBlockTimer={setBlockTimer}
+            onReseted={handleReseted}
         />
 
-        {currentPhoto&&<PhotoSlide currentPhoto={currentPhoto} onLoadPhoto={() => handleBlock(false)}/>}
+        <PhotoSlide 
+            photos={photos}
+            currentIndex={currentPage}
+            onLoadPhoto={() => handleBlock(false)}
+            onNextSlide={handleNext}
+            onPreviousSlide={handlePrevious}
+        />
 
     </PresentationContainer>
     )

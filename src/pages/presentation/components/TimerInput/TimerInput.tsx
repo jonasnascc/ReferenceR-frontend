@@ -10,12 +10,14 @@ import SaveIcon from '@mui/icons-material/Save';
 type TimerInputProps = {
     pause : boolean,
     blockTimer: boolean, 
+    reset?: boolean,
     onNextPhoto : () => void,
     onPreviousPhoto : () => void,
-    onSecondsChange ?: (max: number, progress:number) => void
+    onSecondsChange ?: (max: number, progress:number) => void,
+    onReseted ?: () => void
 }
 
-export const TimerInput = ({pause, blockTimer, onNextPhoto, onPreviousPhoto, onSecondsChange} : TimerInputProps) => {
+export const TimerInput = ({pause, blockTimer, reset=false, onNextPhoto, onPreviousPhoto, onSecondsChange, onReseted=()=>{}} : TimerInputProps) => {
     const {
         inputRef,
         timerValue,
@@ -31,6 +33,7 @@ export const TimerInput = ({pause, blockTimer, onNextPhoto, onPreviousPhoto, onS
         handleSave,
         handlePlayPause,
         handleBlock,
+        handleReset,
         isEditing,
     } = useTimer(10, handleTimerValueChange, () => {}, onNextPhoto)
     
@@ -43,6 +46,11 @@ export const TimerInput = ({pause, blockTimer, onNextPhoto, onPreviousPhoto, onS
         handlePlayPause(timerValue, pause)
     // eslint-disable-next-line react-hooks/exhaustive-deps
     },[pause])
+
+    useEffect(() => {
+        handleReset()
+        onReseted()
+    }, [reset])
 
     useEffect(() => {
         if(onSecondsChange) onSecondsChange(defaultInterval, seconds)

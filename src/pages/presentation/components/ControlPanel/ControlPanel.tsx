@@ -5,14 +5,15 @@ import { ControlPanelBlock, ControlPanelPh, ControlPanelTheme, ControlPanelTimer
 import { useState } from "react";
 import { ThemeProvider } from "@emotion/react";
 
-export type ControlPanelProps = {
+export type ControlPanelProps = {    blockTimer: boolean
+    reset?: boolean,
     onNextPhoto : () => void,
     onPreviousPhoto: () => void,
     onBlockTimer : (value:boolean) => void,
-    blockTimer: boolean
+    onReseted ?: () => void
 }
 
-export const ControlPanel = ({blockTimer, onNextPhoto, onPreviousPhoto, onBlockTimer} : ControlPanelProps) => {
+export const ControlPanel = ({reset=false, blockTimer, onNextPhoto, onPreviousPhoto, onBlockTimer, onReseted} : ControlPanelProps) => {
     const [isPaused, setIsPaused] = useState(true)
     const [progress, setProgress] = useState<number|null>(null)
 
@@ -28,6 +29,7 @@ export const ControlPanel = ({blockTimer, onNextPhoto, onPreviousPhoto, onBlockT
         setIsPaused(state => !state)
     }
 
+
     const handleProgressChange = (max:number, actualSeconds:number) => {
         if(actualSeconds >= 0)
             setProgress(100 - ((actualSeconds*100)/max))
@@ -42,11 +44,13 @@ export const ControlPanel = ({blockTimer, onNextPhoto, onPreviousPhoto, onBlockT
                     <Grid item xs={4}>
                         <ControlPanelTimerBlock>
                             <TimerInput
+                                reset={reset}
                                 pause={isPaused}
                                 blockTimer={blockTimer}
                                 onNextPhoto={handleNext}
                                 onPreviousPhoto={handlePrevious}
                                 onSecondsChange={handleProgressChange}
+                                onReseted={onReseted}
                             />
                             <ActionButtons
                                 isPaused={isPaused}
