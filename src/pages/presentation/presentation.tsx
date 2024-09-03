@@ -28,7 +28,8 @@ export const PresentationPage = () => {
         currentPhoto,
         currentPage,
         handleNextPhoto,
-        handlePreviousPhoto    
+        handlePreviousPhoto,
+        handleIndexChange
     } = usePresentation(stateAlbums)
 
     const handleBlock = (state:boolean) => {
@@ -67,8 +68,7 @@ export const PresentationPage = () => {
             photos={photos}
             currentIndex={currentPage}
             onLoadPhoto={() => handleBlock(false)}
-            onNextSlide={handleNext}
-            onPreviousSlide={handlePrevious}
+            onIndexChange={handleIndexChange}
         />
 
     </PresentationContainer>

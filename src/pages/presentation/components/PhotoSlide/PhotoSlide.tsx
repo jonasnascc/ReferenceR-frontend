@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import { Deviation} from "../../../../model/photo";
 import {Swiper, SwiperClass, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import "./styles.css"
@@ -11,13 +10,11 @@ type PhotoSlideProps = {
     currentIndex: number,
     photos : PresentationPhoto[],
     onLoadPhoto ?: () => void,
-    onNextSlide : () => void,
-    onPreviousSlide: () => void
+    onIndexChange : (index:number) => void
 }
 
-export const PhotoSlide = ({photos, currentIndex, onNextSlide, onPreviousSlide, onLoadPhoto = () => {}} : PhotoSlideProps) => {
+export const PhotoSlide = ({photos, currentIndex,onLoadPhoto = () => {}, onIndexChange} : PhotoSlideProps) => {
     const [index, setIndex] = useState(currentIndex)
-    const [lastIndex, setLastIndex] = useState(currentIndex)
     const [swiperRef, setSwiperRef] = useState<SwiperClass>();
     const [touching, setTouching] = useState(false)
 
@@ -25,12 +22,11 @@ export const PhotoSlide = ({photos, currentIndex, onNextSlide, onPreviousSlide, 
         if(swiperRef) {
             if(currentIndex < photos.length){
                 if(!touching) {
-                    setLastIndex(() => index)
                     setIndex(() => currentIndex)
                 }
             }
-            console.log({currentIndex, len: photos.length})
         }
+        console.log({currentIndex, len: photos.length})
         
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [currentIndex, swiperRef, photos])
@@ -45,15 +41,12 @@ export const PhotoSlide = ({photos, currentIndex, onNextSlide, onPreviousSlide, 
     const handleSlideChange = () => {
         console.log({change:"change", touching})
         if(touching&&swiperRef) {
-            if(index !== lastIndex) {
-                if(index < lastIndex) onPreviousSlide()
-                if(index > lastIndex) onNextSlide()
-            }
+            onIndexChange(swiperRef.activeIndex)
+            console.log(touching? "touched" : "not touched")
         }
     }
 
     const handleTouch = (state:boolean) => {
-        console.log(state ? "touching" : "not touching") 
         setTouching(state)
     }
 

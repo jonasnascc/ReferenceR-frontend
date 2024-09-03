@@ -120,6 +120,21 @@ export const usePresentation = (albums ?: Album[]) => {
         return null;
     }
 
+    const handleIndexChange = (index:number) => {
+        if(index < 0) return;
+
+        if(albums) {
+            if(index >= photos.length-4) fetchNextPhoto()
+            changePage(index)
+            
+        }
+        else  {
+            if(index < photos.length){
+                changePage(index)
+            }
+        }
+    }
+
     const handleNextPhoto = () => {
         if(albums) {
             if(currentPage >= photos.length-4) fetchNextPhoto()
@@ -168,6 +183,7 @@ export const usePresentation = (albums ?: Album[]) => {
         setPresentationPhoto,
         getCurrentPhotoIndex,
         handlePhotoChange,
+        handleIndexChange,
         handleNextPhoto,
         handlePreviousPhoto,
         hasNextPhoto
