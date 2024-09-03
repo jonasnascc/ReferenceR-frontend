@@ -46,6 +46,11 @@ export const PresentationPage = () => {
         handlePreviousPhoto()
     }
 
+    const handleChangeIndex = (index : number) => {
+        setReset(true)
+        handleIndexChange(index)
+    }
+
     const handleReseted = () => {
         setReset(false)
     }
@@ -68,7 +73,7 @@ export const PresentationPage = () => {
             photos={photos}
             currentIndex={currentPage}
             onLoadPhoto={() => handleBlock(false)}
-            onIndexChange={handleIndexChange}
+            onIndexChange={handleChangeIndex}
         />
 
     </PresentationContainer>

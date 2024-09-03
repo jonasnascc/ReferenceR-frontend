@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from "react";
 import {Swiper, SwiperClass, SwiperSlide } from "swiper/react";
+
 import "swiper/css";
 import "./styles.css"
+import 'swiper/css/zoom';
 
 import configuration from "./config"
 import { PresentationPhoto } from "../../../../shared/hooks/presentation/usePresentation";
@@ -39,10 +41,8 @@ export const PhotoSlide = ({photos, currentIndex,onLoadPhoto = () => {}, onIndex
 
 
     const handleSlideChange = () => {
-        console.log({change:"change", touching})
         if(touching&&swiperRef) {
             onIndexChange(swiperRef.activeIndex)
-            console.log(touching? "touched" : "not touched")
         }
     }
 
@@ -67,15 +67,17 @@ export const PhotoSlide = ({photos, currentIndex,onLoadPhoto = () => {}, onIndex
                 {photos.map((ph) => {
                     if(ph.photo) return (
                         <SwiperSlide key={`${ph.photo.code}-${ph.photo.title}`}>
-                            <img
-                                src={ph.photo.url}
-                                alt={ph.photo?.title}
-                                style={{
-                                    maxWidth: "100%",
-                                    maxHeight: "90vh"
-                                }}
-                                onLoad={onLoadPhoto}
-                            />
+                            <div className="swiper-zoom-container">
+                                <img
+                                    src={ph.photo.url}
+                                    alt={ph.photo?.title}
+                                    style={{
+                                        maxWidth: "100%",
+                                        maxHeight: "90vh"
+                                    }}
+                                    onLoad={onLoadPhoto}
+                                />
+                            </div>
                         </SwiperSlide>
                     )
                     return null
