@@ -1,21 +1,20 @@
-import { Grid, LinearProgress } from "@mui/material";
+import { Grid } from "@mui/material";
 import { ActionButtons } from "../ActionButtons/ActionButtons";
 import { TimerInput } from "../TimerInput/TimerInput";
-import { ControlPanelBlock, ControlPanelPh, ControlPanelTheme, ControlPanelTimerBlock, LinearProgressDiv } from "./styles";
+    import { ControlPanelBlock, ControlPanelPh, ControlPanelTimerBlock } from "./styles";
 import { useState } from "react";
-import { ThemeProvider } from "@emotion/react";
 
 export type ControlPanelProps = {    blockTimer: boolean
     reset?: boolean,
     onNextPhoto : () => void,
     onPreviousPhoto: () => void,
     onBlockTimer : (value:boolean) => void,
-    onReseted ?: () => void
+    onReseted ?: () => void,
+    onProgressChange ?: (max:number, progress:number) => void
 }
 
-export const ControlPanel = ({reset=false, blockTimer, onNextPhoto, onPreviousPhoto, onBlockTimer, onReseted} : ControlPanelProps) => {
+export const ControlPanel = ({reset=false, blockTimer, onNextPhoto, onPreviousPhoto, onBlockTimer, onReseted, onProgressChange} : ControlPanelProps) => {
     const [isPaused, setIsPaused] = useState(true)
-    const [progress, setProgress] = useState<number|null>(null)
 
     const handleNext = () => {
         onBlockTimer(true)
@@ -30,13 +29,9 @@ export const ControlPanel = ({reset=false, blockTimer, onNextPhoto, onPreviousPh
     }
 
 
-    const handleProgressChange = (max:number, actualSeconds:number) => {
-        if(actualSeconds >= 0)
-            setProgress(100 - ((actualSeconds*100)/max))
-    }
+
     
     return (
-        <ThemeProvider theme={ControlPanelTheme}>
         <ControlPanelPh>
             <ControlPanelBlock>
                 <Grid container height={"100%"}>
@@ -49,7 +44,7 @@ export const ControlPanel = ({reset=false, blockTimer, onNextPhoto, onPreviousPh
                                 blockTimer={blockTimer}
                                 onNextPhoto={handleNext}
                                 onPreviousPhoto={handlePrevious}
-                                onSecondsChange={handleProgressChange}
+                                onSecondsChange={onProgressChange}
                                 onReseted={onReseted}
                             />
                             <ActionButtons
@@ -62,11 +57,7 @@ export const ControlPanel = ({reset=false, blockTimer, onNextPhoto, onPreviousPh
                     </Grid>
                     <Grid item xs={4}></Grid>
                 </Grid>
-                <LinearProgressDiv>{progress&&<LinearProgress variant="determinate" value={progress}/>}</LinearProgressDiv>
             </ControlPanelBlock>
         </ControlPanelPh>
-        
-        </ThemeProvider>
-        
     )
 }

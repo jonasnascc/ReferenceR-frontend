@@ -1,5 +1,4 @@
 import styled from "@emotion/styled";
-import { createTheme } from "@mui/material";
 
 export const ControlPanelPh = styled.div`
     position: absolute;
@@ -30,25 +29,3 @@ export const ControlPanelTimerBlock = styled.div`
     align-items: center;
     height: 100%;
 `
-
-export const LinearProgressDiv = styled.div`
-    position: absolute;
-    width: calc(100% - 30px);
-    bottom: 0px;
-`
-
-
-export const ControlPanelTheme = createTheme({
-    components: {
-      MuiLinearProgress: {
-        styleOverrides: {
-          root: {
-            backgroundColor: 'transparent', // Cor de fundo da barra de progresso
-          },
-          bar: {
-            backgroundColor: '#D217E2', // Cor da barra de progresso
-          }
-        }
-      }
-    }
-})

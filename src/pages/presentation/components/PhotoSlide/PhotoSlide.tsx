@@ -2,11 +2,11 @@ import React, { useEffect, useState } from "react";
 import {Swiper, SwiperClass, SwiperSlide } from "swiper/react";
 
 import "swiper/css";
-import "./styles.css"
 import 'swiper/css/zoom';
 
 import configuration from "./config"
 import { PresentationPhoto } from "../../../../shared/hooks/presentation/usePresentation";
+import { SlideContent, SlideImage } from "./styles";
 
 type PhotoSlideProps = {
     currentIndex: number,
@@ -67,17 +67,13 @@ export const PhotoSlide = ({photos, currentIndex,onLoadPhoto = () => {}, onIndex
                 {photos.map((ph) => {
                     if(ph.photo) return (
                         <SwiperSlide key={`${ph.photo.code}-${ph.photo.title}`}>
-                            <div className="swiper-zoom-container">
-                                <img
+                            <SlideContent className="swiper-zoom-container">
+                                <SlideImage
                                     src={ph.photo.url}
                                     alt={ph.photo?.title}
-                                    style={{
-                                        maxWidth: "100%",
-                                        maxHeight: "90vh"
-                                    }}
                                     onLoad={onLoadPhoto}
                                 />
-                            </div>
+                            </SlideContent>
                         </SwiperSlide>
                     )
                     return null
