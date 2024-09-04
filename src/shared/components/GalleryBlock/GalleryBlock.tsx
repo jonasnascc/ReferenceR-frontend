@@ -51,8 +51,7 @@ export const GalleryBlock = ({userCollections} : GalleryBlockProps) => {
         if(photos.length > 0) {
             const prPhotos = photos.map(ph => {return {
                 photo: ph,
-                albumCode:selectedAlbum?.code??"",
-                albumAuthor:selectedAlbum?.author??"",
+                album : null,
                 page: -1
             }})
 

@@ -1,8 +1,9 @@
 import { Grid } from "@mui/material";
 import { ActionButtons } from "../ActionButtons/ActionButtons";
 import { TimerInput } from "../TimerInput/TimerInput";
-    import { ControlPanelBlock, ControlPanelPh, ControlPanelTimerBlock } from "./styles";
+    import { ControlPanelBlock, ControlPanelPh, ControlPanelTimerBlock, PhotoAlbum, PhotoAuthor, PhotoMetadataDiv, PhotoTitle } from "./styles";
 import { useState } from "react";
+import { Album } from "../../../../model/album";
 
 export type ControlPanelProps = {    blockTimer: boolean
     reset?: boolean,
@@ -10,10 +11,13 @@ export type ControlPanelProps = {    blockTimer: boolean
     onPreviousPhoto: () => void,
     onBlockTimer : (value:boolean) => void,
     onReseted ?: () => void,
-    onProgressChange ?: (max:number, progress:number) => void
+    onProgressChange ?: (max:number, progress:number) => void,
+    currentPhotoTitle : string,
+    currentAlbum : Album | null,
+    
 }
 
-export const ControlPanel = ({reset=false, blockTimer, onNextPhoto, onPreviousPhoto, onBlockTimer, onReseted, onProgressChange} : ControlPanelProps) => {
+export const ControlPanel = ({reset=false, blockTimer, onNextPhoto, onPreviousPhoto, onBlockTimer, onReseted, onProgressChange, currentAlbum, currentPhotoTitle} : ControlPanelProps) => {
     const [isPaused, setIsPaused] = useState(true)
 
     const handleNext = () => {
@@ -34,29 +38,30 @@ export const ControlPanel = ({reset=false, blockTimer, onNextPhoto, onPreviousPh
     return (
         <ControlPanelPh>
             <ControlPanelBlock>
-                <Grid container height={"100%"}>
-                    <Grid item xs={4}></Grid>
-                    <Grid item xs={4}>
-                        <ControlPanelTimerBlock>
-                            <TimerInput
-                                reset={reset}
-                                pause={isPaused}
-                                blockTimer={blockTimer}
-                                onNextPhoto={handleNext}
-                                onPreviousPhoto={handlePrevious}
-                                onSecondsChange={onProgressChange}
-                                onReseted={onReseted}
-                            />
-                            <ActionButtons
-                                isPaused={isPaused}
-                                onNextPhoto={handleNext}
-                                onPreviousPhoto={handlePrevious}
-                                onPlayPause={handlePlayPause}
-                            />
-                        </ControlPanelTimerBlock>
-                    </Grid>
-                    <Grid item xs={4}></Grid>
-                </Grid>
+                <ControlPanelTimerBlock>
+                    <PhotoMetadataDiv>
+                        <PhotoTitle>{currentPhotoTitle}</PhotoTitle>
+                        <PhotoAlbum>{currentAlbum?.name}</PhotoAlbum>
+                        <PhotoAuthor>{currentAlbum?.author}</PhotoAuthor>
+                        
+                    </PhotoMetadataDiv>
+                    <ActionButtons
+                        isPaused={isPaused}
+                        onNextPhoto={handleNext}
+                        onPreviousPhoto={handlePrevious}
+                        onPlayPause={handlePlayPause}
+                    >
+                        <TimerInput
+                            reset={reset}
+                            pause={isPaused}
+                            blockTimer={blockTimer}
+                            onNextPhoto={handleNext}
+                            onPreviousPhoto={handlePrevious}
+                            onSecondsChange={onProgressChange}
+                            onReseted={onReseted}
+                        />
+                    </ActionButtons>
+                </ControlPanelTimerBlock>
             </ControlPanelBlock>
         </ControlPanelPh>
     )

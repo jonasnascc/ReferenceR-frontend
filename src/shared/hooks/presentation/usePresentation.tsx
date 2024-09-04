@@ -6,8 +6,7 @@ import { useEffect, useState } from "react"
 
 export type PresentationPhoto= {
     photo: Deviation | null,
-    albumCode:string,
-    albumAuthor:string,
+    album : Album | null,
     page: number
 }
 interface Page {
@@ -41,8 +40,7 @@ export const usePresentation = (albums ?: Album[]) => {
     
         const emptyResp = { data: {
             photo : null,
-            albumCode: "",
-            albumAuthor:"",
+            album : null,
             page : pageParam
         }, page: pageParam };
 
@@ -71,8 +69,7 @@ export const usePresentation = (albums ?: Album[]) => {
 
         const data : Page = { data: {
             photo : resp[0]??null,
-            albumCode: selAlbum.code,
-            albumAuthor: selAlbum.author,
+            album: selAlbum,
             page : pageParam
         }, page: pageParam };
 

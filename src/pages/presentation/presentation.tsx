@@ -77,6 +77,8 @@ export const PresentationPage = () => {
                     onBlockTimer={setBlockTimer}
                     onReseted={handleReseted}
                     onProgressChange={handleProgressChange}
+                    currentPhotoTitle={currentPhoto?.title??""}
+                    currentAlbum={photos.filter(ph => ph.photo?.code === currentPhoto?.code)[0]?.album??null}
                 />
 
                 <PhotoSlide 

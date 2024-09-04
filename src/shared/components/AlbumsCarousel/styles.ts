@@ -2,7 +2,7 @@ import styled from "@emotion/styled";
 
 export const AlbumCarouselSlideItem = styled.div<{selected ?: boolean}>`
     position: relative;
-    height: 180px;
+    min-height: 180px;
     width: auto;
     /* border: ${props => props.selected ? "solid 2px white" : "none"}; */
     border-radius: 10px;
