@@ -5,7 +5,6 @@ export const ControlPanelPh = styled.div`
     display: flex;
     flex-direction: column;
     align-items: center;
-    height: 120px;
     width: 100%;
     bottom: 20px;
 `
@@ -27,17 +26,17 @@ export const ControlPanelTimerBlock = styled.div`
     display: flex;
     flex-direction: column;
     justify-content: space-evenly;
-    align-items: center;
     height: 100%;
 `
 
 export const PhotoMetadataDiv = styled.div`
     display: flex;
     flex-direction: column;
-    align-items: center;
     text-align: start;
     width: 100%;
     color: white;
+    padding-left: 1vw;
+    padding-bottom: 10px;
 `
 
 export const PhotoTitle = styled.h3`
