@@ -36,7 +36,7 @@ export const TimerInput = ({pause, blockTimer, startFrom, reset=false, onNextPho
         handleBlock,
         handleReset,
         isEditing,
-    } = useTimer(10, handleTimerValueChange, undefined, undefined, startFrom)
+    } = useTimer(10, handleTimerValueChange, undefined, onNextPhoto,  startFrom)
     
     useEffect(()=>{
         handleBlock(blockTimer);
