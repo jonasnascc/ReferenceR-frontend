@@ -27,7 +27,7 @@ const AlbumCarouselConfiguration : SwiperProps = {
     },
     modules:[
         Navigation,
-        Scrollbar
+        Scrollbar,
     ]
 } 
 

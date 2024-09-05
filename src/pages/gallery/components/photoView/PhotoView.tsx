@@ -61,7 +61,7 @@ export const PhotoView = ({open=false, initialPhotoIndex=0,photos, onClose, onPh
               {
                 photos.map(photo => (
                   <SwiperSlide key={photo.code}>
-                    <ImageContainer>
+                    <ImageContainer className="swiper-zoom-container">
                       <PhotoViewImage 
                         src={photo.url} 
                         alt={photo.title} 
