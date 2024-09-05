@@ -10,6 +10,7 @@ import SaveIcon from '@mui/icons-material/Save';
 type TimerInputProps = {
     pause : boolean,
     blockTimer: boolean, 
+    startFrom ?: number,
     reset?: boolean,
     onNextPhoto : () => void,
     onPreviousPhoto : () => void,
@@ -17,7 +18,7 @@ type TimerInputProps = {
     onReseted ?: () => void
 }
 
-export const TimerInput = ({pause, blockTimer, reset=false, onNextPhoto, onPreviousPhoto, onSecondsChange, onReseted=()=>{}} : TimerInputProps) => {
+export const TimerInput = ({pause, blockTimer, startFrom, reset=false, onNextPhoto, onPreviousPhoto, onSecondsChange, onReseted=()=>{}} : TimerInputProps) => {
     const {
         inputRef,
         timerValue,
@@ -35,7 +36,7 @@ export const TimerInput = ({pause, blockTimer, reset=false, onNextPhoto, onPrevi
         handleBlock,
         handleReset,
         isEditing,
-    } = useTimer(10, handleTimerValueChange, () => {}, onNextPhoto)
+    } = useTimer(10, handleTimerValueChange, undefined, undefined, startFrom)
     
     useEffect(()=>{
         handleBlock(blockTimer);
@@ -62,19 +63,17 @@ export const TimerInput = ({pause, blockTimer, reset=false, onNextPhoto, onPrevi
     }
 
     return (
-        <>
-            <Timer>
-                <TimerInputBase
-                    ref={inputRef}
-                    onKeyDown={handleKeyDown}
-                    onChange={handleChange}
-                    value={timerValue}
-                    disabled={!isEditing}
-                />
-                <EditTile onClick={handleEditTimer} color={isEditing?"black":"white"}>
-                    {isEditing ? <SaveIcon/> : <EditIcon/>}
-                </EditTile>
-            </Timer>
-        </>
+        <Timer>
+            <TimerInputBase
+                ref={inputRef}
+                onKeyDown={handleKeyDown}
+                onChange={handleChange}
+                value={timerValue}
+                disabled={!isEditing}
+            />
+            <EditTile onClick={handleEditTimer} color={isEditing?"black":"white"}>
+                {isEditing ? <SaveIcon/> : <EditIcon/>}
+            </EditTile>
+        </Timer>
     )
 }

@@ -1,14 +1,14 @@
 import { useEffect, useRef, useState } from "react";
 
 
-export const useTimer = (initialSecondsValue: number, onSecondsChange: (value: string) => void, onTimerReset?:() => void, onTimerIsZero?:() => void) => {
+export const useTimer = (initialSecondsValue: number, onSecondsChange: (value: string) => void, onTimerReset?:() => void, onTimerIsZero?:() => void, startFrom?:number) => {
     const [defaultInterval, setDefaultInterval] = useState(initialSecondsValue);
-    const [seconds, setSeconds] = useState(initialSecondsValue)
+    const [seconds, setSeconds] = useState(startFrom&&startFrom<=initialSecondsValue ? startFrom : initialSecondsValue)
     const [isZero, setIsZero] = useState(false);
     const [isPaused, setIsPaused] = useState(true);
     const [isBlocked, setIsBlocked] = useState(false);
     const [isEditing, setIsEditing] = useState(false);
-
+    
     useEffect(() => {
         const interval = setInterval(() => {
             handleDecreaseSeconds();

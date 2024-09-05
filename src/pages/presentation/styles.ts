@@ -1,11 +1,14 @@
 import styled from "@emotion/styled";
 import { createTheme } from "@mui/material";
 
-export const PresentationContainer = styled.div`
+export const PresentationContainer = styled.div<{footerActive?:boolean}>`
     position: relative;
     background-color: #141024;
-    min-height: 100vh;
+    height: 100vh;
     width: 100vw;
+    ${props => props.footerActive && `
+      height: calc(100vh - 50px)
+    `}
 `
 
 

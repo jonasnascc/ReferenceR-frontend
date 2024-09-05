@@ -6,16 +6,16 @@ import 'swiper/css/zoom';
 
 import configuration from "./config"
 import { PresentationPhoto } from "../../../../shared/hooks/presentation/usePresentation";
-import { SlideContent, SlideImage } from "./styles";
+import { SlideContent, SlideImage, SwiperContainer } from "./styles";
 
 type PhotoSlideProps = {
     currentIndex: number,
     photos : PresentationPhoto[],
     onLoadPhoto ?: () => void,
-    onIndexChange : (index:number) => void
+    onIndexChange : (index:number) => void,
+    countFooter ?: boolean,
 }
-
-export const PhotoSlide = ({photos, currentIndex,onLoadPhoto = () => {}, onIndexChange} : PhotoSlideProps) => {
+export const PhotoSlide = ({photos, currentIndex, countFooter=false, onLoadPhoto = () => {}, onIndexChange} : PhotoSlideProps) => {
     const [index, setIndex] = useState(currentIndex)
     const [swiperRef, setSwiperRef] = useState<SwiperClass>();
     const [touching, setTouching] = useState(false)
@@ -51,11 +51,7 @@ export const PhotoSlide = ({photos, currentIndex,onLoadPhoto = () => {}, onIndex
     }
 
     return (
-        <div style={{
-            display:"flex",
-            width: "100%",
-            height: "100%"
-        }}>
+        <SwiperContainer countFooter={countFooter}>
             <Swiper 
                 onSwiper={setSwiperRef}
                 onSlideChangeTransitionStart={handleSlideChange}
@@ -79,6 +75,6 @@ export const PhotoSlide = ({photos, currentIndex,onLoadPhoto = () => {}, onIndex
                     return null
                 })}
             </Swiper>
-        </div>
+        </SwiperContainer>
     )
 };

@@ -1,32 +1,38 @@
 import styled from "@emotion/styled";
 
 export const ControlPanelPh = styled.div`
-    position: absolute;
+    width: 100%;
     display: flex;
     flex-direction: column;
-    align-items: center;
-    width: 100%;
+    position: absolute;
     bottom: 20px;
+    align-items: center;
 `
 
 export const ControlPanelBlock = styled.div`
     position: relative;
     display: flex;
-    flex-direction: column;
     background-color: #221945;
     opacity: 0.9;
+    z-index: 2;
     width: 350px;
     height: 100%;
-    border-radius: 10px;
+    flex-direction: column;
     padding: 10px 10px 5px 10px;
-    z-index: 2;
+    border-radius: 10px;
 `
 
-export const ControlPanelTimerBlock = styled.div`
+export const ControlPanelActionButtonsDiv = styled.div`
     display: flex;
-    flex-direction: column;
-    justify-content: space-evenly;
-    height: 100%;
+    flex: 1;
+    justify-content: center;
+    
+`
+
+export const InfoDiv = styled.div`
+    display: flex;
+    gap: 1vw;
+    align-items: start;
 `
 
 export const PhotoMetadataDiv = styled.div`
@@ -35,8 +41,7 @@ export const PhotoMetadataDiv = styled.div`
     text-align: start;
     width: 100%;
     color: white;
-    padding-left: 1vw;
-    padding-bottom: 10px;
+    margin-bottom: 10px;
 `
 
 export const PhotoTitle = styled.h3`

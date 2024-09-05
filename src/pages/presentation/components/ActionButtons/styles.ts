@@ -1,7 +1,7 @@
 import styled from "@emotion/styled";
 import { CustomButton } from "../../../../shared/components/Buttons/styles";
 
-export const ActionButtonsDiv = styled.div`
+export const ActionButtonsDiv = styled.div<{footerMode?:boolean}>`
     display: flex;
     justify-content: space-evenly;
     gap: .5vw;
@@ -10,6 +10,8 @@ export const ActionButtonsDiv = styled.div`
     height: 40px;
     border-radius: 15px;
     padding: 3px .5vw;
+    margin: 0 25px;
+    flex-wrap: wrap;
 `
 
 export const ActionButton = styled(CustomButton)`

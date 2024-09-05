@@ -10,9 +10,10 @@ import { LinearProgress, ThemeProvider } from "@mui/material";
 export const PresentationPage = () => {
     const location = useLocation()
     const navigate = useNavigate()
-    const [progress, setProgress] = useState<number|null>(null)
-    
 
+    const [footerActive, setFooterActive] = useState(false)
+
+    const [progress, setProgress] = useState<number|null>(null)
     const [blockTimer, setBlockTimer] = useState(false)
     const [reset, setReset] = useState(false)
     const [albums] = useState<Album[]>([])
@@ -63,13 +64,26 @@ export const PresentationPage = () => {
         setReset(false)
     }
 
+    const handleToggleFooter = () => {
+        setFooterActive(state => !state)
+    }
+
     if(stateAlbums.length === 0){
         return <Navigate to="/user/collections"/>
     }
     return(
     <ThemeProvider theme={ChronoShuffleTheme}>
-        <PresentationContainer>
+        <PresentationContainer footerActive={false}>
+                <PhotoSlide 
+                    photos={photos}
+                    currentIndex={currentPage}
+                    onLoadPhoto={() => handleBlock(false)}
+                    onIndexChange={handleChangeIndex}
+                    countFooter={footerActive}
+                />
+                
                 <ControlPanel
+                    footerActive={footerActive}
                     reset={reset}
                     blockTimer={blockTimer}
                     onNextPhoto={handleNext}
@@ -77,15 +91,9 @@ export const PresentationPage = () => {
                     onBlockTimer={setBlockTimer}
                     onReseted={handleReseted}
                     onProgressChange={handleProgressChange}
+                    onToggleFooter={handleToggleFooter}
                     currentPhotoTitle={currentPhoto?.title??""}
                     currentAlbum={photos.filter(ph => ph.photo?.code === currentPhoto?.code)[0]?.album??null}
-                />
-
-                <PhotoSlide 
-                    photos={photos}
-                    currentIndex={currentPage}
-                    onLoadPhoto={() => handleBlock(false)}
-                    onIndexChange={handleChangeIndex}
                 />
         </PresentationContainer>
         <LinearProgressDiv>{progress&&<LinearProgress variant="determinate" value={progress}/>}</LinearProgressDiv>

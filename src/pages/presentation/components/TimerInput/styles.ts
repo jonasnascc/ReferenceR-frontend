@@ -1,5 +1,4 @@
 import styled from "@emotion/styled";
-import { ButtonBase } from "@mui/material";
 
 export const Timer = styled.div`
     position: relative;

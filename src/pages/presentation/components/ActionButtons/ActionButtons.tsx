@@ -11,14 +11,14 @@ type ActionButtonsProps = {
     onNextPhoto : () => void,
     onPreviousPhoto : () => void,
     onPlayPause: () => void,
-    children ?: ReactNode
+    children ?: ReactNode,
+    footerMode?:boolean
 }
 
-export const ActionButtons = ({isPaused, onPreviousPhoto, onNextPhoto, onPlayPause, children} : ActionButtonsProps) => {
-
+export const ActionButtons = ({isPaused, onPreviousPhoto, onNextPhoto, onPlayPause, footerMode, children} : ActionButtonsProps) => {
     return(
         <>  
-            <ActionButtonsDiv>
+            <ActionButtonsDiv footerMode={footerMode}>
                 <ActionButton onClick={onPreviousPhoto} ><SkipPreviousIcon/></ActionButton>
 
                 {children}
