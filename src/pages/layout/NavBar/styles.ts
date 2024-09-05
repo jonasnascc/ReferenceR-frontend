@@ -1,12 +1,12 @@
 import styled from "@emotion/styled";
 
-export const NavBarContainer = styled.div`
+export const NavBarContainer = styled.div<{path:string}>`
     position: relative;
     display: flex;
     align-items: center;
     gap: 1vw;
     min-height: 70px;
-    background-color: #141024;
+    background-color: ${props => props.path==="/" ? "#140C34" : "#141024"};
     padding: 0 2vw;
     flex-wrap: wrap;
     z-index: 2;

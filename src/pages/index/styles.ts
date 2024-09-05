@@ -8,7 +8,7 @@ export const HomeContainer = styled.div`
     flex-direction: column;
     align-items: center;
     min-height: 100%;
-    background-color: #141024;
+    background-color: #140C34;
     height: 100%;
     width: 100%;
     top: 0;

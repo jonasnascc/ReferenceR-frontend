@@ -17,6 +17,9 @@ export const AuthProvider = ({children} : {children : JSX.Element}) => {
                     setAuthenticated(true);
                 }
                 else setAuthenticated(false)
+            } else {
+                setUser(null)
+                setAuthenticated(false)
             }
         }
         validate();

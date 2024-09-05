@@ -46,6 +46,8 @@ export const NavBar = () => {
     const {pathname} = useLocation()
     const navigate = useNavigate()
 
+    console.log(pathname)
+
     const handleLogout = async () => {
         if(await signout()) {
             navigate(pathname, {replace:true})
@@ -60,7 +62,7 @@ export const NavBar = () => {
     
     if(ignorePathnames.includes(pathname)) return (null)
     return(
-        <NavBarContainer>
+        <NavBarContainer path={pathname}>
             <HideInHomePage>
                 <Logo href="/">
                     <LogoImage src={LogoImg} alt="logo"/>
