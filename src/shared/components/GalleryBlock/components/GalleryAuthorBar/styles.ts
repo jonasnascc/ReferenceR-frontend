@@ -4,10 +4,12 @@ export const AuthorTile = styled.div`
     display: flex;
     align-items: center;
     gap: 1vw;
-    height: 70px;
+    min-height: 70px;
     background-color: #141024;
     color: white;
     padding: 0 1.5vw;
+    flex-wrap: wrap;
+    padding: 10px;
 `
 
 export const AuthorNameBox = styled.div`
