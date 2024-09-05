@@ -12,6 +12,8 @@ export const AuthPageContainer = styled.div`
 
     display: flex;
     justify-content: center;
+
+    overflow: hidden;
 `
 
 export const AuthFormTile = styled.div`
