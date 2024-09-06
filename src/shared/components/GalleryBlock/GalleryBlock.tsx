@@ -24,13 +24,18 @@ export const GalleryBlock = ({userCollections} : GalleryBlockProps) => {
         photos,
         selectedAlbum,
         selectedPhotos,
+        notSelectedPhotos,
         handleAlbumClick,
         handleLoadMorePhotos,
         handleAddToCollection,
         handleSelectAllPhotos,
+        handleSelectPhoto,
         isSelectingAll,
         hasNextPage,
         isLoadingPhotos,
+        selectMode,
+        handleSelectMode,
+        handleClearSelection
     } = useGallery({
         authorName: authorName, 
         userFavourites: userCollections,
@@ -60,13 +65,15 @@ export const GalleryBlock = ({userCollections} : GalleryBlockProps) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [photos])
 
-    const handlePhotoClick = (photoCode : string) => {
-        setPresentationPhoto(photoCode)
+    const handlePhotoClick = (photoCode : string, doubleClick?:boolean) => {
+        if(!selectMode || doubleClick) setPresentationPhoto(photoCode)
+        else handleSelectPhoto(photoCode)
     }
 
-    const handleClosePhotoView = () => [
+    const handleClosePhotoView = () => {
         setPresentationPhoto(null)
-    ]
+        
+    }
 
     if(!authorName && !userCollections) {
         navigate("/");
@@ -85,11 +92,22 @@ export const GalleryBlock = ({userCollections} : GalleryBlockProps) => {
                     selectedAlbum={selectedAlbum}
                     handleAlbumSelect={handleAlbumClick}
                 />
-            </AuthorCarouselBlock>
-            <GalleryAlbumHeader album={selectedAlbum}/>
+            </AuthorCarouselBlock> 
+
+            <GalleryAlbumHeader 
+                album={selectedAlbum}
+                selectingAll={isSelectingAll&&notSelectedPhotos.length===0}
+                selectMode={selectMode}
+                onSelectMode={handleSelectMode}
+                onSelectAll={handleSelectAllPhotos}
+                onClearSelection={handleClearSelection}
+            />
+
             <PhotosGrid 
                 photos={photos} 
+                selectMode={selectMode}
                 selectedPhotos = {selectedPhotos}
+                notSelectedPhotos = {notSelectedPhotos}
                 selectingAll={isSelectingAll}
                 onAddToCollection={handleAddToCollection}
                 onSelectPhoto={handlePhotoClick}

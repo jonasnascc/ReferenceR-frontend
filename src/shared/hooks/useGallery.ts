@@ -9,13 +9,20 @@ import { useSearchParams } from "react-router-dom"
 export interface Page {
     data: Deviation[];
     page?: number;
-  }
+}
 
 export const useGallery = (config : {
     authorName?: string,
     provider : string,
     userFavourites ?: boolean
 }) => {
+    const {
+        authorName,
+        provider,
+        userFavourites,
+    } = config
+
+
     const [searchParams, setSearchParams] = useSearchParams()
 
     const [isLoadingAlbums, setLoadingAlbums] = useState(false)
@@ -26,8 +33,7 @@ export const useGallery = (config : {
 
     const [isSelectingAll, setSelectingAll] = useState(false)
     const [selectedPhotos, setSelectedPhotos] = useState<string[]>([])
-
-    const [showingPhoto, setShowingPhoto] = useState<Deviation|null>(null)
+    const [notSelectedPhotos, setNotSelectedPhotos] = useState<string[]>([])
 
     const [isLoadingPhotos, setLoadingPhotos] = useState(false)
     const [photos, setPhotos] = useState<Deviation[]>([])
@@ -35,9 +41,9 @@ export const useGallery = (config : {
     const [currentPage, setCurrentPage] = useState(1)
 
     const {isLoading:loadingAlbums, isFetching:fetchingAlbums} = useQuery<Album[]>([`albums-${config.authorName}`], 
-        () => fetchAuthorAlbums(config?.authorName??"", config.provider), 
+        () => fetchAuthorAlbums(authorName??"", provider), 
         {
-            enabled: Boolean(config?.authorName) && !Boolean(config.userFavourites),
+            enabled: Boolean(authorName) && !Boolean(userFavourites),
             refetchOnWindowFocus: false,
             retry: 3,
             onSuccess: (data) => handleSetAlbums(data)
@@ -61,7 +67,7 @@ export const useGallery = (config : {
         fetchNextPage,
         hasNextPage,
     } = useInfiniteQuery<Page>({
-        enabled: Boolean(selectedAlbum)&&(Boolean(config?.authorName)||Boolean(config?.userFavourites)),
+        enabled: Boolean(selectedAlbum)&&(Boolean(authorName)||Boolean(config?.userFavourites)),
         queryKey: [`album-${selectedAlbum?.code??""}-${selectedAlbum?.author??""}-photos`],
         refetchOnWindowFocus: false,
         retry: 3,
@@ -70,8 +76,8 @@ export const useGallery = (config : {
             setLoadingPhotos(true)
             const resp = await fetchAlbumPhotos(
                 selectedAlbum,
-                config?.authorName ? config.authorName : selectedAlbum.author,
-                config.provider,
+                authorName ? authorName : selectedAlbum.author,
+                provider,
                 pageParam,
                 50
             )
@@ -118,13 +124,13 @@ export const useGallery = (config : {
     }, [photosPages])
 
     // useEffect(()=> {
-    //     console.log(isSelectingAll, selectedPhotos)
-    // },[isSelectingAll, selectedPhotos])
+    //     console.log({isSelectingAll, selectedPhotos, notSelectedPhotos})
+    // },[isSelectingAll, selectedPhotos, notSelectedPhotos])
 
     const handleSetAlbums = (data:Album[]) => {
         setAlbums(data)
         const paramAlb = searchParams.get("album")
-        if(paramAlb && config?.authorName) {
+        if(paramAlb && authorName) {
             const alb = findAlbumByCode(paramAlb, data)
             if(alb) setSelectedAlbum(alb)
             else setSelectedAlbum(data[0])
@@ -168,32 +174,56 @@ export const useGallery = (config : {
 
     const handleSelectMode = (state ?: boolean) => {
         const newState = state ? state : !selectMode;
-        if(!newState) {
-            setSelectedPhotos([])
-            setSelectingAll(false)
-        }
+        if(!newState) 
+            handleClearSelection()
+        
         setSelectMode(newState)
     }
 
     const handleSelectPhoto = (photoCode : string) => {
-        if(selectMode) changePhotoSelected(photoCode, !selectedPhotos.includes(photoCode))
-        else {
-            handleViewPhoto(photoCode)
+        if(selectMode) {
+            if(isSelectingAll) togglePhotoSelected(photoCode, !notSelectedPhotos.includes(photoCode))
+            
+            else togglePhotoSelected(photoCode, !selectedPhotos.includes(photoCode))
         }
     }
 
-    const changePhotoSelected = (photoCode:string, selected:boolean) => {
+    const togglePhotoSelected = (photoCode:string, selected:boolean) => {
         if(selected) selectPhoto(photoCode)
         else unselectPhoto(photoCode)
     }
 
     const selectPhoto = (photoCode:string) => {
-        setSelectedPhotos((prev) => [...prev, photoCode])
+        if(!isSelectingAll) 
+            setSelectedPhotos((prev) => [...prev, photoCode])
+
+        else {
+            if((photos.length < 100) && ((notSelectedPhotos.length+1) > 60)){
+                const delArray = [...notSelectedPhotos, photoCode]
+
+                const allPagePhotoCodes = photos.map(ph => ph.code) 
+
+                const selArray = allPagePhotoCodes.filter(code => !delArray.includes(code))
+
+                setSelectedPhotos(() => selArray)
+                setNotSelectedPhotos([])
+                setSelectingAll(false)
+            }
+            
+            else setNotSelectedPhotos((prev) => [...prev, photoCode])
+        }
     }
 
     const unselectPhoto = (photoCode:string) => {
-        const filtered = selectedPhotos.filter(ph => ph !== photoCode);
-        setSelectedPhotos(filtered)
+        if(!isSelectingAll) {
+            const filtered = selectedPhotos.filter(code => code !== photoCode);
+            setSelectedPhotos(filtered)
+        }
+        else{
+            const filtered = notSelectedPhotos.filter(code => code !== photoCode);
+            setNotSelectedPhotos(filtered)
+        }
+        
     }
 
     const handleAddToCollection = () => {
@@ -209,35 +239,22 @@ export const useGallery = (config : {
         else{
             //favourite selected
         }
-
-
         handleClearSelection()
-
         //add service 
     }
 
     const handleClearSelection = () => {
         setSelectedPhotos([])
+        setNotSelectedPhotos([])
         setSelectingAll(false)
     }
 
-
     const handleSelectAllPhotos = () => {
-        if(isSelectingAll){
+        if(isSelectingAll) handleClearSelection()
+        else {
             setSelectedPhotos([])
+            setSelectingAll(true)
         }
-        setSelectMode(true)
-        setSelectingAll(true)
-    }
-
-    const handleViewPhoto = (photoCode : string) => {
-        const photo = photos.filter(ph => ph.code === photoCode)
-        if(photo.length===0) return;
-        setShowingPhoto(photo[0])
-    }
-
-    const handleClosePhotoView = () => {
-        setShowingPhoto(null)
     }
 
     const handleLoadMorePhotos = () => {
@@ -251,20 +268,19 @@ export const useGallery = (config : {
         isLoadingAlbums,
         selectedAlbum,
         photos,
-        showingPhoto,
         isLoadingPhotos,
         isSelectingAll,
         selectMode,
         currentPage,
         selectedPhotos,
+        notSelectedPhotos,
         handleAlbumClick,
         handleLoadMorePhotos,
         handleSelectMode,
         handleSelectPhoto,
-        handleViewPhoto,
         handleSelectAllPhotos,
         handleAddToCollection,
-        handleClosePhotoView,
+        handleClearSelection,
         getAlbumByIndex,
         hasNextPage,
     }

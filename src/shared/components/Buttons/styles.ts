@@ -30,13 +30,26 @@ export const LogoutButton = styled(AuthButton)`
     background-color: #e21717;
 `
 
-export const OutlinedButton = styled(CustomButton)<{color?:string}>`
+export const OutlinedButton = styled(CustomButton)<{color?:string, active?:boolean, activeColor?:string}>`
     border: solid 1px white;
     border-radius: 5px;
     padding: 2px 5px;
-    ${props => props.color&&`color:${props.color}; border-color:${props.color};`}
-    
-    &:hover{
-        ${props => props.color&&`background-color:${props.color}; color:#141024; font-weight:600;`}
-    }
+    ${props => props.color && `
+        color:${props.color}; 
+        border-color:${props.color};
+
+        &:hover{
+            background-color:${props.color}; 
+            color:#141024; 
+            font-weight:600;
+            border-color:${props.color}
+        }
+        
+        ${props.active && `
+            background-color:${props.activeColor ? props.activeColor : props.color}; 
+            color:${props.activeColor ? "white" : "#141024"}; 
+            font-weight:600;
+            ${props.activeColor&&`border-color:${props.activeColor};`}
+        `}
+    `}
 `

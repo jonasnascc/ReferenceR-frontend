@@ -1,11 +1,14 @@
 import InfiniteScroll from "react-infinite-scroll-component";
 import { Deviation } from "../../../../model/photo";
 import { CustomCircularProgress, CustomImageList, CustomImageListItem, LoadingImageBlock, PhotosGridContainer, PhotosGridImage } from "./styles";
+import { SelectBox } from "./components/SelectBox";
 
 type PhotosGridProps = {
     photos: Deviation[],
+    selectMode : boolean,
     selectedPhotos: string[],
-    onSelectPhoto : (photoCode : string) => void,
+    notSelectedPhotos: string[],
+    onSelectPhoto : (photoCode : string, doubleClick?:boolean) => void,
     hasMore:boolean,
     onLoadMore:() => void,
     onAddToCollection: () => void,
@@ -14,8 +17,26 @@ type PhotosGridProps = {
     selectingAll ?: boolean,
 }
 
-export const PhotosGrid = ({photos, selectedPhotos, hasMore,onLoadMore, onSelectPhoto, onAddToCollection, onSelectAll, loading, selectingAll} : PhotosGridProps) => {
+export const PhotosGrid = ({photos, selectMode, selectedPhotos, notSelectedPhotos, hasMore,onLoadMore, onSelectPhoto, onAddToCollection, onSelectAll, loading, selectingAll} : PhotosGridProps) => {
     if(photos.length === 0) return null
+
+    const handleSelectPhoto = (code : string, doubleClick?:boolean) => {
+        onSelectPhoto(code, doubleClick)
+    }
+
+    const checkSelected = (code : string) => {
+        if(!selectingAll){
+            const selPhoto = selectedPhotos.filter(phCode => phCode === code)
+            if(selPhoto.length === 0) return false;
+            return true;
+        }
+        else {
+            const selPhoto = notSelectedPhotos.filter(phCode => phCode === code)
+            if(selPhoto.length === 0) return true;
+            return false
+        }
+    }
+
     return(
         <PhotosGridContainer>
         <InfiniteScroll
@@ -23,17 +44,8 @@ export const PhotosGrid = ({photos, selectedPhotos, hasMore,onLoadMore, onSelect
             next={onLoadMore}
             hasMore={hasMore}
             loader={<></>}
-            
             endMessage={<></>}
         >
-            {/* <RequireAuth>
-                <SelectedPhotosActions 
-                    selected={selectedPhotos}
-                    onAddToCollection={onAddToCollection}
-                    onSelectAll={onSelectAll}
-                    selectingAll={selectingAll}
-                />
-            </RequireAuth> */}
             <CustomImageList
                 gap={8}
                 cols={6}
@@ -42,16 +54,22 @@ export const PhotosGrid = ({photos, selectedPhotos, hasMore,onLoadMore, onSelect
                     <CustomImageListItem 
                         key={index} 
                     >
+                        {selectMode&&<SelectBox 
+                            checked={checkSelected(photo.code)} 
+                            onCheck={() => handleSelectPhoto(photo.code)}
+                        />}
                         <PhotosGridImage
-                            selected={(!selectingAll&&selectedPhotos.includes(photo.code)) || (selectingAll&&!selectedPhotos.includes(photo.code))} 
+                            selected={checkSelected(photo.code)} 
                             src={photo.thumbUrl} 
                             alt={photo.title}
-                            onClick={() => onSelectPhoto(photo.code)}
+                            onClick={() => handleSelectPhoto(photo.code)}
+                            onDoubleClick={() => handleSelectPhoto(photo.code, true)}
                             loading="lazy"
                         />
                     </CustomImageListItem>
                 ))
             }
+            
             {loading&&(
                 <CustomImageListItem>
                     <LoadingImageBlock>
