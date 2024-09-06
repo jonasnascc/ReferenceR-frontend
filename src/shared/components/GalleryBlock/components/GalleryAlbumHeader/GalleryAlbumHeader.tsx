@@ -3,6 +3,7 @@ import { Album } from "../../../../../model/album";
 import { OutlinedButton } from "../../../Buttons/styles";
 import { HeaderBlock, HeaderContainer, AlbumTile, AlbumSize, AlbumTitle, Sphere } from "./styles";
 import { GallerySelectButtons } from "../GallerySelectButtons/GallerySelectButtons";
+import { FavoriteAlbumButton } from "../../../FavoriteAlbum/FavoriteAlbumButton/FavoriteAlbumButton";
 
 
 type GalleryAlbumHeaderProps = {
@@ -54,6 +55,8 @@ export const GalleryAlbumHeader = ({
                     />
 
                     <Sphere size="5px"/>
+
+                    <FavoriteAlbumButton album={album}/>
 
                     <OutlinedButton color="white" onClick={handleStartPresentation}>Start Presentation</OutlinedButton>
                 </AlbumTile>

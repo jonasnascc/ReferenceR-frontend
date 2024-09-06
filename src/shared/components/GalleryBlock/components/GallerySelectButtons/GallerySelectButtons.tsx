@@ -38,6 +38,9 @@ export const GallerySelectButtons = ({
                 </OutlinedButton>
 
                 <OutlinedButton color="white" onClick={onClearSelection}>Clear</OutlinedButton>
+
+                <OutlinedButton color="white">Save to collection</OutlinedButton>
+
                 </>
             )}
         </SelectButtonsDiv>
