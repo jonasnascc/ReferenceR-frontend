@@ -34,6 +34,7 @@ export const OutlinedButton = styled(CustomButton)<{color?:string, active?:boole
     border: solid 1px white;
     border-radius: 5px;
     padding: 2px 5px;
+    color: inherit;
     ${props => props.color && `
         color:${props.color}; 
         border-color:${props.color};

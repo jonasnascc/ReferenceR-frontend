@@ -3,6 +3,7 @@ import { Album } from "../../../../model/album"
 import { OutlinedButton } from "../../Buttons/styles"
 import { favoriteAlbum, unfavoriteAlbum } from "../../../../api/services/Album"
 import { useState } from "react"
+import { RequireAuth } from "../../../../context/RequireAuth"
 
 type FavoriteAlbumButtonProps = {
     album : Album
@@ -29,8 +30,10 @@ export const FavoriteAlbumButton = ({album} : FavoriteAlbumButtonProps) => {
     }
     
     return (
-        <OutlinedButton color="#FCFF55" onClick={handleClick} active={favorited}>
-            {favorited ? "Favorite" : "Favorite Album"}
-        </OutlinedButton>
+        <RequireAuth>
+            <OutlinedButton color="#FCFF55" onClick={handleClick} active={favorited}>
+                {favorited ? "Favorite" : "Favorite Album"}
+            </OutlinedButton>
+        </RequireAuth>
     )
 }
