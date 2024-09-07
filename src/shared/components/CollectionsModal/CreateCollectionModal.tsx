@@ -6,17 +6,16 @@ import CloseIcon from '@mui/icons-material/Close';
 import { useState } from "react";
 import { useMutation } from "react-query";
 import { createCollection } from "../../../api/services/Collection";
+import { CollectionsModalProps } from "./types";
 
-type CollectionsModalProps = {
-    open : boolean,
-    onClose : () => void
-}
 
-export const CollectionsModal = ({open, onClose} : CollectionsModalProps) => {
+export const CreateCollectionModal = ({open, onClose} : CollectionsModalProps) => {
     const [name, setName] = useState("")
     const [description, setDescription] = useState("")
 
-    const saveMutation = useMutation("create-collection", () => createCollection({name, description}))
+    const saveMutation = useMutation("create-collection", () => createCollection({name, description}), {
+        onSuccess: () => onClose()
+    })
 
     const handleNameChange = (event: any) => {
         setName(event.target.value)
@@ -41,8 +40,8 @@ export const CollectionsModal = ({open, onClose} : CollectionsModalProps) => {
                     <ModalHeader>
                         Create Collection
                         <CustomButton onClick={onClose}><CloseIcon/></CustomButton>
+                        <Divider style={{backgroundColor: "white"}}/>
                     </ModalHeader>
-                    <Divider style={{backgroundColor: "white"}}/>
 
                     <CreateForm onSubmit={(event:any) => {
                         event.preventDefault()

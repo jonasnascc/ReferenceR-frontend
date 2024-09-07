@@ -1,5 +1,7 @@
+import { useState } from "react";
 import { OutlinedButton } from "../../../Buttons/styles";
 import { SelectButtonsDiv } from "./styles";
+import { CollectionsListModal } from "../../../CollectionsModal/CollectionsListModal";
 
 type GallerySelectButtonsProps = {
     active : boolean,
@@ -16,7 +18,18 @@ export const GallerySelectButtons = ({
         onSelectAll = ()=>{},
         onClearSelection = ()=>{}
 } : GallerySelectButtonsProps) => {
+    const [openCollectionsList, setOpenCollectionsList] = useState(false)
+
+    const handleAddToCollections = () => {
+        setOpenCollectionsList(true)
+    }
+
+    const handleCloseCollectionsModal = () => {
+        setOpenCollectionsList(false)
+    }
+
     return(
+        <>
         <SelectButtonsDiv active={active}>
             <OutlinedButton color="white" 
                 onClick={onSelect}
@@ -39,11 +52,16 @@ export const GallerySelectButtons = ({
 
                 <OutlinedButton color="white" onClick={onClearSelection}>Clear</OutlinedButton>
 
-                <OutlinedButton color="white">Save to collection</OutlinedButton>
+                <OutlinedButton color="white" onClick={handleAddToCollections}>Save to collection</OutlinedButton>
 
                 </>
             )}
         </SelectButtonsDiv>
+        <CollectionsListModal
+            open={openCollectionsList}
+            onClose={handleCloseCollectionsModal}
+        />
+        </>
         
     )
 }
