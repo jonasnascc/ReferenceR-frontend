@@ -5,6 +5,7 @@ import { useEffect, useState } from "react"
 import { Deviation } from "../../model/photo"
 import { fetchAlbumPhotos } from "../../api/services/Photo"
 import { useSearchParams } from "react-router-dom"
+import { PhotoCodeByPage } from "../../model/collection"
 
 export interface Page {
     data: Deviation[];
@@ -32,8 +33,8 @@ export const useGallery = (config : {
     const [selectedAlbum, setSelectedAlbum] = useState<Album>()
 
     const [isSelectingAll, setSelectingAll] = useState(false)
-    const [selectedPhotos, setSelectedPhotos] = useState<string[]>([])
-    const [notSelectedPhotos, setNotSelectedPhotos] = useState<string[]>([])
+    const [selectedPhotos, setSelectedPhotos] = useState<PhotoCodeByPage[]>([])
+    const [notSelectedPhotos, setNotSelectedPhotos] = useState<PhotoCodeByPage[]>([])
 
     const [isLoadingPhotos, setLoadingPhotos] = useState(false)
     const [photos, setPhotos] = useState<Deviation[]>([])
@@ -180,67 +181,50 @@ export const useGallery = (config : {
         setSelectMode(newState)
     }
 
-    const handleSelectPhoto = (photoCode : string) => {
+    const handleSelectPhoto = (photo : PhotoCodeByPage) => {
         if(selectMode) {
-            if(isSelectingAll) togglePhotoSelected(photoCode, !notSelectedPhotos.includes(photoCode))
+            if(isSelectingAll) togglePhotoSelected(photo, !notSelectedPhotos.includes(photo))
             
-            else togglePhotoSelected(photoCode, !selectedPhotos.includes(photoCode))
+            else togglePhotoSelected(photo, !selectedPhotos.includes(photo))
         }
     }
 
-    const togglePhotoSelected = (photoCode:string, selected:boolean) => {
-        if(selected) selectPhoto(photoCode)
-        else unselectPhoto(photoCode)
+    const togglePhotoSelected = (photo : PhotoCodeByPage, selected:boolean) => {
+        if(selected) selectPhoto(photo)
+        else unselectPhoto(photo)
     }
 
-    const selectPhoto = (photoCode:string) => {
+    const selectPhoto = (photo : PhotoCodeByPage) => {
         if(!isSelectingAll) 
-            setSelectedPhotos((prev) => [...prev, photoCode])
+            setSelectedPhotos((prev) => [...prev, photo])
 
         else {
             if((photos.length < 100) && ((notSelectedPhotos.length+1) > 60)){
-                const delArray = [...notSelectedPhotos, photoCode]
+                const delArray = [...notSelectedPhotos, photo]
 
-                const allPagePhotoCodes = photos.map(ph => ph.code) 
+                const allPhotos : PhotoCodeByPage[] = photos.map(ph => {return {code: ph.code, page: ph.page}}) 
 
-                const selArray = allPagePhotoCodes.filter(code => !delArray.includes(code))
+                const selArray : PhotoCodeByPage[] = allPhotos.filter(ph => !delArray.includes(photo))
 
                 setSelectedPhotos(() => selArray)
                 setNotSelectedPhotos([])
                 setSelectingAll(false)
             }
             
-            else setNotSelectedPhotos((prev) => [...prev, photoCode])
+            else setNotSelectedPhotos((prev) => [...prev, photo])
         }
     }
 
-    const unselectPhoto = (photoCode:string) => {
+    const unselectPhoto = (photo : PhotoCodeByPage) => {
         if(!isSelectingAll) {
-            const filtered = selectedPhotos.filter(code => code !== photoCode);
+            const filtered = selectedPhotos.filter(code => code !== photo);
             setSelectedPhotos(filtered)
         }
         else{
-            const filtered = notSelectedPhotos.filter(code => code !== photoCode);
+            const filtered = notSelectedPhotos.filter(code => code !== photo);
             setNotSelectedPhotos(filtered)
         }
         
-    }
-
-    const handleAddToCollection = () => {
-        if(!selectedAlbum) return;
-        if(isSelectingAll){
-            if(selectedPhotos.length===0) 
-                favouriteMutation.mutate({album:selectedAlbum, except:null})
-            
-            else
-                favouriteMutation.mutate({album:selectedAlbum, except:selectedPhotos})
-            
-        }
-        else{
-            //favourite selected
-        }
-        handleClearSelection()
-        //add service 
     }
 
     const handleClearSelection = () => {
@@ -279,7 +263,6 @@ export const useGallery = (config : {
         handleSelectMode,
         handleSelectPhoto,
         handleSelectAllPhotos,
-        handleAddToCollection,
         handleClearSelection,
         getAlbumByIndex,
         hasNextPage,

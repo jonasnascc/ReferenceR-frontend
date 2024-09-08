@@ -10,6 +10,7 @@ import { GalleryAlbumHeader } from "./components/GalleryAlbumHeader/GalleryAlbum
 import { AuthorCarouselBlock } from "./components/styles";
 import { GalleryAuthorBar } from "./components/GalleryAuthorBar/GalleryAuthorBar";
 import { PageContainer } from "../PageContainer/styles";
+import { PhotoCodeByPage } from "../../../model/collection";
 
 type GalleryBlockProps = {
     userCollections ?: boolean
@@ -27,7 +28,6 @@ export const GalleryBlock = ({userCollections} : GalleryBlockProps) => {
         notSelectedPhotos,
         handleAlbumClick,
         handleLoadMorePhotos,
-        handleAddToCollection,
         handleSelectAllPhotos,
         handleSelectPhoto,
         isSelectingAll,
@@ -65,9 +65,9 @@ export const GalleryBlock = ({userCollections} : GalleryBlockProps) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [photos])
 
-    const handlePhotoClick = (photoCode : string, doubleClick?:boolean) => {
-        if(!selectMode || doubleClick) setPresentationPhoto(photoCode)
-        else handleSelectPhoto(photoCode)
+    const handlePhotoClick = (ph : PhotoCodeByPage, doubleClick?:boolean) => {
+        if(!selectMode || doubleClick) setPresentationPhoto(ph)
+        else handleSelectPhoto(ph)
     }
 
     const handleClosePhotoView = () => {
@@ -101,6 +101,8 @@ export const GalleryBlock = ({userCollections} : GalleryBlockProps) => {
                 onSelectMode={handleSelectMode}
                 onSelectAll={handleSelectAllPhotos}
                 onClearSelection={handleClearSelection}
+                selectedPhotos={selectedPhotos}
+                exceptPhotos={notSelectedPhotos}
             />
 
             <PhotosGrid 
@@ -109,7 +111,6 @@ export const GalleryBlock = ({userCollections} : GalleryBlockProps) => {
                 selectedPhotos = {selectedPhotos}
                 notSelectedPhotos = {notSelectedPhotos}
                 selectingAll={isSelectingAll}
-                onAddToCollection={handleAddToCollection}
                 onSelectPhoto={handlePhotoClick}
                 onSelectAll={handleSelectAllPhotos}
                 onLoadMore={handleLoadMorePhotos}

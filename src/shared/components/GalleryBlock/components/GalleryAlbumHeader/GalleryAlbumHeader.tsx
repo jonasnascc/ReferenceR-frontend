@@ -4,6 +4,7 @@ import { OutlinedButton } from "../../../Buttons/styles";
 import { HeaderBlock, HeaderContainer, AlbumTile, AlbumSize, AlbumTitle, Sphere } from "./styles";
 import { GallerySelectButtons } from "../GallerySelectButtons/GallerySelectButtons";
 import { FavoriteAlbumButton } from "../../../FavoriteAlbum/FavoriteAlbumButton/FavoriteAlbumButton";
+import { CollectionsListModalProps } from "../../../CollectionsModal/types";
 
 
 type GalleryAlbumHeaderProps = {
@@ -21,8 +22,9 @@ export const GalleryAlbumHeader = ({
     selectMode=false, 
     onSelectMode = () => {},
     onSelectAll,
-    onClearSelection
-} : GalleryAlbumHeaderProps) => {
+    onClearSelection,
+    ...props
+} : GalleryAlbumHeaderProps & CollectionsListModalProps) => {
     const navigate = useNavigate()
     
     const handleStartPresentation = () => {
@@ -52,6 +54,8 @@ export const GalleryAlbumHeader = ({
                         onSelect={handleSelectMode}
                         onSelectAll={onSelectAll}
                         onClearSelection={onClearSelection}
+                        album={album}
+                        {...props}
                     />
 
                     <Sphere size="5px"/>

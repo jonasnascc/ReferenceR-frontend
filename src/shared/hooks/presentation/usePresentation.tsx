@@ -3,6 +3,7 @@ import { Album } from "../../../model/album"
 import { fetchAlbumPhotos } from "../../../api/services/Photo"
 import { Deviation } from "../../../model/photo"
 import { useEffect, useState } from "react"
+import { PhotoCodeByPage } from "../../../model/collection"
 
 export type PresentationPhoto= {
     photo: Deviation | null,
@@ -153,8 +154,8 @@ export const usePresentation = (albums ?: Album[]) => {
     }
 
 
-    const setPresentationPhoto = (photoCode : string|null) => {
-        if(!photoCode) {
+    const setPresentationPhoto = (ph : PhotoCodeByPage|null) => {
+        if(!ph) {
             setCurrentPhoto(null)
             setCurrentPage(0)
             return;
@@ -162,7 +163,7 @@ export const usePresentation = (albums ?: Album[]) => {
         const result = photos.map(ph => ph.photo?.code)
         if(result.length===0) return;
 
-        changePage(result.indexOf(photoCode))
+        changePage(result.indexOf(ph.code))
     }
 
     const getCurrentPhotoIndex = () => {

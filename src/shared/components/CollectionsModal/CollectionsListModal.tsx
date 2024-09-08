@@ -1,5 +1,5 @@
-import { Checkbox, Divider, Modal } from "@mui/material"
-import { CollectionsModalProps } from "./types"
+import {  Divider, Modal } from "@mui/material"
+import { CollectionsListModalProps, CollectionsModalProps } from "./types"
 import { ColList, ColListEl, ListCheckbox, ListModalBox, ModalHeader, ModalPh, SearchInput } from "./styles"
 import CloseIcon from '@mui/icons-material/Close';
 import { CustomButton, OutlinedButton } from "../Buttons/styles"
@@ -7,14 +7,15 @@ import { useQuery } from "react-query";
 import { listUserCollections } from "../../../api/services/Collection";
 import { UserCollection } from "../../../model/collection";
 import { useState } from "react";
-import { CustomInput } from "../Inputs/styles";
+import { useCollections } from "../../hooks/useCollections";
 
-
-export const CollectionsListModal = ({open, onClose} : CollectionsModalProps) => {
+export const CollectionsListModal = ({open, onClose, selectedPhotos, album, exceptPhotos} : CollectionsModalProps & CollectionsListModalProps) => {
     const [search, setSearch] = useState("")
     const [checkedCols, setCheckedCols] = useState<UserCollection[]>([])
 
     const {data} = useQuery<UserCollection[]>(["user-collections"], () => listUserCollections())
+
+    const {handleAddPhotos} = useCollections(selectedPhotos, album, exceptPhotos);
 
     const handleChange = (event:any) => {
         setSearch(event.target.value)
@@ -36,6 +37,10 @@ export const CollectionsListModal = ({open, onClose} : CollectionsModalProps) =>
             if(hasCol) setCheckedCols(newList)
         }
     }   
+
+    const handleSave = () => [
+        handleAddPhotos(checkedCols)
+    ]
     
     return(
         <Modal
@@ -72,7 +77,7 @@ export const CollectionsListModal = ({open, onClose} : CollectionsModalProps) =>
                         
                     }
                     </ColList>
-                    <OutlinedButton color="#D217E2">Save</OutlinedButton>
+                    <OutlinedButton color="white" onClick={handleSave}>Save</OutlinedButton>
                 </ListModalBox>
             </ModalPh>
         </Modal>

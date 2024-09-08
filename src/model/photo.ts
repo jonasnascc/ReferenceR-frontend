@@ -8,7 +8,7 @@ export type Deviation = {
     type: string,
     matureLevel: string | null,
     publishedTime : Date,
-    photoPage: string,
+    page: number,
     license: string,
     tags : {name:string, url:string} [],
     favorited ?: boolean
@@ -20,6 +20,8 @@ export type SimplePhoto = {
     title : string,
     url : string,
     mature ?: boolean,
+    page ?: number,
+    albumCode ?: string
 }
 
 export type Tag = {

@@ -17,7 +17,7 @@ export const fetchAlbumPhotos = async (album: Album | null, author: string | nul
 
 
 export const fetchPhotoTags = async (photo : Deviation | null, provider : string) => {
-    return await axios.get(`deviations/tags?url=${photo?.photoPage}`, { 
+    return await axios.get(`deviations/tags?url=${photo?.page}`, { 
         sendToken: true, provider:provider 
     }).then((resp) => resp.data);
 }

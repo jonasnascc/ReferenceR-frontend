@@ -1,8 +1,20 @@
 import { SimplePhoto } from "./photo"
 
 export type UserCollection = {
-    id:string,
+    id:number,
     name : string,
     description:string,
-    photos : SimplePhoto[]
+    photos : PhotoCodeByPage[]
+}
+
+export type AlbumCollection = {
+    albumCode : string | null,
+    photos : PhotoCodeByPage[],
+    exceptPhotos ?: PhotoCodeByPage[],
+    saveAsFavorite : boolean | false
+}
+
+export type PhotoCodeByPage = {
+    code : string,
+    page : number
 }
