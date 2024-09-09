@@ -1,9 +1,9 @@
 import { useInfiniteQuery } from "react-query"
 import { Album } from "../../../model/album"
 import { fetchAlbumPhotos } from "../../../api/services/Photo"
-import { Deviation } from "../../../model/photo"
+import { Deviation, SimplePhoto } from "../../../model/photo"
 import { useEffect, useState } from "react"
-import { PhotoCodeByPage } from "../../../model/collection"
+import { CollectionPhoto } from "../../../model/collection"
 
 export type PresentationPhoto= {
     photo: Deviation | null,
@@ -154,7 +154,7 @@ export const usePresentation = (albums ?: Album[]) => {
     }
 
 
-    const setPresentationPhoto = (ph : PhotoCodeByPage|null) => {
+    const setPresentationPhoto = (ph : SimplePhoto|null) => {
         if(!ph) {
             setCurrentPhoto(null)
             setCurrentPage(0)

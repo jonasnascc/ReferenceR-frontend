@@ -1,5 +1,5 @@
 import { Album } from "../../../model/album"
-import { PhotoCodeByPage } from "../../../model/collection"
+import { CollectionPhoto } from "../../../model/collection"
 
 export type CollectionsModalProps = {
     open : boolean,
@@ -7,7 +7,7 @@ export type CollectionsModalProps = {
 }
 
 export type CollectionsListModalProps = {
-    selectedPhotos ?: PhotoCodeByPage[],
-    album?:Album,
-    exceptPhotos?: PhotoCodeByPage[]
+    selectedPhotos : CollectionPhoto[],
+    album:Album,
+    exceptPhotos: CollectionPhoto[]
 }

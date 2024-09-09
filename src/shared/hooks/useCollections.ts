@@ -1,29 +1,18 @@
 import { useMutation } from "react-query";
 import { Album } from "../../model/album";
 import { addPhotosToCollection } from "../../api/services/Collection";
-import { AlbumCollection, PhotoCodeByPage, UserCollection } from "../../model/collection";
+import { AlbumCollection, CollectionPhoto, CollectionPhotos, UserCollection } from "../../model/collection";
 
 
 export const useCollections = (
-    selectedPhotos ?: PhotoCodeByPage[],
-    album?:Album,
-    exceptPhotos?: PhotoCodeByPage[],
+    album:Album,
+    selectedPhotos ?: CollectionPhoto[],
+    exceptPhotos?: CollectionPhoto[],
 ) => {
-    const postPhotosMutation = useMutation(["collections-append-photos"], ({collectionId, albumCol} : {collectionId:number, albumCol:AlbumCollection}) => addPhotosToCollection(collectionId, albumCol))
+    const postPhotosMutation = useMutation(["collections-append-photos"], ({collectionId, photos} : {collectionId:number, photos:CollectionPhotos}) => addPhotosToCollection(collectionId, photos))
 
-    const handleAddPhotos = async (selectedCols : UserCollection[]) => {
-        const albumCol : AlbumCollection = {
-            albumCode : album?.code??null,
-            photos : selectedPhotos??[],
-            exceptPhotos: exceptPhotos,
-            saveAsFavorite:false
-        }
-
-        selectedCols.forEach(col => addPhotos(albumCol, col.id))
-    }
-
-    const addPhotos = async (albumCol:AlbumCollection, collectionId : number) => {
-        await postPhotosMutation.mutateAsync({collectionId, albumCol})
+    const handleAddPhotos = async (photos:CollectionPhotos, collectionId : number) => {
+        await postPhotosMutation.mutateAsync({collectionId, photos})
     }
 
     return {

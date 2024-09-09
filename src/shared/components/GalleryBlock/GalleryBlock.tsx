@@ -10,7 +10,8 @@ import { GalleryAlbumHeader } from "./components/GalleryAlbumHeader/GalleryAlbum
 import { AuthorCarouselBlock } from "./components/styles";
 import { GalleryAuthorBar } from "./components/GalleryAuthorBar/GalleryAuthorBar";
 import { PageContainer } from "../PageContainer/styles";
-import { PhotoCodeByPage } from "../../../model/collection";
+import { CollectionPhoto } from "../../../model/collection";
+import { SimplePhoto } from "../../../model/photo";
 
 type GalleryBlockProps = {
     userCollections ?: boolean
@@ -65,9 +66,9 @@ export const GalleryBlock = ({userCollections} : GalleryBlockProps) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [photos])
 
-    const handlePhotoClick = (ph : PhotoCodeByPage, doubleClick?:boolean) => {
+    const handlePhotoClick = (ph : SimplePhoto, doubleClick?:boolean) => {
         if(!selectMode || doubleClick) setPresentationPhoto(ph)
-        else handleSelectPhoto(ph)
+        else handleSelectPhoto({code:ph.code, page:ph.page??-1})
     }
 
     const handleClosePhotoView = () => {

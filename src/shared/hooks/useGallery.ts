@@ -5,7 +5,7 @@ import { useEffect, useState } from "react"
 import { Deviation } from "../../model/photo"
 import { fetchAlbumPhotos } from "../../api/services/Photo"
 import { useSearchParams } from "react-router-dom"
-import { PhotoCodeByPage } from "../../model/collection"
+import { CollectionPhoto } from "../../model/collection"
 
 export interface Page {
     data: Deviation[];
@@ -33,8 +33,8 @@ export const useGallery = (config : {
     const [selectedAlbum, setSelectedAlbum] = useState<Album>()
 
     const [isSelectingAll, setSelectingAll] = useState(false)
-    const [selectedPhotos, setSelectedPhotos] = useState<PhotoCodeByPage[]>([])
-    const [notSelectedPhotos, setNotSelectedPhotos] = useState<PhotoCodeByPage[]>([])
+    const [selectedPhotos, setSelectedPhotos] = useState<CollectionPhoto[]>([])
+    const [notSelectedPhotos, setNotSelectedPhotos] = useState<CollectionPhoto[]>([])
 
     const [isLoadingPhotos, setLoadingPhotos] = useState(false)
     const [photos, setPhotos] = useState<Deviation[]>([])
@@ -60,8 +60,6 @@ export const useGallery = (config : {
             onSuccess: (data) =>  handleSetAlbums(data)
             
         })
-
-    const favouriteMutation = useMutation([`album-${selectedAlbum?.code}-favourite`], (favAlbum:FavouriteAlbum) => favoriteAlbum(favAlbum))
 
     const {
         data:photosPages,
@@ -113,6 +111,7 @@ export const useGallery = (config : {
             let finalData : Deviation[]= []
             photosPages?.pages.forEach(page => {
                 page.data.forEach(photo => {
+                    if(selectedAlbum) photo.albumCode = selectedAlbum.code
                     finalData = [...finalData, photo]
                 })
             })
@@ -181,7 +180,7 @@ export const useGallery = (config : {
         setSelectMode(newState)
     }
 
-    const handleSelectPhoto = (photo : PhotoCodeByPage) => {
+    const handleSelectPhoto = (photo : CollectionPhoto) => {
         if(selectMode) {
             if(isSelectingAll) togglePhotoSelected(photo, !notSelectedPhotos.includes(photo))
             
@@ -189,12 +188,12 @@ export const useGallery = (config : {
         }
     }
 
-    const togglePhotoSelected = (photo : PhotoCodeByPage, selected:boolean) => {
+    const togglePhotoSelected = (photo : CollectionPhoto, selected:boolean) => {
         if(selected) selectPhoto(photo)
         else unselectPhoto(photo)
     }
 
-    const selectPhoto = (photo : PhotoCodeByPage) => {
+    const selectPhoto = (photo : CollectionPhoto) => {
         if(!isSelectingAll) 
             setSelectedPhotos((prev) => [...prev, photo])
 
@@ -202,9 +201,9 @@ export const useGallery = (config : {
             if((photos.length < 100) && ((notSelectedPhotos.length+1) > 60)){
                 const delArray = [...notSelectedPhotos, photo]
 
-                const allPhotos : PhotoCodeByPage[] = photos.map(ph => {return {code: ph.code, page: ph.page}}) 
+                const allPhotos : CollectionPhoto[] = photos.map(ph => {return {code: ph.code, page: ph.page, albumCode: ""}}) 
 
-                const selArray : PhotoCodeByPage[] = allPhotos.filter(ph => !delArray.includes(photo))
+                const selArray : CollectionPhoto[] = allPhotos.filter(ph => !delArray.includes(photo))
 
                 setSelectedPhotos(() => selArray)
                 setNotSelectedPhotos([])
@@ -215,7 +214,7 @@ export const useGallery = (config : {
         }
     }
 
-    const unselectPhoto = (photo : PhotoCodeByPage) => {
+    const unselectPhoto = (photo : CollectionPhoto) => {
         if(!isSelectingAll) {
             const filtered = selectedPhotos.filter(code => code !== photo);
             setSelectedPhotos(filtered)

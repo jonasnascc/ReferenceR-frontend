@@ -11,7 +11,8 @@ export type Deviation = {
     page: number,
     license: string,
     tags : {name:string, url:string} [],
-    favorited ?: boolean
+    favorited ?: boolean,
+    albumCode : string
 }
 
 export type SimplePhoto = {

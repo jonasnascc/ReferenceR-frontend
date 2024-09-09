@@ -1,4 +1,4 @@
-import { AlbumCollection } from "../../model/collection"
+import { AlbumCollection, CollectionPhotos } from "../../model/collection"
 import axios from "../axios"
 
 const PREFIX = "user/collections"
@@ -13,6 +13,6 @@ export const listUserCollections = async () => {
         .then(resp => resp.data)
 }
 
-export const addPhotosToCollection = async (collectionId:number, albumCol:AlbumCollection) => {
-    return await axios.post(`${PREFIX}/${collectionId}`, albumCol, {sendToken: true})
+export const addPhotosToCollection = async (collectionId:number, photos:CollectionPhotos) => {
+    return await axios.post(`${PREFIX}/${collectionId}/photos`, photos, {sendToken: true}).then(resp => resp.data)
 }
