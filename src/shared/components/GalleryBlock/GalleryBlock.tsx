@@ -12,6 +12,7 @@ import { GalleryAuthorBar } from "./components/GalleryAuthorBar/GalleryAuthorBar
 import { PageContainer } from "../PageContainer/styles";
 import { CollectionPhoto } from "../../../model/collection";
 import { SimplePhoto } from "../../../model/photo";
+import { usePhotosSelect } from "../../hooks/usePhotosSelect";
 
 type GalleryBlockProps = {
     userCollections ?: boolean
@@ -25,18 +26,11 @@ export const GalleryBlock = ({userCollections} : GalleryBlockProps) => {
         albums,
         photos,
         selectedAlbum,
-        selectedPhotos,
-        notSelectedPhotos,
         handleAlbumClick,
         handleLoadMorePhotos,
-        handleSelectAllPhotos,
-        handleSelectPhoto,
-        isSelectingAll,
         hasNextPage,
         isLoadingPhotos,
-        selectMode,
-        handleSelectMode,
-        handleClearSelection
+        
     } = useGallery({
         authorName: authorName, 
         userFavourites: userCollections,
@@ -44,9 +38,20 @@ export const GalleryBlock = ({userCollections} : GalleryBlockProps) => {
     })
 
     const {
+        selectedPhotos,
+        notSelectedPhotos,
+        isSelectingAll,
+        selectMode,
+        handleSelectMode,
+        handleSelectPhoto,
+        handleSelectAllPhotos,
+        handleClearSelection,
+    } = usePhotosSelect(photos)
+
+    const {
         currentPhoto, 
         setPresentationPhoto,
-        setPhotos : setPstnPhotos,
+        handlePhotosUpdate,
         handlePhotoChange,
         handleNextPhoto,
         handlePreviousPhoto,
@@ -54,15 +59,7 @@ export const GalleryBlock = ({userCollections} : GalleryBlockProps) => {
     } = usePresentation()
 
     useEffect(() => {
-        if(photos.length > 0) {
-            const prPhotos = photos.map(ph => {return {
-                photo: ph,
-                album : null,
-                page: -1
-            }})
-
-            setPstnPhotos(() => prPhotos)
-        }
+        handlePhotosUpdate(photos)
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [photos])
 

@@ -46,8 +46,6 @@ export const NavBar = () => {
     const {pathname} = useLocation()
     const navigate = useNavigate()
 
-    console.log(pathname)
-
     const handleLogout = async () => {
         if(await signout()) {
             navigate(pathname, {replace:true})

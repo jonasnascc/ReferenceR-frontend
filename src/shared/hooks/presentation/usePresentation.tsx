@@ -173,11 +173,23 @@ export const usePresentation = (albums ?: Album[]) => {
         return photos.indexOf(result[0])
     }
 
+    const handlePhotosUpdate = (photos : Deviation[]) => {
+        if(photos.length > 0) {
+            const prPhotos = photos.map(ph => {return {
+                photo: ph,
+                album : null,
+                page: -1
+            }})
+
+            setPhotos(() => prPhotos)
+        }
+    }
+
     return {
         currentPhoto,
         currentPage,
         photos,
-        setPhotos,
+        handlePhotosUpdate,
         setPresentationPhoto,
         getCurrentPhotoIndex,
         handlePhotoChange,
