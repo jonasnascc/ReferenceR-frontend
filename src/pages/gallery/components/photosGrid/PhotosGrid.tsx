@@ -2,13 +2,12 @@ import InfiniteScroll from "react-infinite-scroll-component";
 import { Deviation, SimplePhoto } from "../../../../model/photo";
 import { CustomCircularProgress, CustomImageList, CustomImageListItem, LoadingImageBlock, PhotosGridContainer, PhotosGridImage } from "./styles";
 import { SelectBox } from "./components/SelectBox";
-import { CollectionPhoto } from "../../../../model/collection";
 
 type PhotosGridProps = {
     photos: Deviation[],
     selectMode : boolean,
-    selectedPhotos: CollectionPhoto[],
-    notSelectedPhotos: CollectionPhoto[],
+    selectedPhotos: SimplePhoto[],
+    notSelectedPhotos: SimplePhoto[],
     onSelectPhoto : (ph : SimplePhoto, doubleClick?:boolean) => void,
     hasMore:boolean,
     onLoadMore:() => void,
@@ -18,7 +17,9 @@ type PhotosGridProps = {
 }
 
 export const PhotosGrid = ({photos, selectMode, selectedPhotos, notSelectedPhotos, hasMore,onLoadMore, onSelectPhoto, onSelectAll, loading, selectingAll} : PhotosGridProps) => {
-    if(photos.length === 0) return null
+    if(photos.length === 0) {
+        return null
+    }
 
     const handleSelectPhoto = (ph : Deviation, doubleClick?:boolean) => {
         onSelectPhoto(ph, doubleClick)

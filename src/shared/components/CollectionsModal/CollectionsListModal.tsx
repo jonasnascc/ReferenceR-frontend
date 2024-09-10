@@ -13,12 +13,7 @@ export const CollectionsListModal = ({open, onClose, selectedAlbums} : Collectio
     const [search, setSearch] = useState("")
     const [checkedCols, setCheckedCols] = useState<UserCollection[]>([])
 
-    const {data} = useQuery<UserCollection[]>(["user-collections"], () => listUserCollections(), {
-        refetchOnMount: false,
-        refetchOnWindowFocus: false
-    })
-
-    const {handleAddPhotos} = useCollections();
+    const {userCollections, handleAddPhotos} = useCollections();
 
     const handleChange = (event:any) => {
         setSearch(event.target.value)
@@ -65,7 +60,7 @@ export const CollectionsListModal = ({open, onClose, selectedAlbums} : Collectio
                     <div>{search&&"results"}</div>
                     <ColList>
                     {
-                        data&&data.filter(col => search ? col.name.toLowerCase().includes(search.toLowerCase().trim()) : col).map((col, index) => (
+                        userCollections&&userCollections.filter(col => search ? col.name.toLowerCase().includes(search.toLowerCase().trim()) : col).map((col, index) => (
                             <ColListEl key={index}>
                                 <ListCheckbox 
                                     sx={{

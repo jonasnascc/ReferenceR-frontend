@@ -24,7 +24,7 @@ function App() {
           <Route index element={<AuthorPage/>}/>
           <Route path='gallery' element={<GalleryPage/>}/>
         </Route>
-        <Route path='/user' element={<Layout/>}>
+        <Route path='/user' element={<RequireAuth redirect='/login'><Layout/></RequireAuth>}>
           <Route index element={<UserProfilePage/>}/>
           <Route path='collections'>
             <Route index  element={<UserCollectionsPage/>}/>
@@ -32,9 +32,6 @@ function App() {
         </Route>
         <Route path='/chronoShuffle' element={<PresentationPage/>}/>
         <Route path='/login' element={<RequireNoAuth redirect='/'><LoginPage/></RequireNoAuth>}/>
-        <Route path='/user' element={<RequireAuth redirect='/login'><Layout/></RequireAuth>}>
-          <Route path='collections' element={<UserCollectionsPage/>}/>
-        </Route>
       </Routes>
     </div>
   );

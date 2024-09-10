@@ -2,7 +2,6 @@
 import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { PhotoView } from "../../../pages/gallery/components/photoView/PhotoView";
 import { PhotosGrid } from "../../../pages/gallery/components/photosGrid/PhotosGrid";
-import { useGallery } from "../../hooks/useGallery";
 import { usePresentation } from "../../hooks/presentation/usePresentation";
 import { useEffect } from "react";
 import { AlbumsCarousel } from "../AlbumsCarousel/AlbumsCarousel";
@@ -10,32 +9,34 @@ import { GalleryAlbumHeader } from "./components/GalleryAlbumHeader/GalleryAlbum
 import { AuthorCarouselBlock } from "./components/styles";
 import { GalleryAuthorBar } from "./components/GalleryAuthorBar/GalleryAuthorBar";
 import { PageContainer } from "../PageContainer/styles";
-import { CollectionPhoto } from "../../../model/collection";
-import { SimplePhoto } from "../../../model/photo";
+import { Deviation, SimplePhoto } from "../../../model/photo";
 import { usePhotosSelect } from "../../hooks/usePhotosSelect";
+import { Album } from "../../../model/album";
 
 type GalleryBlockProps = {
-    userCollections ?: boolean
+    albums : Album[],
+    photos : Deviation[],
+    selectedAlbum ?: Album,
+    handleAlbumClick : (index:number) => void,
+    handleLoadMorePhotos : () => void,
+    hasNextPage ?: boolean,
+    isLoadingPhotos : boolean,
 }
 
-export const GalleryBlock = ({userCollections} : GalleryBlockProps) => {
+export const GalleryBlock = ({
+    albums,
+    photos,
+    selectedAlbum,
+    handleAlbumClick,
+    handleLoadMorePhotos,
+    hasNextPage,
+    isLoadingPhotos,
+} : GalleryBlockProps) => {
     const {authorName} = useParams()
     const navigate = useNavigate();
-    
-    const {
-        albums,
-        photos,
-        selectedAlbum,
-        handleAlbumClick,
-        handleLoadMorePhotos,
-        hasNextPage,
-        isLoadingPhotos,
-        
-    } = useGallery({
-        authorName: authorName, 
-        userFavourites: userCollections,
-        provider:"deviantart"
-    })
+    const location = useLocation();
+
+    const isCollectionsPage = location.pathname.startsWith("/user/collections")
 
     const {
         selectedPhotos,
@@ -72,7 +73,7 @@ export const GalleryBlock = ({userCollections} : GalleryBlockProps) => {
 
     const handlePhotoClick = (ph : SimplePhoto, doubleClick?:boolean) => {
         if(!selectMode || doubleClick) setPresentationPhoto(ph)
-        else handleSelectPhoto({code:ph.code, page:ph.page??-1})
+        else handleSelectPhoto(ph)
     }
 
     const handleClosePhotoView = () => {
@@ -80,15 +81,15 @@ export const GalleryBlock = ({userCollections} : GalleryBlockProps) => {
         
     }
 
-    if(!authorName && !userCollections) {
+    if(!authorName && !isCollectionsPage) {
         navigate("/");
         return (null);
     }
     return (
         <PageContainer>
             <AuthorCarouselBlock>
-                {(authorName||userCollections)&&<GalleryAuthorBar 
-                    author={userCollections&&selectedAlbum?.author!==undefined ? selectedAlbum.author : (authorName ? authorName : "")} 
+                {(authorName)&&<GalleryAuthorBar 
+                    author={authorName ? authorName : ""} 
                     userCollections 
                     provider="deviatart"
                 />}

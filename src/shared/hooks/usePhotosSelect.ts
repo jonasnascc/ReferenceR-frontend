@@ -1,14 +1,14 @@
 import { useEffect, useState } from "react";
-import { AlbumCollection, CollectionPhoto } from "../../model/collection";
-import { Deviation } from "../../model/photo";
+import { AlbumCollection } from "../../model/collection";
+import { Deviation, SimplePhoto } from "../../model/photo";
 import { Album } from "../../model/album";
 
 export const usePhotosSelect = (photos : Deviation[]) => {
     const [currentAlbum, setCurrentAlbum] = useState<Album>()
     const [selectRecord, setSelectRecord] = useState<Record<string,AlbumCollection>>({})
     const [isSelectingAll, setSelectingAll] = useState(false)
-    const [selectedPhotos, setSelectedPhotos] = useState<CollectionPhoto[]>([])
-    const [notSelectedPhotos, setNotSelectedPhotos] = useState<CollectionPhoto[]>([])
+    const [selectedPhotos, setSelectedPhotos] = useState<SimplePhoto[]>([])
+    const [notSelectedPhotos, setNotSelectedPhotos] = useState<SimplePhoto[]>([])
 
     const [selectMode, setSelectMode] = useState(false)
 
@@ -50,7 +50,7 @@ export const usePhotosSelect = (photos : Deviation[]) => {
     // },[selectedPhotos, notSelectedPhotos, isSelectingAll])
 
 
-    const handleSelectPhoto = (photo : CollectionPhoto) => {
+    const handleSelectPhoto = (photo : SimplePhoto) => {
         if(selectMode) {
             if(isSelectingAll) togglePhotoSelected(photo, notSelectedPhotos.filter(ph => ph.code === photo.code).length === 0)
             
@@ -58,12 +58,12 @@ export const usePhotosSelect = (photos : Deviation[]) => {
         }
     }
 
-    const togglePhotoSelected = (photo : CollectionPhoto, selected:boolean) => {
+    const togglePhotoSelected = (photo : SimplePhoto, selected:boolean) => {
         if(selected) selectPhoto(photo)
         else unselectPhoto(photo)
     }
 
-    const selectPhoto = (photo : CollectionPhoto) => {
+    const selectPhoto = (photo : SimplePhoto) => {
         if(!isSelectingAll) 
             setSelectedPhotos((prev) => [...prev, photo])
         
@@ -72,9 +72,8 @@ export const usePhotosSelect = (photos : Deviation[]) => {
             if((photos.length < 100) && ((notSelectedPhotos.length+1) > 60)){
                 const delArray = [...notSelectedPhotos, photo]
 
-                const allPhotos : CollectionPhoto[] = photos.map(ph => {return {code: ph.code, page: ph.page}}) 
 
-                const selArray : CollectionPhoto[] = allPhotos.filter(ph => delArray.filter(photo => ph.code === photo.code).length === 0)
+                const selArray : SimplePhoto[] = photos.filter(ph => delArray.filter(photo => ph.code === photo.code).length === 0)
 
                 setSelectedPhotos(() => selArray)
                 setNotSelectedPhotos([])
@@ -87,7 +86,7 @@ export const usePhotosSelect = (photos : Deviation[]) => {
         }
     }
 
-    const unselectPhoto = (photo : CollectionPhoto, album?:Album) => {
+    const unselectPhoto = (photo : SimplePhoto, album?:Album) => {
         if(!isSelectingAll) {
             const filtered = selectedPhotos.filter(ph => ph.code !== photo.code);
             setSelectedPhotos(filtered)
@@ -99,7 +98,7 @@ export const usePhotosSelect = (photos : Deviation[]) => {
         
     }
 
-    const setAlbumSelectedPhotos = (props : {album:Album, selPhotos ?: CollectionPhoto[], except?: CollectionPhoto[], append?:boolean}) => {
+    const setAlbumSelectedPhotos = (props : {album:Album, selPhotos ?: SimplePhoto[], except?: SimplePhoto[], append?:boolean}) => {
         const {album, selPhotos, except, append} = props
 
         const record = selectRecord

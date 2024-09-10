@@ -5,7 +5,7 @@ import { HeaderBlock, HeaderContainer, AlbumTile, AlbumSize, AlbumTitle, Sphere 
 import { GallerySelectButtons } from "../GallerySelectButtons/GallerySelectButtons";
 import { FavoriteAlbumButton } from "../../../FavoriteAlbum/FavoriteAlbumButton/FavoriteAlbumButton";
 import { CollectionsListModalProps } from "../../../CollectionsModal/types";
-import { AlbumCollection, CollectionPhoto } from "../../../../../model/collection";
+import { AlbumCollection } from "../../../../../model/collection";
 
 
 type GalleryAlbumHeaderProps = {

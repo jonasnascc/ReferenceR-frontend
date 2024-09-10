@@ -3,7 +3,6 @@ import { Album } from "../../../model/album"
 import { fetchAlbumPhotos } from "../../../api/services/Photo"
 import { Deviation, SimplePhoto } from "../../../model/photo"
 import { useEffect, useState } from "react"
-import { CollectionPhoto } from "../../../model/collection"
 
 export type PresentationPhoto= {
     photo: Deviation | null,

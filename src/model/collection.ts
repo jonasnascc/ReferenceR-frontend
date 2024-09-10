@@ -1,24 +1,20 @@
 import { Album } from "./album"
+import { Deviation, SimplePhoto } from "./photo"
 
 export type UserCollection = {
     id:number,
     name : string,
     description:string,
-    photos : CollectionPhoto[]
+    photos : SimplePhoto[]
 }
 
 export type AlbumCollection = {
     album : Album,
-    photos : CollectionPhoto[],
-    exceptPhotos : CollectionPhoto[],
+    photos : SimplePhoto[],
+    exceptPhotos : SimplePhoto[],
     saveAsFavorite : boolean | false
 }
 
 export type CollectionPhotos = {
     albums : AlbumCollection[]
-}
-
-export type CollectionPhoto = {
-    code : string,
-    page : number
 }

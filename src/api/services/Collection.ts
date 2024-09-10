@@ -16,3 +16,8 @@ export const listUserCollections = async () => {
 export const addPhotosToCollection = async (collectionId:number, photos:CollectionPhotos) => {
     return await axios.post(`${PREFIX}/${collectionId}/photos`, photos, {sendToken: true}).then(resp => resp.data)
 }
+
+export const listCollectionPhotos = async (collectionId:number) => {
+    return await axios.get(`${PREFIX}/${collectionId}/photos`, {sendToken: true})
+        .then(resp => resp.data)
+}
