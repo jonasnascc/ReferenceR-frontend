@@ -9,24 +9,16 @@ import { CollectionPhotos, UserCollection } from "../../../model/collection";
 import { useState } from "react";
 import { useCollections } from "../../hooks/useCollections";
 
-export const CollectionsListModal = ({open, onClose, selectedPhotos, album, exceptPhotos} : CollectionsModalProps & CollectionsListModalProps) => {
+export const CollectionsListModal = ({open, onClose, selectedAlbums} : CollectionsModalProps & CollectionsListModalProps) => {
     const [search, setSearch] = useState("")
     const [checkedCols, setCheckedCols] = useState<UserCollection[]>([])
-    const photos  :CollectionPhotos = {
-        albums : [{
-            album : album,
-            photos: selectedPhotos,
-            exceptPhotos: exceptPhotos,
-            saveAsFavorite:false
-        }]
-    }
 
     const {data} = useQuery<UserCollection[]>(["user-collections"], () => listUserCollections(), {
         refetchOnMount: false,
         refetchOnWindowFocus: false
     })
 
-    const {handleAddPhotos} = useCollections(album, selectedPhotos, exceptPhotos);
+    const {handleAddPhotos} = useCollections();
 
     const handleChange = (event:any) => {
         setSearch(event.target.value)
@@ -51,7 +43,7 @@ export const CollectionsListModal = ({open, onClose, selectedPhotos, album, exce
 
     const handleSave = () => [
         checkedCols.forEach(col => {
-            handleAddPhotos(photos, col.id)
+            handleAddPhotos({albums: selectedAlbums}, col.id)
         })
     ]
     

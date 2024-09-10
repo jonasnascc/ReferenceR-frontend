@@ -42,10 +42,12 @@ export const GalleryBlock = ({userCollections} : GalleryBlockProps) => {
         notSelectedPhotos,
         isSelectingAll,
         selectMode,
+        selectRecord,
         handleSelectMode,
         handleSelectPhoto,
         handleSelectAllPhotos,
         handleClearSelection,
+        handleChangeCurrentAlbum
     } = usePhotosSelect(photos)
 
     const {
@@ -62,6 +64,11 @@ export const GalleryBlock = ({userCollections} : GalleryBlockProps) => {
         handlePhotosUpdate(photos)
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [photos])
+
+    useEffect(() => {
+        if(selectedAlbum) handleChangeCurrentAlbum(selectedAlbum)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [selectedAlbum])
 
     const handlePhotoClick = (ph : SimplePhoto, doubleClick?:boolean) => {
         if(!selectMode || doubleClick) setPresentationPhoto(ph)
@@ -99,8 +106,7 @@ export const GalleryBlock = ({userCollections} : GalleryBlockProps) => {
                 onSelectMode={handleSelectMode}
                 onSelectAll={handleSelectAllPhotos}
                 onClearSelection={handleClearSelection}
-                selectedPhotos={selectedPhotos}
-                exceptPhotos={notSelectedPhotos}
+                selectedAlbums={Object.values(selectRecord)}
             />
 
             <PhotosGrid 

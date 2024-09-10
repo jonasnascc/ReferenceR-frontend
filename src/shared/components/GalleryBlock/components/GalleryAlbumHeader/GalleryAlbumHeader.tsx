@@ -5,13 +5,12 @@ import { HeaderBlock, HeaderContainer, AlbumTile, AlbumSize, AlbumTitle, Sphere 
 import { GallerySelectButtons } from "../GallerySelectButtons/GallerySelectButtons";
 import { FavoriteAlbumButton } from "../../../FavoriteAlbum/FavoriteAlbumButton/FavoriteAlbumButton";
 import { CollectionsListModalProps } from "../../../CollectionsModal/types";
-import { CollectionPhoto } from "../../../../../model/collection";
+import { AlbumCollection, CollectionPhoto } from "../../../../../model/collection";
 
 
 type GalleryAlbumHeaderProps = {
-    selectedPhotos : CollectionPhoto[],
     album?:Album,
-    exceptPhotos: CollectionPhoto[]
+    selectedAlbums:AlbumCollection[]
     selectingAll:boolean,
     selectMode ?: boolean,
     onSelectMode ?: () => void,

@@ -7,6 +7,7 @@ import { Album } from "../../../../../model/album";
 import { CollectionsListModalProps } from "../../../CollectionsModal/types";
 
 type GallerySelectButtonsProps = {
+    album:Album,
     active : boolean,
     selectingAll : boolean,
     onSelect : () => void,
