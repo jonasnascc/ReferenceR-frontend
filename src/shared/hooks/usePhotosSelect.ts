@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { CollectionPhoto } from "../../model/collection";
 import { Deviation } from "../../model/photo";
 
@@ -17,12 +17,16 @@ export const usePhotosSelect = (photos : Deviation[]) => {
         setSelectMode(newState)
     }
 
+    useEffect(() => {
+        console.log({selectedPhotos, notSelectedPhotos, isSelectingAll})
+    },[selectedPhotos, notSelectedPhotos, isSelectingAll])
+
 
     const handleSelectPhoto = (photo : CollectionPhoto) => {
         if(selectMode) {
-            if(isSelectingAll) togglePhotoSelected(photo, !notSelectedPhotos.includes(photo))
+            if(isSelectingAll) togglePhotoSelected(photo, notSelectedPhotos.filter(ph => ph.code === photo.code).length === 0)
             
-            else togglePhotoSelected(photo, !selectedPhotos.includes(photo))
+            else togglePhotoSelected(photo, selectedPhotos.filter(ph => ph.code === photo.code).length === 0)
         }
     }
 
@@ -39,9 +43,9 @@ export const usePhotosSelect = (photos : Deviation[]) => {
             if((photos.length < 100) && ((notSelectedPhotos.length+1) > 60)){
                 const delArray = [...notSelectedPhotos, photo]
 
-                const allPhotos : CollectionPhoto[] = photos.map(ph => {return {code: ph.code, page: ph.page, albumCode: ""}}) 
+                const allPhotos : CollectionPhoto[] = photos.map(ph => {return {code: ph.code, page: ph.page}}) 
 
-                const selArray : CollectionPhoto[] = allPhotos.filter(ph => !delArray.includes(photo))
+                const selArray : CollectionPhoto[] = allPhotos.filter(ph => delArray.filter(photo => ph.code === photo.code).length === 0)
 
                 setSelectedPhotos(() => selArray)
                 setNotSelectedPhotos([])
@@ -54,11 +58,11 @@ export const usePhotosSelect = (photos : Deviation[]) => {
 
     const unselectPhoto = (photo : CollectionPhoto) => {
         if(!isSelectingAll) {
-            const filtered = selectedPhotos.filter(code => code !== photo);
+            const filtered = selectedPhotos.filter(ph => ph.code !== photo.code);
             setSelectedPhotos(filtered)
         }
         else{
-            const filtered = notSelectedPhotos.filter(code => code !== photo);
+            const filtered = notSelectedPhotos.filter(ph => ph.code !== photo.code);
             setNotSelectedPhotos(filtered)
         }
         
