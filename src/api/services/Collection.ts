@@ -13,11 +13,22 @@ export const listUserCollections = async () => {
         .then(resp => resp.data)
 }
 
+
 export const addPhotosToCollection = async (collectionId:number, photos:CollectionPhotos) => {
     return await axios.post(`${PREFIX}/${collectionId}/photos`, photos, {sendToken: true}).then(resp => resp.data)
 }
 
 export const listCollectionPhotos = async (collectionId:number) => {
     return await axios.get(`${PREFIX}/${collectionId}/photos`, {sendToken: true})
+        .then(resp => resp.data)
+}
+
+export const listCollectionAlbums = async (collectionId:number) => {
+    return await axios.get(`${PREFIX}/${collectionId}/albums`, {sendToken: true})
+        .then(resp => resp.data)
+}
+
+export const listCollectionAlbumPhotos = async (collectionId:number, albumId:number) => {
+    return await axios.get(`${PREFIX}/${collectionId}/albums/${albumId}/photos`, {sendToken: true})
         .then(resp => resp.data)
 }

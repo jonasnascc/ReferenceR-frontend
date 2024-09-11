@@ -22,7 +22,8 @@ export type SimplePhoto = {
     url : string,
     mature ?: boolean,
     page ?: number,
-    albumCode ?: string
+    albumCode ?: string,
+    thumbUrl?:string
 }
 
 export type Tag = {

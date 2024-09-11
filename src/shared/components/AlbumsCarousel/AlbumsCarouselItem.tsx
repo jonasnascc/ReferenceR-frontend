@@ -35,7 +35,7 @@ export const AlbumsCarouselItem = ({album, onSelect, selected=false} : AlbumsCar
             {thumbnail && (
                 <SlideItemPhoto>
                     <AlbumCarouselImage
-                        src={thumbnail.url}
+                        src={thumbnail?.thumbUrl??thumbnail.url}
                         alt={`slide-item#${album.name}`}
                     />
                 </SlideItemPhoto>
