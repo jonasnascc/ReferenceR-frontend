@@ -1,19 +1,10 @@
 import { useInfiniteQuery, useMutation, useQuery, useQueryClient } from "react-query";
-import { addPhotosToCollection, listCollectionAlbumPhotos, listCollectionAlbums, listCollectionPhotos, listUserCollections } from "../../api/services/Collection";
-import { AlbumCollection, CollectionPhotos, UserCollection } from "../../model/collection";
+import { addPhotosToCollection, listCollectionAlbumPhotos, listCollectionAlbums, listUserCollections } from "../../api/services/Collection";
+import { CollectionPhotos, UserCollection } from "../../model/collection";
 import { useContext, useEffect, useState } from "react";
 import { Album } from "../../model/album";
 import { AuthContext } from "../../context/AuthContext";
-import { Deviation, SimplePhoto } from "../../model/photo";
-
-// albums : Album[],
-// photos : Deviation[],
-// selectedAlbum ?: Album,
-// handleAlbumClick : (index:number) => void,
-// handleLoadMorePhotos : () => void,
-// hasNextPage ?: boolean,
-// isLoadingPhotos : boolean,
-// userCollections ?: boolean
+import { Deviation } from "../../model/photo";
 
 export interface Page {
     data: Deviation[];
@@ -22,7 +13,6 @@ export interface Page {
 
 export const useCollections = () => {
     const {user} = useContext(AuthContext)
-    const queryClient = useQueryClient();
     const [photos, setPhotos] = useState<Deviation[]>([])
     const [albums, setAlbums] = useState<Album[]>([])
 
@@ -44,7 +34,7 @@ export const useCollections = () => {
         onSuccess: (data) => {
                 if(!user) return;
     
-                data.map(collection => {
+                data.forEach(collection => {
                     const albumCode = `${user.id}-collection-${collection.id}`
                     console.log(albumCode)
                     const album : Album = {
@@ -87,7 +77,6 @@ export const useCollections = () => {
     const {
         data,
         fetchNextPage,
-        hasNextPage,
     } = useInfiniteQuery<Page>({
         enabled: Boolean(currentCollection) && (loadedAlbums.length !== selCollectionAlbums.length),
         queryKey: [`${currentCollection?.id??-1}-collection-albums-${currentLoadingAlbumIndex&&`${selCollectionAlbums[currentLoadingAlbumIndex]?.id??-1}`}`],
@@ -104,7 +93,7 @@ export const useCollections = () => {
 
             return {data:resp, page: pageParam}
         },
-        getNextPageParam: (lastPage:Page, pages: Page[]) => {
+        getNextPageParam: (lastPage:Page) => {
             if(!currentCollection || currentLoadingAlbumIndex === undefined || lastPage.page===undefined) return;
             const curAlbum = selCollectionAlbums[currentLoadingAlbumIndex]
             if(!curAlbum) return;
