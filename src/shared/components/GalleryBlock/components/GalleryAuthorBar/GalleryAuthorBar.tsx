@@ -9,8 +9,10 @@ import { OutlinedButton } from "../../../Buttons/styles";
 export const GalleryAuthorBar = ({author, provider, collectionsPage=false} : {author:string, provider:string, collectionsPage?:boolean}) => {
     const [authorProfile, setAuthorProfile] = useState<Author>()
 
+    const authorName = `${author[0].toUpperCase()}${author.substring(1, author.length)}`
+
     useQuery<Author>([author + "-author-info"], () => getAuthorProfile(author,provider), {
-        enabled: author!=="",
+        enabled: author!=="" && !collectionsPage,
         refetchOnWindowFocus: false,
         onSuccess: (data) => {
             setAuthorProfile(data)
@@ -19,31 +21,41 @@ export const GalleryAuthorBar = ({author, provider, collectionsPage=false} : {au
 
     return(
         <>
-        {authorProfile&&(
+        {(authorProfile||collectionsPage)&&(
             <AuthorTile>
-                <Avatar alt={authorProfile.userName} src={authorProfile.iconUrl} sx={{width:"40px", height: "auto"}}/>
+                {
+                    authorProfile ? (
+                        <Avatar alt={authorProfile?.userName} src={authorProfile.iconUrl} sx={{width:"40px", height: "auto"}}/>
+                    ) : (
+                        <Avatar sx={{width:"40px", height: "40px", bgcolor: "#D217E2"}}>{`${author[0]??""}`.toUpperCase()}</Avatar>
+                    )
+                }
                 <AuthorNameBox>
-                    <AuthorName>{`${authorProfile.userName}`}</AuthorName>
-                    <AuthorTagline>{`${authorProfile.userTagline}`}</AuthorTagline>
+                    <AuthorName>{`${authorProfile?.userName??authorName}`}</AuthorName>
+                    {authorProfile&&<AuthorTagline>{`${authorProfile.userTagline}`}</AuthorTagline>}
                 </AuthorNameBox>
-                <ButtonsDiv>
-                    <OutlinedButton color="#FCFF55">Favorite</OutlinedButton>
-                    <OutlinedButton color="#D217E2">DeviantArt</OutlinedButton>
-                </ButtonsDiv>
-                <StatsBlock>
-                    <Statistic
-                        text="DEVIATIONS"
-                        statNumber={authorProfile.deviations}
-                    />
-                    <Statistic
-                        text="WATCHERS"
-                        statNumber={authorProfile?.watchers??0}
-                    />
-                    <Statistic
-                        text="FAVORITES"
-                        statNumber={authorProfile?.favourites??0}
-                    />
-                </StatsBlock>
+                {authorProfile&&
+                    <>
+                    <ButtonsDiv>
+                        <OutlinedButton color="#FCFF55">Favorite</OutlinedButton>
+                        <OutlinedButton color="#D217E2">DeviantArt</OutlinedButton>
+                    </ButtonsDiv>
+                    <StatsBlock>
+                        <Statistic
+                            text="DEVIATIONS"
+                            statNumber={authorProfile.deviations}
+                        />
+                        <Statistic
+                            text="WATCHERS"
+                            statNumber={authorProfile?.watchers??0}
+                        />
+                        <Statistic
+                            text="FAVORITES"
+                            statNumber={authorProfile?.favourites??0}
+                        />
+                    </StatsBlock>
+                    </>
+                }
             </AuthorTile>
         )}
         </>

@@ -20,14 +20,13 @@ export const useCollections = () => {
 
     const [selCollectionAlbums , setSelCollectionAlbums] = useState<Album[]>([])
 
-    const postPhotosMutation = useMutation(["collections-append-photos"], ({collectionId, photos} : {collectionId:number, photos:CollectionPhotos}) => addPhotosToCollection(collectionId, photos))
-
     const [currentLoadingAlbumIndex, setCurrentLoadingAlbumIndex] = useState<number>()
     const [loadedAlbums, setLoadedAlbums] = useState<number[]>([])
 
-    const [loadedPhotos, setLoadedPhotos] = useState<string[]>([])
-
     const [isLoadingPhotos] = useState(false)
+    
+    const postPhotosMutation = useMutation(["collections-append-photos"], ({collectionId, photos} : {collectionId:number, photos:CollectionPhotos}) => addPhotosToCollection(collectionId, photos))
+
 
     const {data:userCollections} = useQuery<UserCollection[]>(["user-collections"], () => listUserCollections(), {
         refetchOnWindowFocus: false,
@@ -35,8 +34,7 @@ export const useCollections = () => {
                 if(!user) return;
     
                 data.forEach(collection => {
-                    const albumCode = `${user.id}-collection-${collection.id}`
-                    console.log(albumCode)
+                    const albumCode = `collection-${collection.id}:${user.id}`
                     const album : Album = {
                         id: collection.id,
                         code: albumCode,
@@ -49,13 +47,13 @@ export const useCollections = () => {
                             url: "",
                             mature: true,
                         },
-                        author: `${user.name}'s collection`,
+                        author: `${user.name}`,
                         provider: "referencer",
                         size: 0
                     }
         
                     if(albums.filter(alb => alb.code === album.code).length === 0){
-                        setAlbums([...albums, album])
+                        setAlbums(prev => [...prev, album])
                     }
                 })
     
@@ -75,21 +73,30 @@ export const useCollections = () => {
     })
 
     const {
-        data,
         fetchNextPage,
     } = useInfiniteQuery<Page>({
         enabled: Boolean(currentCollection) && (loadedAlbums.length !== selCollectionAlbums.length),
         queryKey: [`${currentCollection?.id??-1}-collection-albums-${currentLoadingAlbumIndex&&`${selCollectionAlbums[currentLoadingAlbumIndex]?.id??-1}`}`],
         refetchOnWindowFocus: false,
         queryFn: async ({pageParam = currentLoadingAlbumIndex}) => {
-            console.log({currentCollection, currentLoadingAlbumIndex, selCollectionAlbums})
             if(!currentCollection || currentLoadingAlbumIndex===undefined) return {data:[], page:pageParam};
             const curAlbum = selCollectionAlbums[currentLoadingAlbumIndex]
             if(!curAlbum) return {data:[], page:pageParam};
 
-            const resp = await listCollectionAlbumPhotos(currentCollection.id, curAlbum.id)
+            const resp : Deviation[] = await listCollectionAlbumPhotos(currentCollection.id, curAlbum.id)
 
             setLoadedAlbums(prev => [...prev, curAlbum.id])
+
+            if(resp) {
+                if((loadedAlbums.length !== selCollectionAlbums.length && currentLoadingAlbumIndex!==undefined)) {
+                    setCurrentLoadingAlbumIndex(() => currentLoadingAlbumIndex + 1)
+                    fetchNextPage()
+                }
+                let array = resp.filter(ph => photos.filter(dv => dv.code === ph.code).length === 0)
+                
+                const photosArray= [...photos, ...array]
+                setPhotos(photosArray)
+            }
 
             return {data:resp, page: pageParam}
         },
@@ -107,42 +114,30 @@ export const useCollections = () => {
         }
         
     })
-
-    useEffect(() => {
-        if(data) {
-            if((loadedAlbums.length !== selCollectionAlbums.length && currentLoadingAlbumIndex!==undefined)) {
-                setCurrentLoadingAlbumIndex(() => currentLoadingAlbumIndex + 1)
-                fetchNextPage()
-            }
-            let array : Deviation[] = []
-
-            data.pages.forEach(page => {
-                array = [...array, ...page.data.filter(ph => photos.filter(dv => dv.code === ph.code).length === 0)]
-            })
-            
-            const photosArray= [...photos, ...array]
-            setPhotos(photosArray)
-        }
-    }, [data])
-
-    useEffect(() => {
-        console.log({loadedAlbums})
-    }, [loadedAlbums])
     
     const handleAddPhotos = async (photos:CollectionPhotos, collectionId : number) => {
         await postPhotosMutation.mutateAsync({collectionId, photos})
     }
 
     const handleAlbumClick = (index:number) => {
+        if(currentCollection && (albums[index].code !== currentCollection.code)) {
+            setLoadedAlbums([])
+            setPhotos([])
+            setCurrentLoadingAlbumIndex(0)
+        }
         setCurrentCollection(albums[index])
     }
 
     const handleLoadMorePhotos = () => {
-        
+        if((loadedAlbums.length !== selCollectionAlbums.length && currentLoadingAlbumIndex!==undefined)) {
+                setCurrentLoadingAlbumIndex(() => currentLoadingAlbumIndex + 1)
+                fetchNextPage()
+            }
     }
 
 
     return {
+        currentCollection,
         albums,
         photos,
         userCollections,

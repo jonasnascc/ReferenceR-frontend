@@ -3,9 +3,7 @@ import { CollectionsListModalProps, CollectionsModalProps } from "./types"
 import { ColList, ColListEl, ListCheckbox, ListModalBox, ModalHeader, ModalPh, SearchInput } from "./styles"
 import CloseIcon from '@mui/icons-material/Close';
 import { CustomButton, OutlinedButton } from "../Buttons/styles"
-import { useQuery } from "react-query";
-import { listUserCollections } from "../../../api/services/Collection";
-import { CollectionPhotos, UserCollection } from "../../../model/collection";
+import { UserCollection } from "../../../model/collection";
 import { useState } from "react";
 import { useCollections } from "../../hooks/useCollections";
 

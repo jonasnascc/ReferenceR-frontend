@@ -9,6 +9,7 @@ export const UserCollectionsPage = () => {
 
     const props = useCollections()
 
+
     return (
         <>
         <OutlinedButton color="white" onClick={() => setOpenModal(true)}>Create Collection</OutlinedButton>
@@ -16,7 +17,7 @@ export const UserCollectionsPage = () => {
             open={openModal}
             onClose={() => setOpenModal(false)}
         />
-        <GalleryBlock {...props}/>
+        <GalleryBlock selectedAlbum={props.currentCollection} {...props} collectionsPage/>
         </>
     )
 }

@@ -3,7 +3,7 @@ import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { PhotoView } from "../../../pages/gallery/components/photoView/PhotoView";
 import { PhotosGrid } from "../../../pages/gallery/components/photosGrid/PhotosGrid";
 import { usePresentation } from "../../hooks/presentation/usePresentation";
-import { useEffect } from "react";
+import { useContext, useEffect } from "react";
 import { AlbumsCarousel } from "../AlbumsCarousel/AlbumsCarousel";
 import { GalleryAlbumHeader } from "./components/GalleryAlbumHeader/GalleryAlbumHeader";
 import { AuthorCarouselBlock } from "./components/styles";
@@ -12,6 +12,7 @@ import { PageContainer } from "../PageContainer/styles";
 import { Deviation, SimplePhoto } from "../../../model/photo";
 import { usePhotosSelect } from "../../hooks/usePhotosSelect";
 import { Album } from "../../../model/album";
+import { AuthContext } from "../../../context/AuthContext";
 
 type GalleryBlockProps = {
     albums : Album[],
@@ -35,6 +36,7 @@ export const GalleryBlock = ({
     collectionsPage,
 } : GalleryBlockProps) => {
     const {authorName} = useParams()
+    const {user} = useContext(AuthContext)
     const navigate = useNavigate();
     const location = useLocation();
 
@@ -90,8 +92,8 @@ export const GalleryBlock = ({
     return (
         <PageContainer>
             <AuthorCarouselBlock>
-                {(authorName)&&<GalleryAuthorBar 
-                    author={authorName ? authorName : ""} 
+                {(authorName || collectionsPage)&&<GalleryAuthorBar 
+                    author={authorName ? authorName : (collectionsPage ? `${user?.name ? `${user.name}'s Collections`: ""}` : "")} 
                     collectionsPage={collectionsPage} 
                     provider="deviatart"
                 />}
