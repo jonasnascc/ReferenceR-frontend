@@ -35,6 +35,8 @@ export const useCollections = () => {
     const [currentLoadingAlbumIndex, setCurrentLoadingAlbumIndex] = useState<number>()
     const [loadedAlbums, setLoadedAlbums] = useState<number[]>([])
 
+    const [loadedPhotos, setLoadedPhotos] = useState<string[]>([])
+
     const [isLoadingPhotos] = useState(false)
 
     const {data:userCollections} = useQuery<UserCollection[]>(["user-collections"], () => listUserCollections(), {
@@ -99,6 +101,7 @@ export const useCollections = () => {
             const resp = await listCollectionAlbumPhotos(currentCollection.id, curAlbum.id)
 
             setLoadedAlbums(prev => [...prev, curAlbum.id])
+
             return {data:resp, page: pageParam}
         },
         getNextPageParam: (lastPage:Page, pages: Page[]) => {
@@ -128,7 +131,8 @@ export const useCollections = () => {
                 array = [...array, ...page.data.filter(ph => photos.filter(dv => dv.code === ph.code).length === 0)]
             })
             
-            setPhotos(prev => [...prev, ...array])
+            const photosArray= [...photos, ...array]
+            setPhotos(photosArray)
         }
     }, [data])
 

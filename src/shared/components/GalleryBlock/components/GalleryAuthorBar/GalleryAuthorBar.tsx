@@ -6,7 +6,7 @@ import { getAuthorProfile } from "../../../../../api/services/Author";
 import { Author } from "../../../../../model/Author";
 import { OutlinedButton } from "../../../Buttons/styles";
 
-export const GalleryAuthorBar = ({author, provider, userCollections=false} : {author:string, provider:string, userCollections?:boolean}) => {
+export const GalleryAuthorBar = ({author, provider, collectionsPage=false} : {author:string, provider:string, collectionsPage?:boolean}) => {
     const [authorProfile, setAuthorProfile] = useState<Author>()
 
     useQuery<Author>([author + "-author-info"], () => getAuthorProfile(author,provider), {

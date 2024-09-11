@@ -21,6 +21,7 @@ type GalleryBlockProps = {
     handleLoadMorePhotos : () => void,
     hasNextPage ?: boolean,
     isLoadingPhotos : boolean,
+    collectionsPage?:boolean
 }
 
 export const GalleryBlock = ({
@@ -31,6 +32,7 @@ export const GalleryBlock = ({
     handleLoadMorePhotos,
     hasNextPage,
     isLoadingPhotos,
+    collectionsPage,
 } : GalleryBlockProps) => {
     const {authorName} = useParams()
     const navigate = useNavigate();
@@ -90,7 +92,7 @@ export const GalleryBlock = ({
             <AuthorCarouselBlock>
                 {(authorName)&&<GalleryAuthorBar 
                     author={authorName ? authorName : ""} 
-                    userCollections 
+                    collectionsPage={collectionsPage} 
                     provider="deviatart"
                 />}
                 <AlbumsCarousel 
