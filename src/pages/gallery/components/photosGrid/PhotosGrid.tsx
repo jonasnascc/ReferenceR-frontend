@@ -2,6 +2,8 @@ import InfiniteScroll from "react-infinite-scroll-component";
 import { Deviation, SimplePhoto } from "../../../../model/photo";
 import { CustomCircularProgress, CustomImageList, CustomImageListItem, LoadingImageBlock, PhotosGridContainer, PhotosGridImage } from "./styles";
 import { SelectBox } from "./components/SelectBox";
+import { useEffect, useState } from "react";
+import { GalleryGrid } from "./components/GalleryGrid/GalleryGrid";
 
 type PhotosGridProps = {
     photos: Deviation[],
@@ -47,40 +49,13 @@ export const PhotosGrid = ({photos, selectMode, selectedPhotos, notSelectedPhoto
             loader={<></>}
             endMessage={<></>}
         >
-            <CustomImageList
-                gap={8}
+            <GalleryGrid 
+                photos={photos} 
                 cols={6}
-            >{
-                photos.map((photo, index) => (
-                    <CustomImageListItem 
-                        key={index} 
-                    >
-                        {selectMode&&<SelectBox 
-                            checked={checkSelected(photo.code)} 
-                            onCheck={() => handleSelectPhoto(photo)}
-                        />}
-                        <PhotosGridImage
-                            selected={checkSelected(photo.code)} 
-                            src={photo.thumbUrl} 
-                            alt={photo.title}
-                            onClick={() => handleSelectPhoto(photo)}
-                            onDoubleClick={() => handleSelectPhoto(photo, true)}
-                            loading="lazy"
-                        />
-                    </CustomImageListItem>
-                ))
-            }
-            
-            {loading&&(
-                <CustomImageListItem>
-                    <LoadingImageBlock>
-                        <CustomCircularProgress/>
-                    </LoadingImageBlock>
-                </CustomImageListItem>
-            )}
-            
-            
-            </CustomImageList>
+                onClick={(photo:Deviation) => handleSelectPhoto(photo, false)}
+                onDoubleClick={(photo:Deviation) => handleSelectPhoto(photo, true)}
+                checkPhotoSelectedFn={(photo:Deviation) => checkSelected(photo.code)}
+            />
         </InfiniteScroll>
         </PhotosGridContainer>
         

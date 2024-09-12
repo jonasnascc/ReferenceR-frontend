@@ -7,8 +7,8 @@ export const PhotosGridContainer = styled.div`
 `
 
 export const PhotosGridImage = styled.img<{selected?:boolean}>`
-    min-height: 100%;
-    max-width: auto;
+    height: 100%;
+    width: 100%;
     object-fit: cover;
     ${props=>props.selected&&`
         box-shadow: rgba(50, 50, 93, 0.25) 0px 6px 12px -2px, #D217E2 0px 3px 7px -3px;
@@ -27,7 +27,7 @@ export const CustomImageList = styled(ImageList)`
 
 export const CustomImageListItem = styled(ImageListItem)`
     width: 100%;
-    max-height: 200px;
+    height: auto;
 `
 
 export const CustomCircularProgress = styled(CircularProgress)`
