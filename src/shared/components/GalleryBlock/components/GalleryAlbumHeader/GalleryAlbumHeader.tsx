@@ -25,6 +25,7 @@ export const GalleryAlbumHeader = ({
     onSelectMode = () => {},
     onSelectAll,
     onClearSelection,
+    selectedAlbums,
     ...props
 } : GalleryAlbumHeaderProps) => {
     const navigate = useNavigate()
@@ -53,10 +54,12 @@ export const GalleryAlbumHeader = ({
                     <GallerySelectButtons 
                         active={selectMode}
                         selectingAll={selectingAll}
+                        selectingAny={selectedAlbums.length > 0}
                         onSelect={handleSelectMode}
                         onSelectAll={onSelectAll}
                         onClearSelection={onClearSelection}
                         album={album}
+                        selectedAlbums={selectedAlbums}
                         {...props}
                     />
 

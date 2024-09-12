@@ -5,11 +5,13 @@ import { CollectionsListModal } from "../../../CollectionsModal/CollectionsListM
 import { SimplePhoto } from "../../../../../model/photo";
 import { Album } from "../../../../../model/album";
 import { CollectionsListModalProps } from "../../../CollectionsModal/types";
+import { useQueryClient } from "react-query";
 
 type GallerySelectButtonsProps = {
     album:Album,
     active : boolean,
     selectingAll : boolean,
+    selectingAny : boolean,
     onSelect : () => void,
     onSelectAll ?: () => void,
     onClearSelection ?: () => void,
@@ -18,14 +20,17 @@ type GallerySelectButtonsProps = {
 export const GallerySelectButtons = ({
         active, 
         selectingAll,
+        selectingAny,
         onSelect,
         onSelectAll = ()=>{},
         onClearSelection = ()=>{},
         ...props
 } : GallerySelectButtonsProps & CollectionsListModalProps) => {
     const [openCollectionsList, setOpenCollectionsList] = useState(false)
+    const queryClient = useQueryClient()
 
     const handleAddToCollections = () => {
+        queryClient.invalidateQueries(["user-collections"])
         setOpenCollectionsList(true)
     }
 
@@ -57,7 +62,7 @@ export const GallerySelectButtons = ({
 
                 <OutlinedButton color="white" onClick={onClearSelection}>Clear</OutlinedButton>
 
-                <OutlinedButton color="white" onClick={handleAddToCollections}>Save to collection</OutlinedButton>
+                {(selectingAll||selectingAny) &&<OutlinedButton color="white" onClick={handleAddToCollections}>Save to collection</OutlinedButton>}
 
                 </>
             )}
@@ -65,6 +70,7 @@ export const GallerySelectButtons = ({
         <CollectionsListModal
             open={openCollectionsList}
             onClose={handleCloseCollectionsModal}
+            
             {...props}
         />
         </>

@@ -1,6 +1,7 @@
 import styled from "@emotion/styled";
 import { CustomInput, CustomTextArea } from "../Inputs/styles";
 import Checkbox from '@mui/material/Checkbox';
+import { CustomButton, OutlinedButton } from "../Buttons/styles";
 
 export const ModalPh = styled.div`
     position: absolute;
@@ -72,6 +73,7 @@ export const ColList = styled.ul`
     padding: 10px 10px;
     max-height: 30vh;
     overflow-y: auto;
+    margin: 10px 0 5px 0;
 `
 
 export const ColListEl = styled.li`
@@ -87,18 +89,45 @@ export const ColListEl = styled.li`
     }
 `
 
+export const SearchInputDiv = styled.div`
+    display: flex;
+    width: calc(100% - 10px);
+    border: solid 1px rgba(255,255,255, .7);
+    border-radius: 5px;
+    margin-top: 10px;
+    padding: 3px .3vw;
+`
+
 export const SearchInput = styled(CustomInput)`
     background-color: transparent;
-    border-bottom: solid 1px rgba(255,255,255, .7);
     color: white;
-    border-radius: 0px;
-    width: calc(100% - 10px);
+    flex: 1;
+`
 
-    &:focus {
-        border-bottom: solid 2px white;
-    }
+export const EmptyMessage = styled.div`
+    margin-bottom: 10px;
 `
 
 export const ListCheckbox = styled(Checkbox)`
 `
+
+export const CollectionButtonDiv = styled.div`
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    width: 100%;
+    gap: 10px;
+`
+
+
+
+export const CollectionButton = styled(CustomButton)<{btnType:"create"|"save"}>`
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 40px;
+    width: 100%;
+    background-color: ${props => props.btnType==="create" ? "#3D298E" : "#D217E2" };
+`
+
 

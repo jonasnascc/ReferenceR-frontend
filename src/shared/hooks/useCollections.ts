@@ -23,7 +23,7 @@ export const useCollections = () => {
     const [currentLoadingAlbumIndex, setCurrentLoadingAlbumIndex] = useState<number>()
     const [loadedAlbums, setLoadedAlbums] = useState<number[]>([])
 
-    const [isLoadingPhotos] = useState(false)
+    const [isLoadingPhotos, setLoadingPhotos] = useState(false)
     
     const postPhotosMutation = useMutation(["collections-append-photos"], ({collectionId, photos} : {collectionId:number, photos:CollectionPhotos}) => addPhotosToCollection(collectionId, photos))
 
@@ -75,18 +75,19 @@ export const useCollections = () => {
     const {
         fetchNextPage,
     } = useInfiniteQuery<Page>({
-        enabled: Boolean(currentCollection) && (loadedAlbums.length !== selCollectionAlbums.length),
+        enabled: Boolean(currentCollection) && (loadedAlbums.length !== selCollectionAlbums.length) && (selCollectionAlbums.length > 0),
         queryKey: [`${currentCollection?.id??-1}-collection-albums-${currentLoadingAlbumIndex&&`${selCollectionAlbums[currentLoadingAlbumIndex]?.id??-1}`}`],
         refetchOnWindowFocus: false,
         queryFn: async ({pageParam = currentLoadingAlbumIndex}) => {
             if(!currentCollection || currentLoadingAlbumIndex===undefined) return {data:[], page:pageParam};
             const curAlbum = selCollectionAlbums[currentLoadingAlbumIndex]
             if(!curAlbum) return {data:[], page:pageParam};
-
+            setLoadingPhotos(true)
             const resp : Deviation[] = await listCollectionAlbumPhotos(currentCollection.id, curAlbum.id)
 
             setLoadedAlbums(prev => [...prev, curAlbum.id])
-
+            
+            setLoadingPhotos(false)
             if(resp) {
                 if((loadedAlbums.length !== selCollectionAlbums.length && currentLoadingAlbumIndex!==undefined)) {
                     setCurrentLoadingAlbumIndex(() => currentLoadingAlbumIndex + 1)
@@ -116,7 +117,7 @@ export const useCollections = () => {
     })
     
     const handleAddPhotos = async (photos:CollectionPhotos, collectionId : number) => {
-        await postPhotosMutation.mutateAsync({collectionId, photos})
+        return await postPhotosMutation.mutateAsync({collectionId, photos})
     }
 
     const handleAlbumClick = (index:number) => {

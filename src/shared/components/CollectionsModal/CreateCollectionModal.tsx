@@ -1,10 +1,10 @@
-import { Box, Divider, Modal } from "@mui/material"
+import { Box, Divider, Modal, Typography } from "@mui/material"
 import { CustomButton, OutlinedButton } from "../Buttons/styles"
 import { CreateForm, FormControl, FormInput, FormLabel, FormTextArea, ModalBox, ModalHeader, ModalPh } from "./styles"
 
 import CloseIcon from '@mui/icons-material/Close';
 import { useState } from "react";
-import { useMutation } from "react-query";
+import { useMutation, useQueryClient } from "react-query";
 import { createCollection } from "../../../api/services/Collection";
 import { CollectionsModalProps } from "./types";
 
@@ -12,9 +12,13 @@ import { CollectionsModalProps } from "./types";
 export const CreateCollectionModal = ({open, onClose} : CollectionsModalProps) => {
     const [name, setName] = useState("")
     const [description, setDescription] = useState("")
+    const queryClient = useQueryClient()
 
     const saveMutation = useMutation("create-collection", () => createCollection({name, description}), {
-        onSuccess: () => onClose()
+        onSuccess: () => {
+            queryClient.invalidateQueries(["user-collections"])
+            onClose()
+        }
     })
 
     const handleNameChange = (event: any) => {
@@ -38,7 +42,7 @@ export const CreateCollectionModal = ({open, onClose} : CollectionsModalProps) =
             <ModalPh>
                 <ModalBox>
                     <ModalHeader>
-                        Create Collection
+                        <div style={{flex:1}}>Create Collection</div>
                         <CustomButton onClick={onClose}><CloseIcon/></CustomButton>
                         <Divider style={{backgroundColor: "white"}}/>
                     </ModalHeader>

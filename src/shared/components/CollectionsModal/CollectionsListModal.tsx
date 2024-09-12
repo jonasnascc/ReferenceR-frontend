@@ -1,15 +1,18 @@
 import {  Divider, Modal } from "@mui/material"
 import { CollectionsListModalProps, CollectionsModalProps } from "./types"
-import { ColList, ColListEl, ListCheckbox, ListModalBox, ModalHeader, ModalPh, SearchInput } from "./styles"
+import { CollectionButton, CollectionButtonDiv, ColList, ColListEl, EmptyMessage, ListCheckbox, ListModalBox, ModalHeader, ModalPh, SearchInput, SearchInputDiv } from "./styles"
 import CloseIcon from '@mui/icons-material/Close';
-import { CustomButton, OutlinedButton } from "../Buttons/styles"
+import { CustomButton } from "../Buttons/styles"
 import { UserCollection } from "../../../model/collection";
 import { useState } from "react";
 import { useCollections } from "../../hooks/useCollections";
+import SearchIcon from '@mui/icons-material/Search';
+import { CreateCollectionModal } from "./CreateCollectionModal";
 
 export const CollectionsListModal = ({open, onClose, selectedAlbums} : CollectionsModalProps & CollectionsListModalProps) => {
     const [search, setSearch] = useState("")
     const [checkedCols, setCheckedCols] = useState<UserCollection[]>([])
+    const [openCreation, setOpenCreation] = useState(false)
 
     const {userCollections, handleAddPhotos} = useCollections();
 
@@ -34,11 +37,19 @@ export const CollectionsListModal = ({open, onClose, selectedAlbums} : Collectio
         }
     }   
 
-    const handleSave = () => [
-        checkedCols.forEach(col => {
-            handleAddPhotos({albums: selectedAlbums}, col.id)
+    const handleSave = async () => {
+        checkedCols.forEach(async col => {
+            await handleAddPhotos({albums: selectedAlbums}, col.id)
         })
-    ]
+        onClose()
+    }
+
+    const handleCloseCreation = () => {
+        setOpenCreation(false)
+    }
+    const handleCreateNew = () => {
+        setOpenCreation(true)
+    }
     
     return(
         <Modal
@@ -54,29 +65,46 @@ export const CollectionsListModal = ({open, onClose, selectedAlbums} : Collectio
                         <CustomButton onClick={onClose}><CloseIcon/></CustomButton>
                     </ModalHeader>
                     <Divider style={{backgroundColor: "white"}}/>
-                    <SearchInput onChange={handleChange}/>
-                    <div>{search&&"results"}</div>
+                    {
+                    userCollections&&userCollections.length>0 &&<>
+                        <SearchInputDiv>
+                            <SearchInput onChange={handleChange}/>
+                            <SearchIcon/>
+                        </SearchInputDiv>
+                        <div>{search&&"results"}</div>
+                    </>
+                    }
+                    
                     <ColList>
                     {
-                        userCollections&&userCollections.filter(col => search ? col.name.toLowerCase().includes(search.toLowerCase().trim()) : col).map((col, index) => (
-                            <ColListEl key={index}>
-                                <ListCheckbox 
-                                    sx={{
-                                        color: "#D217E2",
-                                        '&.Mui-checked': {
+                        userCollections&&userCollections.length>0 ? (
+                            userCollections.filter(col => search ? col.name.toLowerCase().includes(search.toLowerCase().trim()) : col).map((col, index) => (
+                                <ColListEl key={index}>
+                                    <ListCheckbox 
+                                        sx={{
                                             color: "#D217E2",
-                                        },
-                                    }}
-                                    onClick={(event:any) => handleCheck(event, col)}
-                                />
-                                {col.name}
-                            </ColListEl>
-                        ))
-                        
+                                            '&.Mui-checked': {
+                                                color: "#D217E2",
+                                            },
+                                        }}
+                                        onClick={(event:any) => handleCheck(event, col)}
+                                    />
+                                    {col.name}
+                                </ColListEl>
+                            ))
+                        ) : (
+                            <EmptyMessage>You don't have collections yet.</EmptyMessage>
+                        )
                     }
                     </ColList>
-                    <OutlinedButton color="white" onClick={handleSave}>Save</OutlinedButton>
+                    <CollectionButtonDiv>
+                        {userCollections&&userCollections.length>0 &&
+                            <CollectionButton btnType="save" onClick={handleSave}>Save</CollectionButton>
+                        }
+                        <CollectionButton btnType="create" onClick={handleCreateNew}>Create new collection</CollectionButton>
+                    </CollectionButtonDiv>
                 </ListModalBox>
+                <CreateCollectionModal open={openCreation} onClose={handleCloseCreation}/>
             </ModalPh>
         </Modal>
     )
