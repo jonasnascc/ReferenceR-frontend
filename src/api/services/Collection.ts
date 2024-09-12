@@ -1,3 +1,4 @@
+import { Album } from "../../model/album"
 import { AlbumCollection, CollectionPhotos } from "../../model/collection"
 import axios from "../axios"
 
@@ -25,7 +26,7 @@ export const listCollectionPhotos = async (collectionId:number) => {
 
 export const listCollectionAlbums = async (collectionId:number) => {
     return await axios.get(`${PREFIX}/${collectionId}/albums`, {sendToken: true})
-        .then(resp => resp.data)
+        .then(resp => resp.data.sort((a:Album, b:Album) => b.id - a.id))
 }
 
 export const listCollectionAlbumPhotos = async (collectionId:number, albumId:number) => {
