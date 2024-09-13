@@ -5,7 +5,7 @@ export type Album = {
     code : string,
     name : string,
     url : string,
-    thumbnail : SimplePhoto,
+    thumbnail : SimplePhoto | null,
     author : string,
     provider : string,
     size : number,

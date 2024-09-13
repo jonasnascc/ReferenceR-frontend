@@ -73,7 +73,8 @@ export const usePhotosSelect = (photos : Deviation[]) => {
                 const delArray = [...notSelectedPhotos, photo]
 
 
-                const selArray : SimplePhoto[] = photos.filter(ph => delArray.filter(photo => ph.code === photo.code).length === 0)
+                const devArray : Deviation[] = photos.filter(ph => delArray.filter(photo => ph.code === photo.code).length === 0)
+                const selArray : SimplePhoto[] = photos.map(ph => {return {...ph, author:ph.author.name}})
 
                 setSelectedPhotos(() => selArray)
                 setNotSelectedPhotos([])

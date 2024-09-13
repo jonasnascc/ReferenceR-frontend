@@ -11,5 +11,6 @@ export const SelectButtonsDiv = styled.div<{active:boolean}>`
         `}
     `}
     border-radius: 5px;
-    transition: background-color .4s ease-out
+    transition: background-color .4s ease-out;
+    flex-wrap: wrap;
 `

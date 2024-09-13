@@ -1,5 +1,5 @@
 import { useInfiniteQuery, useMutation, useQuery, useQueryClient } from "react-query";
-import { addPhotosToCollection, listCollectionAlbumPhotos, listCollectionAlbums, listUserCollections } from "../../api/services/Collection";
+import { addPhotosToCollection, listCollectionAlbumPhotos, listCollectionAlbums, listUserCollections, listUserCollectionsAsAlbums } from "../../api/services/Collection";
 import { CollectionPhotos, UserCollection } from "../../model/collection";
 import { useContext, useEffect, useState } from "react";
 import { Album } from "../../model/album";
@@ -27,33 +27,14 @@ export const useCollections = () => {
     
     const postPhotosMutation = useMutation(["collections-append-photos"], ({collectionId, photos} : {collectionId:number, photos:CollectionPhotos}) => addPhotosToCollection(collectionId, photos))
 
-
-    const {data:userCollections} = useQuery<UserCollection[]>(["user-collections"], () => listUserCollections(), {
+    const {data:userCollections} = useQuery<Album[]>(["user-collections"], () => listUserCollectionsAsAlbums(), {
         refetchOnWindowFocus: false,
         onSuccess: (data) => {
                 if(!user) return;
     
                 data.forEach(collection => {
-                    const albumCode = `collection-${collection.id}:${user.id}`
-                    const album : Album = {
-                        id: collection.id,
-                        code: albumCode,
-                        name: collection.name,
-                        url: "",
-                        thumbnail: {
-                            id: -1,
-                            code: "",
-                            title: "",
-                            url: "",
-                            mature: true,
-                        },
-                        author: `${user.name}`,
-                        provider: "referencer",
-                        size: 0
-                    }
-        
-                    if(albums.filter(alb => alb.code === album.code).length === 0){
-                        setAlbums(prev => [...prev, album])
+                    if(albums.filter(alb => alb.code === collection.code).length === 0){
+                        setAlbums(prev => [...prev, collection])
                     }
                 })
     
@@ -115,6 +96,12 @@ export const useCollections = () => {
         }
         
     })
+
+    useEffect(() => {
+        if(!currentCollection && (albums.length > 0)) {
+            handleAlbumClick(0);
+        }
+    }, [currentCollection, albums])
     
     const handleAddPhotos = async (photos:CollectionPhotos, collectionId : number) => {
         return await postPhotosMutation.mutateAsync({collectionId, photos})

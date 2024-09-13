@@ -14,6 +14,7 @@ export const AlbumTile = styled.div`
     display: flex;
     align-items: center;
     gap: .5vw;
+    flex-wrap: wrap;
 `
 
 export const HeaderText = styled.h4`

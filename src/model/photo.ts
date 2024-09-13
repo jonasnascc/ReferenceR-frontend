@@ -3,6 +3,12 @@ export type Deviation = {
     code: string,
     title: string,
     url: string,
+    author: {
+        id?:number,
+        name:string,
+        profileUrl?:string,
+        provider?:string
+    },
     thumbUrl : string,
     mature: boolean,
     type: string,
@@ -23,7 +29,8 @@ export type SimplePhoto = {
     mature ?: boolean,
     page ?: number,
     albumCode ?: string,
-    thumbUrl?:string
+    thumbUrl?:string,
+    author:string
 }
 
 export type Tag = {

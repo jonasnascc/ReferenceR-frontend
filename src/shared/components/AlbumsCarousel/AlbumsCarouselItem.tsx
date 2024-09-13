@@ -16,6 +16,8 @@ export const AlbumsCarouselItem = ({album, onSelect, selected=false} : AlbumsCar
 
     useQuery<SimplePhoto>([`album-${album.code}|${album.author}-thumbnail`], () => fetchAlbumThumbnail(album.id), {
         enabled: album.id!==null && !Boolean(thumbnail),
+        refetchOnWindowFocus: false,
+        retry: 1,
         onSuccess: (data) => {
             setThumbnail(data)
         }

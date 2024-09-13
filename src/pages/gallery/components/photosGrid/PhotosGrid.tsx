@@ -25,7 +25,7 @@ export const PhotosGrid = ({photos, currentPhoto, selectMode, selectedPhotos, no
     }
 
     const handleSelectPhoto = (ph : Deviation, doubleClick?:boolean) => {
-        onSelectPhoto(ph, doubleClick)
+        onSelectPhoto({...ph, author:ph.author.name}, doubleClick)
     }
 
     const checkSelected = (code : string) => {
