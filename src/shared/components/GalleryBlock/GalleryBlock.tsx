@@ -120,6 +120,7 @@ export const GalleryBlock = ({
                 selectedPhotos = {selectedPhotos}
                 notSelectedPhotos = {notSelectedPhotos}
                 selectingAll={isSelectingAll}
+                currentPhoto={currentPhoto}
                 onSelectPhoto={handlePhotoClick}
                 onSelectAll={handleSelectAllPhotos}
                 onLoadMore={handleLoadMorePhotos}

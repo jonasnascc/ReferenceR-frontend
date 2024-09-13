@@ -10,6 +10,7 @@ type PhotosGridProps = {
     selectMode : boolean,
     selectedPhotos: SimplePhoto[],
     notSelectedPhotos: SimplePhoto[],
+    currentPhoto : Deviation|null,
     onSelectPhoto : (ph : SimplePhoto, doubleClick?:boolean) => void,
     hasMore:boolean,
     onLoadMore:() => void,
@@ -18,7 +19,7 @@ type PhotosGridProps = {
     selectingAll ?: boolean,
 }
 
-export const PhotosGrid = ({photos, selectMode, selectedPhotos, notSelectedPhotos, hasMore,onLoadMore, onSelectPhoto, onSelectAll, loading, selectingAll} : PhotosGridProps) => {
+export const PhotosGrid = ({photos, currentPhoto, selectMode, selectedPhotos, notSelectedPhotos, hasMore,onLoadMore, onSelectPhoto, onSelectAll, loading, selectingAll} : PhotosGridProps) => {
     if(photos.length === 0) {
         return null
     }
@@ -40,6 +41,12 @@ export const PhotosGrid = ({photos, selectMode, selectedPhotos, notSelectedPhoto
         }
     }
 
+    const checkIsPresenting  = (code:string) => {
+        if(!currentPhoto) return false;
+
+        return currentPhoto.code === code
+    }
+
     return(
         <PhotosGridContainer>
         <InfiniteScroll
@@ -55,6 +62,7 @@ export const PhotosGrid = ({photos, selectMode, selectedPhotos, notSelectedPhoto
                 onClick={(photo:Deviation) => handleSelectPhoto(photo, false)}
                 onDoubleClick={(photo:Deviation) => handleSelectPhoto(photo, true)}
                 checkPhotoSelectedFn={(photo:Deviation) => checkSelected(photo.code)}
+                checkPhotoIsPresenting={(photo:Deviation)=> checkIsPresenting(photo.code)}
             />
         </InfiniteScroll>
         </PhotosGridContainer>

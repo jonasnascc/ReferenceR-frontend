@@ -112,7 +112,9 @@ export const usePresentation = (albums ?: Album[]) => {
 
     const handlePhotoChange = (index:number) => {
         if(index < photos.length) {
-            return photos[index]?.photo??null;
+            const photo = photos[index];
+            if(photo) setCurrentPhoto(photo.photo)
+            return photo?.photo??null;
         }
         return null;
     }

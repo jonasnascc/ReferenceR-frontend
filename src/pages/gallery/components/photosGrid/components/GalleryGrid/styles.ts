@@ -21,16 +21,17 @@ export const GalleryGridImageBlock = styled.div<{maxWidth?:string}>`
     `} 
 `
 
-
-export const GalleryGridImage = styled.img<{selected?:boolean}>`
-    background-color: red;
+export const GalleryGridImage = styled.img<{selected?:boolean, presenting?:boolean}>`
     width: 100%;
     height: auto;
-    color: white;
     object-fit: cover;
     ${props=>props.selected&&`
         box-shadow: rgba(50, 50, 93, 0.25) 0px 6px 12px -2px, #D217E2 0px 3px 7px -3px;
         border: solid 2px #D217E2;
+    `}
+    ${props=>props.presenting&&`
+        box-shadow: rgba(50, 50, 93, 0.25) 0px 6px 12px -2px, white 0px 3px 7px -3px;
+        border: solid 2px white;
     `}
     cursor: pointer;
 `

@@ -10,7 +10,8 @@ type ColumnPhotosProps = {
     width: string, 
     checkPhotoSelectedFn?:(photo : Deviation) => boolean, 
     onClick?:(photo : Deviation) => void, 
-    onDoubleClick?:(photo : Deviation) => void
+    onDoubleClick?:(photo : Deviation) => void,
+    checkPhotoIsPresenting?:(photo:Deviation)=>boolean
 }
 
 type GridColumnsProps= {
@@ -27,20 +28,22 @@ export const GalleryGrid = (props : GalleryGridProps) => {
     const [colsNumber, setColsNumber] = useState(props.cols)
     const [width, setWidth] = useState<number>();
 
-    const handleUpdateCols = (width : number) => {
-        if(width < 480) {
-            setColsNumber(() => 1)
-        }
-        else if(width < 768) {
-            setColsNumber(() => 2)
-        }
-        else if(width < 1279) {
-            setColsNumber(() => 4)
-        }
-        else setColsNumber(props.cols)
-    }
+    
 
     useEffect(() => {
+        const handleUpdateCols = (width : number) => {
+            if(width < 480) {
+                setColsNumber(() => 1)
+            }
+            else if(width < 768) {
+                setColsNumber(() => 2)
+            }
+            else if(width < 1279) {
+                setColsNumber(() => 4)
+            }
+            else setColsNumber(props.cols)
+        }
+        
         if(width) handleUpdateCols(width+47)
     }, [width])
 
@@ -136,23 +139,62 @@ const GridColumns = (props : GridColumnsProps) => {
 
 
 
-const ColumnPhotos = ({ photos, width, checkPhotoSelectedFn=(photo:Deviation)=>false, onClick=(photo : Deviation)=>{}, onDoubleClick=(photo : Deviation)=>{} } : ColumnPhotosProps) => {
+const ColumnPhotos = (props : ColumnPhotosProps) => {
+    const {
+        photos, 
+        width,
+    } = props
+
     return(
         <>
         {
             photos.map((photo, index) => (
                 <GalleryGridImageBlock key={index} maxWidth={width}>
-                    <GalleryGridImage
-                        selected={checkPhotoSelectedFn(photo)}
-                        src={photo.thumbUrl}
-                        alt={photo.title}
-                        loading="lazy"
-                        onClick={() => onClick(photo)}
-                        onDoubleClick={() => onDoubleClick(photo)}
-                    />
+                    <GridImage {...props} photo={photo}/>
                 </GalleryGridImageBlock>
             ))
         }
         </>
+    )
+}
+
+type GridImageProps = {
+    photo:Deviation
+}&Omit<ColumnPhotosProps,"width" | "photos">
+
+const GridImage = ({photo, checkPhotoSelectedFn=() => false, checkPhotoIsPresenting=()=>false, onClick=()=>{}, onDoubleClick=()=>{}} : GridImageProps) => {
+    const ref = useRef<HTMLImageElement>(null)
+
+    const isElementInViewport = (element: HTMLElement | null) => {
+        if (!element) return false;
+        const rect = element.getBoundingClientRect();
+        return (
+          rect.top >= 0 &&
+          rect.bottom <= (window.innerHeight || document.documentElement.clientHeight)
+        );
+      };
+
+    const handleCheckPresenting = () => {
+        const presenting  = checkPhotoIsPresenting(photo)
+
+        if(ref.current && presenting && !isElementInViewport(ref.current)) {
+            
+            ref.current.scrollIntoView({behavior:'smooth'})
+        }
+
+        return presenting
+    }
+   
+    return (
+        <GalleryGridImage
+            ref={ref}
+            selected={checkPhotoSelectedFn(photo)}
+            presenting={handleCheckPresenting()}
+            src={photo.url}
+            alt={photo.title}
+            loading="lazy"
+            onClick={() => onClick(photo)}
+            onDoubleClick={() => onDoubleClick(photo)}
+        />
     )
 }
