@@ -57,6 +57,7 @@ export const PhotosGrid = ({photos, album, currentPhoto, selectMode, selectedPho
             hasMore={hasMore}
             loader={<></>}
             endMessage={<></>}
+            style={{overflow:"hidden"}}
         >
             <GalleryGrid 
                 photos={photos} 
