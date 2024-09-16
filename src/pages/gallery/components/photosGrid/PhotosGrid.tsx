@@ -4,9 +4,11 @@ import { CustomCircularProgress, CustomImageList, CustomImageListItem, LoadingIm
 import { SelectBox } from "./components/SelectBox";
 import { useEffect, useState } from "react";
 import { GalleryGrid } from "./components/GalleryGrid/GalleryGrid";
+import { Album } from "../../../../model/album";
 
 type PhotosGridProps = {
     photos: Deviation[],
+    album?:Album,
     selectMode : boolean,
     selectedPhotos: SimplePhoto[],
     notSelectedPhotos: SimplePhoto[],
@@ -19,7 +21,7 @@ type PhotosGridProps = {
     selectingAll ?: boolean,
 }
 
-export const PhotosGrid = ({photos, currentPhoto, selectMode, selectedPhotos, notSelectedPhotos, hasMore,onLoadMore, onSelectPhoto, onSelectAll, loading, selectingAll} : PhotosGridProps) => {
+export const PhotosGrid = ({photos, album, currentPhoto, selectMode, selectedPhotos, notSelectedPhotos, hasMore,onLoadMore, onSelectPhoto, onSelectAll, loading, selectingAll} : PhotosGridProps) => {
     if(photos.length === 0) {
         return null
     }
@@ -58,6 +60,7 @@ export const PhotosGrid = ({photos, currentPhoto, selectMode, selectedPhotos, no
         >
             <GalleryGrid 
                 photos={photos} 
+                album={album}
                 cols={6}
                 onClick={(photo:Deviation) => handleSelectPhoto(photo, false)}
                 onDoubleClick={(photo:Deviation) => handleSelectPhoto(photo, true)}

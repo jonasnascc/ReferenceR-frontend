@@ -116,6 +116,7 @@ export const GalleryBlock = ({
 
             <PhotosGrid 
                 photos={photos} 
+                album={selectedAlbum}
                 selectMode={selectMode}
                 selectedPhotos = {selectedPhotos}
                 notSelectedPhotos = {notSelectedPhotos}

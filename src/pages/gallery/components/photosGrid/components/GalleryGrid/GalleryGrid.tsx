@@ -2,11 +2,14 @@ import { RefObject, useEffect, useRef, useState } from "react"
 import { Deviation } from "../../../../../../model/photo"
 import { GalleryGridColumn, GalleryGridContainer, GalleryGridImage, GalleryGridImageBlock } from "./styles"
 import { setRef } from "@mui/material"
+import { PhotoMoreButton } from "../PhotoMoreButton/PhotoMoreButton"
+import { Album } from "../../../../../../model/album"
 
 
 
 type ColumnPhotosProps = {
     photos : Deviation[],
+    album?:Album,
     width: string, 
     checkPhotoSelectedFn?:(photo : Deviation) => boolean, 
     onClick?:(photo : Deviation) => void, 
@@ -143,6 +146,7 @@ const ColumnPhotos = (props : ColumnPhotosProps) => {
     const {
         photos, 
         width,
+        album
     } = props
 
     return(
@@ -150,6 +154,7 @@ const ColumnPhotos = (props : ColumnPhotosProps) => {
         {
             photos.map((photo, index) => (
                 <GalleryGridImageBlock key={index} maxWidth={width}>
+                    <PhotoMoreButton photo={photo} album={album}/>
                     <GridImage {...props} photo={photo}/>
                 </GalleryGridImageBlock>
             ))

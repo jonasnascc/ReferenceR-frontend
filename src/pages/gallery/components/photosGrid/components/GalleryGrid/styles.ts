@@ -16,6 +16,7 @@ export const GalleryGridColumn = styled.div`
 `
 
 export const GalleryGridImageBlock = styled.div<{maxWidth?:string}>`
+position: relative;
     ${props => props.maxWidth&&`
         max-width: ${props.maxWidth};
     `} 
