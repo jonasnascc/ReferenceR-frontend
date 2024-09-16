@@ -56,10 +56,11 @@ export const useCollections = () => {
     const {
         fetchNextPage,
     } = useInfiniteQuery<Page>({
-        enabled: Boolean(currentCollection) && (loadedAlbums.length !== selCollectionAlbums.length) && (selCollectionAlbums.length > 0),
+        enabled: Boolean(currentCollection) && (selCollectionAlbums.length > 0) && (loadedAlbums.length !== selCollectionAlbums.length),
         queryKey: [`${currentCollection?.id??-1}-collection-albums-${currentLoadingAlbumIndex&&`${selCollectionAlbums[currentLoadingAlbumIndex]?.id??-1}`}`],
         refetchOnWindowFocus: false,
         queryFn: async ({pageParam = currentLoadingAlbumIndex}) => {
+            console.log({currentCollection, currentLoadingAlbumIndex, sel: selCollectionAlbums[currentLoadingAlbumIndex??-1]??null})
             if(!currentCollection || currentLoadingAlbumIndex===undefined) return {data:[], page:pageParam};
             const curAlbum = selCollectionAlbums[currentLoadingAlbumIndex]
             if(!curAlbum) return {data:[], page:pageParam};

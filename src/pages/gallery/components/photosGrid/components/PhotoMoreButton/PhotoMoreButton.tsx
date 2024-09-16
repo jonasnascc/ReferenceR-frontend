@@ -8,6 +8,8 @@ import AddToPhotosIcon from '@mui/icons-material/AddToPhotos';
 import { useLocation } from "react-router-dom";
 import { CollectionsListModal } from "../../../../../../shared/components/CollectionsModal/CollectionsListModal";
 import { Album } from "../../../../../../model/album";
+import { useMutation } from "react-query";
+import { deleteCollectionPhotos } from "../../../../../../api/services/Collection";
 
 type PhotoMoreButtonProps = {
     photo : Deviation,
@@ -15,10 +17,12 @@ type PhotoMoreButtonProps = {
     album ?: Album
 }
 
-export const PhotoMoreButton = ({photo, album}:PhotoMoreButtonProps) => {
+export const PhotoMoreButton = ({photo, collectionId, album}:PhotoMoreButtonProps) => {
     const location = useLocation()
     const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
     const [openColList, setOpenColList] = useState(false)
+
+    const deleteMutation = useMutation(["delete-photo"], (args: {collectionId:number, photoId:number}) => deleteCollectionPhotos(args.collectionId, [args.photoId]))
 
     const {
         id,
@@ -50,6 +54,13 @@ export const PhotoMoreButton = ({photo, album}:PhotoMoreButtonProps) => {
         setOpenColList(false)
     }
 
+    const handleDeletePhoto = () => {
+        if(collectionId&&photo) {
+            deleteMutation.mutate({collectionId, photoId:photo.id})
+            handleClose()
+        }
+    }
+
     const open = Boolean(anchorEl);
     const popId = open ? 'photo-popover' : undefined;
     return (
@@ -71,7 +82,7 @@ export const PhotoMoreButton = ({photo, album}:PhotoMoreButtonProps) => {
             <OptionsList>
             {
                 collectionsPage? 
-                    <PhotoOption style={{color:"red"}}><DeleteIcon/>Delete</PhotoOption> 
+                    <PhotoOption style={{color:"red"}} onClick={handleDeletePhoto}><DeleteIcon/>Delete</PhotoOption> 
                     : 
                     (
                         <>

@@ -17,7 +17,7 @@ export const UserCollectionsPage = () => {
             open={openModal}
             onClose={() => setOpenModal(false)}
         />
-        <GalleryBlock selectedAlbum={props.currentCollection} {...props} collectionsPage/>
+        <GalleryBlock selectedAlbum={props.currentCollection} {...props} collectionId={props.currentCollection?.id} collectionsPage/>
         </>
     )
 }

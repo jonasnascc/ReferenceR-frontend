@@ -17,6 +17,7 @@ import { AuthContext } from "../../../context/AuthContext";
 type GalleryBlockProps = {
     albums : Album[],
     photos : Deviation[],
+    collectionId?:number,
     selectedAlbum ?: Album,
     handleAlbumClick : (index:number) => void,
     handleLoadMorePhotos : () => void,
@@ -34,6 +35,7 @@ export const GalleryBlock = ({
     hasNextPage,
     isLoadingPhotos,
     collectionsPage,
+    collectionId
 } : GalleryBlockProps) => {
     const {authorName} = useParams()
     const {user} = useContext(AuthContext)
@@ -118,6 +120,7 @@ export const GalleryBlock = ({
                 photos={photos} 
                 album={selectedAlbum}
                 selectMode={selectMode}
+                collectionId={collectionId}
                 selectedPhotos = {selectedPhotos}
                 notSelectedPhotos = {notSelectedPhotos}
                 selectingAll={isSelectingAll}

@@ -11,6 +11,7 @@ type ColumnPhotosProps = {
     photos : Deviation[],
     album?:Album,
     width: string, 
+    collectionId ?: number,
     checkPhotoSelectedFn?:(photo : Deviation) => boolean, 
     onClick?:(photo : Deviation) => void, 
     onDoubleClick?:(photo : Deviation) => void,
@@ -146,7 +147,8 @@ const ColumnPhotos = (props : ColumnPhotosProps) => {
     const {
         photos, 
         width,
-        album
+        album,
+        collectionId
     } = props
 
     return(
@@ -154,7 +156,7 @@ const ColumnPhotos = (props : ColumnPhotosProps) => {
         {
             photos.map((photo, index) => (
                 <GalleryGridImageBlock key={index} maxWidth={width}>
-                    <PhotoMoreButton photo={photo} album={album}/>
+                    <PhotoMoreButton photo={photo} album={album} collectionId={collectionId}/>
                     <GridImage {...props} photo={photo}/>
                 </GalleryGridImageBlock>
             ))
