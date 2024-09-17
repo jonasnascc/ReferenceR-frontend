@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
-import { AlbumCollection } from "../../model/collection";
+import { CollectionPhotosSelection } from "../../model/collection";
 import { Deviation, SimplePhoto } from "../../model/photo";
 import { Album } from "../../model/album";
 
 export const usePhotosSelect = (photos : Deviation[]) => {
     const [currentAlbum, setCurrentAlbum] = useState<Album>()
-    const [selectRecord, setSelectRecord] = useState<Record<string,AlbumCollection>>({})
+    const [selectRecord, setSelectRecord] = useState<Record<string,CollectionPhotosSelection>>({})
     const [isSelectingAll, setSelectingAll] = useState(false)
     const [selectedPhotos, setSelectedPhotos] = useState<SimplePhoto[]>([])
     const [notSelectedPhotos, setNotSelectedPhotos] = useState<SimplePhoto[]>([])

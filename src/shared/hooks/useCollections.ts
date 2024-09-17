@@ -1,6 +1,6 @@
 import { useInfiniteQuery, useMutation, useQuery, useQueryClient } from "react-query";
-import { addPhotosToCollection, deleteCollectionPhotos, listCollectionAlbumPhotos, listCollectionAlbums, listUserCollections, listUserCollectionsAsAlbums } from "../../api/services/Collection";
-import { CollectionPhotos, UserCollection } from "../../model/collection";
+import { addPhotosToCollection, deleteCollectionPhotos, listCollectionAlbumPhotos, listCollectionAlbums, listUserCollections } from "../../api/services/Collection";
+import { CollectionPhotosSelection, UserCollection } from "../../model/collection";
 import { useContext, useEffect, useState } from "react";
 import { Album } from "../../model/album";
 import { AuthContext } from "../../context/AuthContext";
@@ -26,11 +26,11 @@ export const useCollections = () => {
 
     const [isLoadingPhotos, setLoadingPhotos] = useState(false)
     
-    const postPhotosMutation = useMutation(["collections-append-photos"], ({collectionId, photos} : {collectionId:number, photos:CollectionPhotos}) => addPhotosToCollection(collectionId, photos))
+    const postPhotosMutation = useMutation(["collections-append-photos"], ({collectionId, photos} : {collectionId:number, photos:CollectionPhotosSelection[]}) => addPhotosToCollection(collectionId, photos))
 
     const deleteMutation = useMutation(["delete-photo"], (args: {collectionId:number, photoIds:number[]}) => deleteCollectionPhotos(args.collectionId, args.photoIds))
 
-    const {data:userCollections} = useQuery<Album[]>(["user-collections"], () => listUserCollectionsAsAlbums(), {
+    const {data:userCollections} = useQuery<Album[]>(["user-collections"], () => listUserCollections(), {
         refetchOnWindowFocus: false,
         onSuccess: (data) => {
                 if(!user) return;
@@ -107,7 +107,7 @@ export const useCollections = () => {
         }
     }, [currentCollection, albums])
     
-    const handleAddPhotos = async (photos:CollectionPhotos, collectionId : number) => {
+    const handleAddPhotos = async (photos:CollectionPhotosSelection[], collectionId : number) => {
         return await postPhotosMutation.mutateAsync({collectionId, photos})
     }
 

@@ -1,4 +1,4 @@
-import { AlbumCollection } from "../../../model/collection"
+import { CollectionPhotosSelection } from "../../../model/collection"
 
 export type CollectionsModalProps = {
     open : boolean,
@@ -6,5 +6,5 @@ export type CollectionsModalProps = {
 }
 
 export type CollectionsListModalProps = {
-    selectedAlbums:AlbumCollection[]
+    selectedAlbums:CollectionPhotosSelection[]
 }

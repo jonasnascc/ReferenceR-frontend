@@ -40,7 +40,7 @@ export const CollectionsListModal = ({open, onClose, selectedAlbums} : Collectio
 
     const handleSave = async () => {
         checkedCols.forEach(async col => {
-            await handleAddPhotos({albums: selectedAlbums}, col.id)
+            await handleAddPhotos(selectedAlbums, col.id)
         })
         onClose()
     }

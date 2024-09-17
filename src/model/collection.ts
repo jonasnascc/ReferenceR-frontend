@@ -5,16 +5,13 @@ export type UserCollection = {
     id:number,
     name : string,
     description:string,
+    siez: number,
     photos : SimplePhoto[]
 }
 
-export type AlbumCollection = {
+export type CollectionPhotosSelection = {
     album : Album,
     photos : SimplePhoto[],
     exceptPhotos : SimplePhoto[],
     saveAsFavorite : boolean | false
-}
-
-export type CollectionPhotos = {
-    albums : AlbumCollection[]
 }

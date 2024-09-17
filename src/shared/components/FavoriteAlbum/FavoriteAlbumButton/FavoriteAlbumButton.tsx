@@ -6,10 +6,12 @@ import { useState } from "react"
 import { RequireAuth } from "../../../../context/RequireAuth"
 
 type FavoriteAlbumButtonProps = {
-    album : Album
+    album : Album,
+    visible?:boolean
 }
 
-export const FavoriteAlbumButton = ({album} : FavoriteAlbumButtonProps) => {
+export const FavoriteAlbumButton = ({album, visible= true} : FavoriteAlbumButtonProps) => {
+
     const queryClient = useQueryClient()
     const [favorited, setFavorited] = useState<boolean>(Boolean(album.favorited))
 
@@ -19,6 +21,7 @@ export const FavoriteAlbumButton = ({album} : FavoriteAlbumButtonProps) => {
     const unFavoriteMutation = useMutation([`unfavorite-album-${album.code}`], () => unfavoriteAlbum(album), {
         onError: () => setFavorited(true)
     })
+    
 
     const handleClick = () => {
         setFavorited(state => !state)
@@ -28,7 +31,8 @@ export const FavoriteAlbumButton = ({album} : FavoriteAlbumButtonProps) => {
 
         queryClient.refetchQueries(`albums-${album.author}`)
     }
-    
+
+    if(!visible) return null;
     return (
         <RequireAuth>
             <OutlinedButton color="#FCFF55" onClick={handleClick} active={favorited}>
