@@ -13,16 +13,16 @@ type PhotosGridProps = {
     selectedPhotos: SimplePhoto[],
     notSelectedPhotos: SimplePhoto[],
     currentPhoto : Deviation|null,
-    collectionId ?: number,
     onSelectPhoto : (ph : SimplePhoto, doubleClick?:boolean) => void,
     hasMore:boolean,
     onLoadMore:() => void,
     onSelectAll: () => void,
     loading ?: boolean,
     selectingAll ?: boolean,
+    onDeletePhotos ?: (photo : Deviation[]) => void
 }
 
-export const PhotosGrid = ({photos, album, collectionId, currentPhoto, selectMode, selectedPhotos, notSelectedPhotos, hasMore,onLoadMore, onSelectPhoto, onSelectAll, loading, selectingAll} : PhotosGridProps) => {
+export const PhotosGrid = ({photos, album, currentPhoto, selectMode, selectedPhotos, notSelectedPhotos, hasMore,onLoadMore, onDeletePhotos, onSelectPhoto, onSelectAll, loading, selectingAll} : PhotosGridProps) => {
     if(photos.length === 0) {
         return null
     }
@@ -61,7 +61,6 @@ export const PhotosGrid = ({photos, album, collectionId, currentPhoto, selectMod
             style={{overflow:"hidden"}}
         >
             <GalleryGrid 
-                collectionId={collectionId}
                 photos={photos} 
                 album={album}
                 cols={6}
@@ -69,6 +68,7 @@ export const PhotosGrid = ({photos, album, collectionId, currentPhoto, selectMod
                 onDoubleClick={(photo:Deviation) => handleSelectPhoto(photo, true)}
                 checkPhotoSelectedFn={(photo:Deviation) => checkSelected(photo.code)}
                 checkPhotoIsPresenting={(photo:Deviation)=> checkIsPresenting(photo.code)}
+                onDeletePhotos={onDeletePhotos}
             />
         </InfiniteScroll>
         </PhotosGridContainer>

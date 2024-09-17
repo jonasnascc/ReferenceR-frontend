@@ -17,7 +17,12 @@ export const UserCollectionsPage = () => {
             open={openModal}
             onClose={() => setOpenModal(false)}
         />
-        <GalleryBlock selectedAlbum={props.currentCollection} {...props} collectionId={props.currentCollection?.id} collectionsPage/>
+        <GalleryBlock
+            {...props} 
+            collectionsPage
+            selectedAlbum={props.currentCollection}
+            onDeletePhotos={props.handleDeletePhotos}
+        />
         </>
     )
 }

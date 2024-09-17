@@ -15,6 +15,7 @@ type GallerySelectButtonsProps = {
     onSelect : () => void,
     onSelectAll ?: () => void,
     onClearSelection ?: () => void,
+    onDeleteSelected ?: () => void
 }
 
 export const GallerySelectButtons = ({
@@ -24,6 +25,7 @@ export const GallerySelectButtons = ({
         onSelect,
         onSelectAll = ()=>{},
         onClearSelection = ()=>{},
+        onDeleteSelected = ()=>{},
         ...props
 } : GallerySelectButtonsProps & CollectionsListModalProps) => {
     const [openCollectionsList, setOpenCollectionsList] = useState(false)
@@ -36,6 +38,10 @@ export const GallerySelectButtons = ({
 
     const handleCloseCollectionsModal = () => {
         setOpenCollectionsList(false)
+    }
+
+    const handleDeletePhotos = () => {
+        onDeleteSelected()
     }
 
     return(
@@ -62,7 +68,9 @@ export const GallerySelectButtons = ({
 
                 <OutlinedButton color="white" onClick={onClearSelection}>Clear</OutlinedButton>
 
-                {(selectingAll||selectingAny) &&<OutlinedButton color="white" onClick={handleAddToCollections}>Save to collection</OutlinedButton>}
+                <OutlinedButton color="white" onClick={handleAddToCollections}>Save to collection</OutlinedButton>
+
+                <OutlinedButton color="red" onClick={handleDeletePhotos}>Delete</OutlinedButton>
 
                 </>
             )}

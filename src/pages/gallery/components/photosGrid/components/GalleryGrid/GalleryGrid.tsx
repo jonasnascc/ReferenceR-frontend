@@ -10,12 +10,12 @@ import { Album } from "../../../../../../model/album"
 type ColumnPhotosProps = {
     photos : Deviation[],
     album?:Album,
-    width: string, 
-    collectionId ?: number,
+    width: string,
     checkPhotoSelectedFn?:(photo : Deviation) => boolean, 
     onClick?:(photo : Deviation) => void, 
     onDoubleClick?:(photo : Deviation) => void,
     checkPhotoIsPresenting?:(photo:Deviation)=>boolean
+    onDeletePhotos ?: (photos : Deviation[]) => void
 }
 
 type GridColumnsProps= {
@@ -148,7 +148,7 @@ const ColumnPhotos = (props : ColumnPhotosProps) => {
         photos, 
         width,
         album,
-        collectionId
+        onDeletePhotos
     } = props
 
     return(
@@ -156,7 +156,7 @@ const ColumnPhotos = (props : ColumnPhotosProps) => {
         {
             photos.map((photo, index) => (
                 <GalleryGridImageBlock key={index} maxWidth={width}>
-                    <PhotoMoreButton photo={photo} album={album} collectionId={collectionId}/>
+                    <PhotoMoreButton photo={photo} album={album} onDeletePhotos={onDeletePhotos}/>
                     <GridImage {...props} photo={photo}/>
                 </GalleryGridImageBlock>
             ))

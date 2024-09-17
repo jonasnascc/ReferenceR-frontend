@@ -1,10 +1,11 @@
 import { useInfiniteQuery, useMutation, useQuery, useQueryClient } from "react-query";
-import { addPhotosToCollection, listCollectionAlbumPhotos, listCollectionAlbums, listUserCollections, listUserCollectionsAsAlbums } from "../../api/services/Collection";
+import { addPhotosToCollection, deleteCollectionPhotos, listCollectionAlbumPhotos, listCollectionAlbums, listUserCollections, listUserCollectionsAsAlbums } from "../../api/services/Collection";
 import { CollectionPhotos, UserCollection } from "../../model/collection";
 import { useContext, useEffect, useState } from "react";
 import { Album } from "../../model/album";
 import { AuthContext } from "../../context/AuthContext";
-import { Deviation } from "../../model/photo";
+import { Deviation, SimplePhoto } from "../../model/photo";
+import { error } from "console";
 
 export interface Page {
     data: Deviation[];
@@ -26,6 +27,8 @@ export const useCollections = () => {
     const [isLoadingPhotos, setLoadingPhotos] = useState(false)
     
     const postPhotosMutation = useMutation(["collections-append-photos"], ({collectionId, photos} : {collectionId:number, photos:CollectionPhotos}) => addPhotosToCollection(collectionId, photos))
+
+    const deleteMutation = useMutation(["delete-photo"], (args: {collectionId:number, photoIds:number[]}) => deleteCollectionPhotos(args.collectionId, args.photoIds))
 
     const {data:userCollections} = useQuery<Album[]>(["user-collections"], () => listUserCollectionsAsAlbums(), {
         refetchOnWindowFocus: false,
@@ -124,6 +127,18 @@ export const useCollections = () => {
             }
     }
 
+    const handleDeletePhotos = (delPhotos:Deviation[]|SimplePhoto[]) => {
+        const ids = delPhotos.map(ph => ph.id)
+        const array = photos.filter(ph => !ids.includes(ph.id))
+        if(currentCollection) {
+            deleteMutation.mutateAsync({collectionId: currentCollection.id, photoIds: delPhotos.map(ph => ph.id)})
+            .then(resp => {
+                if(resp.status === 200) setPhotos(array)
+            })
+            .catch(error => console.log(error))
+        }
+    }
+
 
     return {
         currentCollection,
@@ -132,6 +147,7 @@ export const useCollections = () => {
         userCollections,
         handleAddPhotos,
         handleAlbumClick,
+        handleDeletePhotos,
         handleLoadMorePhotos,
         isLoadingPhotos
     }

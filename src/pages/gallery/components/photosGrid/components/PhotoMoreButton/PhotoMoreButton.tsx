@@ -1,5 +1,5 @@
 import { Popover } from "@mui/material";
-import { Deviation, SimplePhoto } from "../../../../../../model/photo";
+import { Deviation } from "../../../../../../model/photo";
 import { ButtonDiv, MoreButton, OptionsList, PhotoOption } from "./styles";
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import { useState } from "react";
@@ -8,21 +8,18 @@ import AddToPhotosIcon from '@mui/icons-material/AddToPhotos';
 import { useLocation } from "react-router-dom";
 import { CollectionsListModal } from "../../../../../../shared/components/CollectionsModal/CollectionsListModal";
 import { Album } from "../../../../../../model/album";
-import { useMutation } from "react-query";
-import { deleteCollectionPhotos } from "../../../../../../api/services/Collection";
 
 type PhotoMoreButtonProps = {
     photo : Deviation,
-    collectionId ?: number,
-    album ?: Album
+    album ?: Album,
+    onDeletePhotos ?: (photos : Deviation[]) => void
 }
 
-export const PhotoMoreButton = ({photo, collectionId, album}:PhotoMoreButtonProps) => {
+export const PhotoMoreButton = ({photo, album, onDeletePhotos}:PhotoMoreButtonProps) => {
     const location = useLocation()
     const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
     const [openColList, setOpenColList] = useState(false)
 
-    const deleteMutation = useMutation(["delete-photo"], (args: {collectionId:number, photoId:number}) => deleteCollectionPhotos(args.collectionId, [args.photoId]))
 
     const {
         id,
@@ -55,8 +52,8 @@ export const PhotoMoreButton = ({photo, collectionId, album}:PhotoMoreButtonProp
     }
 
     const handleDeletePhoto = () => {
-        if(collectionId&&photo) {
-            deleteMutation.mutate({collectionId, photoId:photo.id})
+        if(photo) {
+            if(onDeletePhotos) onDeletePhotos([photo])
             handleClose()
         }
     }

@@ -17,13 +17,13 @@ import { AuthContext } from "../../../context/AuthContext";
 type GalleryBlockProps = {
     albums : Album[],
     photos : Deviation[],
-    collectionId?:number,
     selectedAlbum ?: Album,
     handleAlbumClick : (index:number) => void,
     handleLoadMorePhotos : () => void,
     hasNextPage ?: boolean,
     isLoadingPhotos : boolean,
-    collectionsPage?:boolean
+    collectionsPage?:boolean,
+    onDeletePhotos ?: (photos : Deviation[] | SimplePhoto[]) => void
 }
 
 export const GalleryBlock = ({
@@ -35,7 +35,7 @@ export const GalleryBlock = ({
     hasNextPage,
     isLoadingPhotos,
     collectionsPage,
-    collectionId
+    onDeletePhotos
 } : GalleryBlockProps) => {
     const {authorName} = useParams()
     const {user} = useContext(AuthContext)
@@ -87,6 +87,13 @@ export const GalleryBlock = ({
         
     }
 
+    const handleDeleteSelected = () => {
+        if(onDeletePhotos) {
+            onDeletePhotos(selectedPhotos)
+            handleSelectMode(false)
+        }
+    }
+
     if(!authorName && !isCollectionsPage) {
         navigate("/");
         return (null);
@@ -113,6 +120,7 @@ export const GalleryBlock = ({
                 onSelectMode={handleSelectMode}
                 onSelectAll={handleSelectAllPhotos}
                 onClearSelection={handleClearSelection}
+                onDeleteSelected={handleDeleteSelected}
                 selectedAlbums={Object.values(selectRecord)}
             />
 
@@ -120,7 +128,6 @@ export const GalleryBlock = ({
                 photos={photos} 
                 album={selectedAlbum}
                 selectMode={selectMode}
-                collectionId={collectionId}
                 selectedPhotos = {selectedPhotos}
                 notSelectedPhotos = {notSelectedPhotos}
                 selectingAll={isSelectingAll}
@@ -130,6 +137,7 @@ export const GalleryBlock = ({
                 onLoadMore={handleLoadMorePhotos}
                 hasMore={Boolean(hasNextPage)}
                 loading={isLoadingPhotos}
+                onDeletePhotos={onDeletePhotos}
             />
             {
                 currentPhoto!==null&&(

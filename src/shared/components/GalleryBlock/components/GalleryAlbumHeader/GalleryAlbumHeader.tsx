@@ -16,6 +16,7 @@ type GalleryAlbumHeaderProps = {
     onSelectMode ?: () => void,
     onClearSelection ?: () => void,
     onSelectAll ?: () => void
+    onDeleteSelected ?: () => void
 }
 
 export const GalleryAlbumHeader = ({
