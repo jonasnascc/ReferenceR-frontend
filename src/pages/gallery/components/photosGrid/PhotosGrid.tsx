@@ -4,11 +4,11 @@ import { CustomCircularProgress, CustomImageList, CustomImageListItem, LoadingIm
 import { SelectBox } from "./components/SelectBox";
 import { useEffect, useState } from "react";
 import { GalleryGrid } from "./components/GalleryGrid/GalleryGrid";
-import { Album } from "../../../../model/album";
+import { Album, UserCollection } from "../../../../model/album";
 
 type PhotosGridProps = {
     photos: Deviation[],
-    album?:Album,
+    album?:Album | UserCollection,
     selectMode : boolean,
     selectedPhotos: SimplePhoto[],
     notSelectedPhotos: SimplePhoto[],

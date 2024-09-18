@@ -1,15 +1,14 @@
 import { useLocation, useNavigate } from "react-router-dom";
-import { Album } from "../../../../../model/album";
+import { Album, CollectionPhotosSelection, UserCollection } from "../../../../../model/album";
 import { OutlinedButton } from "../../../Buttons/styles";
 import { HeaderBlock, HeaderContainer, AlbumTile, AlbumSize, AlbumTitle, Sphere } from "./styles";
 import { GallerySelectButtons } from "../GallerySelectButtons/GallerySelectButtons";
 import { FavoriteAlbumButton } from "../../../FavoriteAlbum/FavoriteAlbumButton/FavoriteAlbumButton";
 import { CollectionsListModalProps } from "../../../CollectionsModal/types";
-import { CollectionPhotosSelection } from "../../../../../model/collection";
 
 
 type GalleryAlbumHeaderProps = {
-    album?:Album,
+    album?:Album | UserCollection,
     selectedAlbums:CollectionPhotosSelection[]
     selectingAll:boolean,
     selectMode ?: boolean,
@@ -53,7 +52,7 @@ export const GalleryAlbumHeader = ({
                     
                     <AlbumSize>{`${album.size} photos`}</AlbumSize>
                     
-                    <FavoriteAlbumButton album={album} visible={!isCollectionPage}/>
+                    <FavoriteAlbumButton album={album as Album} visible={!isCollectionPage}/>
 
                     <Sphere size="5px"/>
 

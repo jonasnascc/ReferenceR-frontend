@@ -1,11 +1,9 @@
-import { useInfiniteQuery, useMutation, useQuery, useQueryClient } from "react-query";
+import { useInfiniteQuery, useMutation, useQuery } from "react-query";
 import { addPhotosToCollection, deleteCollectionPhotos, listCollectionAlbumPhotos, listCollectionAlbums, listUserCollections } from "../../api/services/Collection";
-import { CollectionPhotosSelection, UserCollection } from "../../model/collection";
 import { useContext, useEffect, useState } from "react";
-import { Album } from "../../model/album";
+import { Album, CollectionPhotosSelection, UserCollection } from "../../model/album";
 import { AuthContext } from "../../context/AuthContext";
 import { Deviation, SimplePhoto } from "../../model/photo";
-import { error } from "console";
 
 export interface Page {
     data: Deviation[];
@@ -15,9 +13,9 @@ export interface Page {
 export const useCollections = () => {
     const {user} = useContext(AuthContext)
     const [photos, setPhotos] = useState<Deviation[]>([])
-    const [albums, setAlbums] = useState<Album[]>([])
+    const [collections, setCollections] = useState<UserCollection[]>([])
 
-    const [currentCollection, setCurrentCollection] = useState<Album>()
+    const [currentCollection, setCurrentCollection] = useState<UserCollection>()
 
     const [selCollectionAlbums , setSelCollectionAlbums] = useState<Album[]>([])
 
@@ -30,14 +28,14 @@ export const useCollections = () => {
 
     const deleteMutation = useMutation(["delete-photo"], (args: {collectionId:number, photoIds:number[]}) => deleteCollectionPhotos(args.collectionId, args.photoIds))
 
-    const {data:userCollections} = useQuery<Album[]>(["user-collections"], () => listUserCollections(), {
+    const {data:userCollections} = useQuery<UserCollection[]>(["user-collections"], () => listUserCollections(), {
         refetchOnWindowFocus: false,
         onSuccess: (data) => {
                 if(!user) return;
     
-                data.forEach(collection => {
-                    if(albums.filter(alb => alb.code === collection.code).length === 0){
-                        setAlbums(prev => [...prev, collection])
+                data.forEach(col => {
+                    if(collections.filter(collection => col.id === collection.id).length === 0){
+                        setCollections(prev => [...prev, col])
                     }
                 })
     
@@ -60,7 +58,7 @@ export const useCollections = () => {
         fetchNextPage,
     } = useInfiniteQuery<Page>({
         enabled: Boolean(currentCollection) && (selCollectionAlbums.length > 0) && (loadedAlbums.length !== selCollectionAlbums.length),
-        queryKey: [`${currentCollection?.id??-1}-collection-albums-${currentLoadingAlbumIndex&&`${selCollectionAlbums[currentLoadingAlbumIndex]?.id??-1}`}`],
+        queryKey: [`collection-albums-${currentLoadingAlbumIndex&&`${selCollectionAlbums[currentLoadingAlbumIndex]?.id??-1}`}`],
         refetchOnWindowFocus: false,
         queryFn: async ({pageParam = currentLoadingAlbumIndex}) => {
             console.log({currentCollection, currentLoadingAlbumIndex, sel: selCollectionAlbums[currentLoadingAlbumIndex??-1]??null})
@@ -81,7 +79,7 @@ export const useCollections = () => {
                 let array = resp.filter(ph => photos.filter(dv => dv.code === ph.code).length === 0)
                 
                 const photosArray= [...photos, ...array]
-                setPhotos(photosArray)
+                console.log(photosArray)
             }
 
             return {data:resp, page: pageParam}
@@ -91,7 +89,7 @@ export const useCollections = () => {
             const curAlbum = selCollectionAlbums[currentLoadingAlbumIndex]
             if(!curAlbum) return;
 
-            if(lastPage.page < albums.length-1){
+            if(lastPage.page < collections.length-1){
                 return lastPage.page + 1
             }
         },
@@ -102,22 +100,22 @@ export const useCollections = () => {
     })
 
     useEffect(() => {
-        if(!currentCollection && (albums.length > 0)) {
+        if(!currentCollection && (collections.length > 0)) {
             handleAlbumClick(0);
         }
-    }, [currentCollection, albums])
+    }, [currentCollection, collections])
     
     const handleAddPhotos = async (photos:CollectionPhotosSelection[], collectionId : number) => {
         return await postPhotosMutation.mutateAsync({collectionId, photos})
     }
 
     const handleAlbumClick = (index:number) => {
-        if(currentCollection && (albums[index].code !== currentCollection.code)) {
+        if(currentCollection && (collections[index].id !== currentCollection.id)) {
             setLoadedAlbums([])
             setPhotos([])
             setCurrentLoadingAlbumIndex(0)
         }
-        setCurrentCollection(albums[index])
+        setCurrentCollection(collections[index])
     }
 
     const handleLoadMorePhotos = () => {
@@ -142,7 +140,7 @@ export const useCollections = () => {
 
     return {
         currentCollection,
-        albums,
+        collections,
         photos,
         userCollections,
         handleAddPhotos,

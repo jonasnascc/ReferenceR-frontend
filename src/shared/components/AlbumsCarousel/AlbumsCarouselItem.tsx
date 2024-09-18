@@ -1,20 +1,20 @@
 import React, { useState } from "react"
 import { AlbumCarouselSlideItem, AlbumCarouselImage, AlbumCarouselItemDescription, DescriptionAlbumName, DescriptionAlbumSize, SlideItemPhoto } from "./styles"
-import { Album } from "../../../model/album"
+import { Album, UserCollection } from "../../../model/album"
 import { SimplePhoto } from "../../../model/photo"
 import { useQuery } from "react-query"
 import { fetchAlbumThumbnail } from "../../../api/services/Album"
 
 type AlbumsCarouselItemProps = {
     selected ?: boolean,
-    album: Album,
+    album: Album | UserCollection,
     onSelect : () => void
 }
 export const AlbumsCarouselItem = ({album, onSelect, selected=false} : AlbumsCarouselItemProps) => {
     const [thumbnail, setThumbnail] = useState<SimplePhoto | null>(album.thumbnail)
     const [isHovering, setIsHovering] = useState(false)
 
-    useQuery<SimplePhoto>([`album-${album.code}|${album.author}-thumbnail`], () => fetchAlbumThumbnail(album.id), {
+    useQuery<SimplePhoto>([`album-${'code' in album ? album.code : album?.id??-1}|${'author' in album && album.author}-thumbnail`], () => fetchAlbumThumbnail(album.id), {
         enabled: album.id!==null && !Boolean(thumbnail),
         refetchOnWindowFocus: false,
         retry: 1,
@@ -45,7 +45,7 @@ export const AlbumsCarouselItem = ({album, onSelect, selected=false} : AlbumsCar
             <AlbumCarouselItemDescription>
                 {
                 album.name==="All" || album.name==="Scraps" ? (
-                    <DescriptionAlbumName>{(album.name !== "Scraps" ? album.author : `${album.author} - Scraps`)}</DescriptionAlbumName>
+                    <DescriptionAlbumName>{'author' in album && (album.name !== "Scraps" ? album.author : `${album.author} - Scraps`)}</DescriptionAlbumName>
                     ) : (
                         <>
                         <DescriptionAlbumName>{album.name}</DescriptionAlbumName>

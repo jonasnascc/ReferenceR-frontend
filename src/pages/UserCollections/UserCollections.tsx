@@ -17,12 +17,12 @@ export const UserCollectionsPage = () => {
             open={openModal}
             onClose={() => setOpenModal(false)}
         />
-        <GalleryBlock
+        {props.photos&&<GalleryBlock
             {...props} 
             collectionsPage
             selectedAlbum={props.currentCollection}
             onDeletePhotos={props.handleDeletePhotos}
-        />
+        />}
         </>
     )
 }

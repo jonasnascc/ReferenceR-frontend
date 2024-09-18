@@ -1,4 +1,4 @@
-import { CollectionPhotosSelection } from "../../../model/collection"
+import { CollectionPhotosSelection } from "../../../model/album"
 
 export type CollectionsModalProps = {
     open : boolean,

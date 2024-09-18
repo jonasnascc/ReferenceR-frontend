@@ -7,11 +7,11 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import AddToPhotosIcon from '@mui/icons-material/AddToPhotos';
 import { useLocation } from "react-router-dom";
 import { CollectionsListModal } from "../../../../../../shared/components/CollectionsModal/CollectionsListModal";
-import { Album } from "../../../../../../model/album";
+import { Album, UserCollection } from "../../../../../../model/album";
 
 type PhotoMoreButtonProps = {
     photo : Deviation,
-    album ?: Album,
+    album ?: Album | UserCollection,
     onDeletePhotos ?: (photos : Deviation[]) => void
 }
 
@@ -89,7 +89,7 @@ export const PhotoMoreButton = ({photo, album, onDeletePhotos}:PhotoMoreButtonPr
                                 onClose={handleCloseColList} 
                                 selectedAlbums={
                                     album ? [{
-                                        album: album,
+                                        album: album as Album,
                                         photos: [{
                                             id,
                                             code,

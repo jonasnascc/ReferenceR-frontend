@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
-import { CollectionPhotosSelection } from "../../model/collection";
 import { Deviation, SimplePhoto } from "../../model/photo";
-import { Album } from "../../model/album";
+import { Album, CollectionPhotosSelection, UserCollection } from "../../model/album";
 
 export const usePhotosSelect = (photos : Deviation[]) => {
     const [currentAlbum, setCurrentAlbum] = useState<Album>()
@@ -13,7 +12,9 @@ export const usePhotosSelect = (photos : Deviation[]) => {
     const [selectMode, setSelectMode] = useState(false)
 
 
-    const handleChangeCurrentAlbum = (album: Album) => {
+    const handleChangeCurrentAlbum = (album: Album | UserCollection) => {
+        if(!('code' in album)) return;
+
         if(currentAlbum && ((selectedPhotos.length>0) || (notSelectedPhotos.length>0))) {
             setAlbumSelectedPhotos({
                 album: currentAlbum,

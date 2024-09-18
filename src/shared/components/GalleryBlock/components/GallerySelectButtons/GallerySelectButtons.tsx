@@ -2,14 +2,13 @@ import { useState } from "react";
 import { OutlinedButton } from "../../../Buttons/styles";
 import { SelectButtonsDiv } from "./styles";
 import { CollectionsListModal } from "../../../CollectionsModal/CollectionsListModal";
-import { SimplePhoto } from "../../../../../model/photo";
-import { Album } from "../../../../../model/album";
+import { Album, UserCollection } from "../../../../../model/album";
 import { CollectionsListModalProps } from "../../../CollectionsModal/types";
 import { useQueryClient } from "react-query";
 import { RequireAuth } from "../../../../../context/RequireAuth";
 
 type GallerySelectButtonsProps = {
-    album:Album,
+    album:Album | UserCollection,
     active : boolean,
     selectingAll : boolean,
     selectingAny : boolean,
