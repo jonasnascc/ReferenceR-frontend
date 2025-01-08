@@ -3,16 +3,15 @@ import { CollectionsListModalProps, CollectionsModalProps } from "./types"
 import { CollectionButton, CollectionButtonDiv, ColList, ColListEl, EmptyMessage, ListCheckbox, ListModalBox, ModalHeader, ModalPh, SearchInput, SearchInputDiv } from "./styles"
 import CloseIcon from '@mui/icons-material/Close';
 import { CustomButton } from "../Buttons/styles"
-import { UserCollection } from "../../../model/collection";
 import { useState } from "react";
 import { useCollections } from "../../hooks/useCollections";
 import SearchIcon from '@mui/icons-material/Search';
 import { CreateCollectionModal } from "./CreateCollectionModal";
-import { Album } from "../../../model/album";
+import { Album, UserCollection } from "../../../model/album";
 
 export const CollectionsListModal = ({open, onClose, selectedAlbums} : CollectionsModalProps & CollectionsListModalProps) => {
     const [search, setSearch] = useState("")
-    const [checkedCols, setCheckedCols] = useState<Album[]>([])
+    const [checkedCols, setCheckedCols] = useState<UserCollection[]>([])
     const [openCreation, setOpenCreation] = useState(false)
 
     const {userCollections, handleAddPhotos} = useCollections();
@@ -26,7 +25,7 @@ export const CollectionsListModal = ({open, onClose, selectedAlbums} : Collectio
         onClose()
     }
 
-    const handleCheck = (event: any, collection:Album) => {
+    const handleCheck = (event: any, collection:UserCollection) => {
         const checked = event.target.checked;
         const hasCol = checkedCols.filter(col => col.id === collection.id).length > 0;
         
@@ -40,7 +39,7 @@ export const CollectionsListModal = ({open, onClose, selectedAlbums} : Collectio
 
     const handleSave = async () => {
         checkedCols.forEach(async col => {
-            await handleAddPhotos({albums: selectedAlbums}, col.id)
+            await handleAddPhotos(selectedAlbums, col.id)
         })
         onClose()
     }

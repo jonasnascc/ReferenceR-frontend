@@ -5,6 +5,8 @@ import { AuthorName, AuthorNameBox, AuthorTagline, AuthorTile, ButtonsDiv, StatN
 import { getAuthorProfile } from "../../../../../api/services/Author";
 import { Author } from "../../../../../model/Author";
 import { OutlinedButton } from "../../../Buttons/styles";
+import { RequireAuth } from "../../../../../context/RequireAuth";
+import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 
 export const GalleryAuthorBar = ({author, provider, collectionsPage=false} : {author:string, provider:string, collectionsPage?:boolean}) => {
     const [authorProfile, setAuthorProfile] = useState<Author>()
@@ -37,8 +39,8 @@ export const GalleryAuthorBar = ({author, provider, collectionsPage=false} : {au
                 {authorProfile&&
                     <>
                     <ButtonsDiv>
-                        <OutlinedButton color="#FCFF55">Favorite</OutlinedButton>
-                        <OutlinedButton color="#D217E2">DeviantArt</OutlinedButton>
+                        <RequireAuth><OutlinedButton color="#FCFF55">Favorite</OutlinedButton></RequireAuth>
+                        <OutlinedButton color="#D217E2">DeviantArt <OpenInNewIcon/></OutlinedButton>
                     </ButtonsDiv>
                     <StatsBlock>
                         <Statistic

@@ -1,16 +1,15 @@
-import { useNavigate } from "react-router-dom";
-import { Album } from "../../../../../model/album";
+import { useLocation, useNavigate } from "react-router-dom";
+import { Album, CollectionPhotosSelection, UserCollection } from "../../../../../model/album";
 import { OutlinedButton } from "../../../Buttons/styles";
 import { HeaderBlock, HeaderContainer, AlbumTile, AlbumSize, AlbumTitle, Sphere } from "./styles";
 import { GallerySelectButtons } from "../GallerySelectButtons/GallerySelectButtons";
 import { FavoriteAlbumButton } from "../../../FavoriteAlbum/FavoriteAlbumButton/FavoriteAlbumButton";
 import { CollectionsListModalProps } from "../../../CollectionsModal/types";
-import { AlbumCollection } from "../../../../../model/collection";
 
 
 type GalleryAlbumHeaderProps = {
-    album?:Album,
-    selectedAlbums:AlbumCollection[]
+    album?:Album | UserCollection,
+    selectedAlbums:CollectionPhotosSelection[]
     selectingAll:boolean,
     selectMode ?: boolean,
     onSelectMode ?: () => void,
@@ -30,6 +29,9 @@ export const GalleryAlbumHeader = ({
     ...props
 } : GalleryAlbumHeaderProps) => {
     const navigate = useNavigate()
+    const location = useLocation()
+    
+    const isCollectionPage = location.pathname.startsWith("/user/collections")
     
     const handleStartPresentation = () => {
         if(album) navigate(`/chronoShuffle`, {state: {albums: [album]}})
@@ -50,6 +52,12 @@ export const GalleryAlbumHeader = ({
                     
                     <AlbumSize>{`${album.size} photos`}</AlbumSize>
                     
+                    <FavoriteAlbumButton album={album as Album} visible={!isCollectionPage}/>
+
+                    <Sphere size="5px"/>
+
+                    <OutlinedButton color="white" onClick={handleStartPresentation}>Chrono Shuffle</OutlinedButton>
+
                     <Sphere size="5px"/>
 
                     <GallerySelectButtons 
@@ -63,12 +71,6 @@ export const GalleryAlbumHeader = ({
                         selectedAlbums={selectedAlbums}
                         {...props}
                     />
-
-                    <Sphere size="5px"/>
-
-                    <FavoriteAlbumButton album={album}/>
-
-                    <OutlinedButton color="white" onClick={handleStartPresentation}>Start Presentation</OutlinedButton>
                 </AlbumTile>
             </HeaderContainer>
         </HeaderBlock>

@@ -3,13 +3,13 @@ import { Deviation } from "../../../../../../model/photo"
 import { GalleryGridColumn, GalleryGridContainer, GalleryGridImage, GalleryGridImageBlock } from "./styles"
 import { setRef } from "@mui/material"
 import { PhotoMoreButton } from "../PhotoMoreButton/PhotoMoreButton"
-import { Album } from "../../../../../../model/album"
+import { Album, UserCollection } from "../../../../../../model/album"
 
 
 
 type ColumnPhotosProps = {
     photos : Deviation[],
-    album?:Album,
+    album?:Album | UserCollection,
     width: string,
     checkPhotoSelectedFn?:(photo : Deviation) => boolean, 
     onClick?:(photo : Deviation) => void, 

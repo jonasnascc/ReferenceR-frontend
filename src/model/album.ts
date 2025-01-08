@@ -4,15 +4,21 @@ export type Album = {
     id : number,
     code : string,
     name : string,
-    url : string,
+    size : number,
     thumbnail : SimplePhoto | null,
+    photos ?: SimplePhoto[],
+    url : string,
     author : string,
     provider : string,
-    size : number,
-    favorited ?: boolean;
 }
 
-export type FavouriteAlbum = {
+export type UserCollection = {
+    description:string,
+} & Omit<Album, 'code' | 'url' | 'author' | 'provider'>
+
+export type CollectionPhotosSelection = {
     album : Album,
-    except: string[] | null
+    photos : SimplePhoto[],
+    exceptPhotos : SimplePhoto[],
+    saveAsFavorite : boolean | false
 }

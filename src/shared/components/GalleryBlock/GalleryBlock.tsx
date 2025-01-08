@@ -11,13 +11,14 @@ import { GalleryAuthorBar } from "./components/GalleryAuthorBar/GalleryAuthorBar
 import { PageContainer } from "../PageContainer/styles";
 import { Deviation, SimplePhoto } from "../../../model/photo";
 import { usePhotosSelect } from "../../hooks/usePhotosSelect";
-import { Album } from "../../../model/album";
+import { Album, UserCollection } from "../../../model/album";
 import { AuthContext } from "../../../context/AuthContext";
 
 type GalleryBlockProps = {
-    albums : Album[],
+    albums ?: Album[],
+    collections ?: UserCollection[],
     photos : Deviation[],
-    selectedAlbum ?: Album,
+    selectedAlbum ?: Album | UserCollection,
     handleAlbumClick : (index:number) => void,
     handleLoadMorePhotos : () => void,
     hasNextPage ?: boolean,
@@ -28,6 +29,7 @@ type GalleryBlockProps = {
 
 export const GalleryBlock = ({
     albums,
+    collections,
     photos,
     selectedAlbum,
     handleAlbumClick,
@@ -108,6 +110,7 @@ export const GalleryBlock = ({
                 />}
                 <AlbumsCarousel 
                     albums={albums}
+                    collections={collections}
                     selectedAlbum={selectedAlbum}
                     handleAlbumSelect={handleAlbumClick}
                 />
