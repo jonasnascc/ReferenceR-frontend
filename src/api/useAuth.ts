@@ -14,6 +14,12 @@ export const useAuth = () => ({
             return response.data;
         return null;
     },
+    signup: async (name:string, email:string, password:string, confirmPassword:string) => {
+        const response = await api.post("users/register", {name, email, password, confirmPassword}).catch((err) => {
+            throw new Error(JSON.stringify(err))
+        });
+        return response.data;
+    },
     signin : async  (login:string, password:string) => {
         const response = await api.post("users/login", {login, password}).catch((err) => {
             throw new Error(JSON.stringify(err))

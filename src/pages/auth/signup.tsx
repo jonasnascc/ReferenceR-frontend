@@ -5,19 +5,21 @@ import { AuthButton, AuthForm, AuthFormControl, AuthFormTile, AuthInput, AuthInp
 import logo from "../../logo.svg"
 
 
-export const LoginPage = () => {
+export const SignupPage = () => {
     const navigate = useNavigate();
     const location = useLocation();
 
-    const {signin} = useContext(AuthContext)
+    const {signup} = useContext(AuthContext)
 
-    const [login, setLogin] = useState("")
+    const [name, setName] = useState("")
+    const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
+    const [confirmPassword, setConfirmPassword] = useState("")
     const [errorMessage, setErrorMessage] = useState("")
 
     const handleSubmit = async (event : any) => {
         event.preventDefault();
-        if(await signin(login, password)) {
+        if(await signup(name, email, password, confirmPassword)) {
             const from = location.state?.from
             if(from) navigate(from)
             else navigate("/")
@@ -26,12 +28,20 @@ export const LoginPage = () => {
         }
     }
 
-    const handleLoginChange = (event : any) => {
-        setLogin(event.target.value)
+    const handleNameChange = (event : any) => {
+        setName(event.target.value)
+    }
+
+    const handleEmailChange = (event : any) => {
+        setEmail(event.target.value)
     }
 
     const handlePasswordChange = (event : any) => {
         setPassword(event.target.value)
+    }
+
+    const handleConfirmPasswordChange = (event : any) => {
+        setConfirmPassword(event.target.value)
     }
 
     return (
@@ -46,14 +56,26 @@ export const LoginPage = () => {
                         />
                         <LogoTitle>REFERENCER</LogoTitle>
                     </LogoDiv>
+
+                    <AuthFormControl>
+                        <AuthInputLabel>Name:</AuthInputLabel>
+                        <AuthInput
+                            type="text"
+                            id="name"
+                            name="name"
+                            onChange={handleNameChange}
+                            value={name}
+                        />
+                    </AuthFormControl>
+
                     <AuthFormControl>
                         <AuthInputLabel>Email:</AuthInputLabel>
                         <AuthInput
                             type="text"
-                            id="login"
-                            name="login"
-                            onChange={handleLoginChange}
-                            value={login}
+                            id="email"
+                            name="email"
+                            onChange={handleEmailChange}
+                            value={email}
                         />
                     </AuthFormControl>
                     
@@ -68,9 +90,18 @@ export const LoginPage = () => {
                         />
                     </AuthFormControl>
                     
-                    
-                    <AuthButton type="submit" onClick={handleSubmit} btnType="login">SignIn</AuthButton>
-                    <AuthButton type="button" onClick={() => navigate("/signup")} btnType="signup">Sign Up</AuthButton>
+                    <AuthFormControl>
+                        <AuthInputLabel>Confirm your password:</AuthInputLabel>
+                        <AuthInput
+                            type="password"
+                            id="confirmpassword"
+                            name="confirmpassword"
+                            onChange={handleConfirmPasswordChange}
+                            value={confirmPassword}
+                        />
+                    </AuthFormControl>
+
+                    <AuthButton type="button" onClick={handleSubmit} btnType="signup">Sign Up</AuthButton>
                 </AuthForm>
             </AuthFormTile>
         </AuthPageContainer>

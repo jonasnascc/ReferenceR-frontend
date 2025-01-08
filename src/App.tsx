@@ -11,6 +11,7 @@ import { PresentationPage } from './pages/presentation/presentation';
 import { AuthorPage } from './pages/author/AuthorPage';
 import { UserCollectionsPage } from './pages/userCollections/UserCollections';
 import { UserProfilePage } from './pages/userProfile/UserProfile';
+import { SignupPage } from './pages/auth/signup';
 
 
 function App() {
@@ -32,6 +33,7 @@ function App() {
         </Route>
         <Route path='/chronoShuffle' element={<PresentationPage/>}/>
         <Route path='/login' element={<RequireNoAuth redirect='/'><LoginPage/></RequireNoAuth>}/>
+        <Route path='/signup' element={<RequireNoAuth redirect='/'><SignupPage/></RequireNoAuth>}/>
       </Routes>
     </div>
   );
