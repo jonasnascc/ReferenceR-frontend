@@ -38,3 +38,9 @@ export const deleteCollectionPhotos = async (collectionId:number, photosIds : nu
         data: {ids:photosIds}
     })
 }
+
+export const getCollectionThumbnail = async (collectionId:number) => {
+    return await axios.get(`${PREFIX}/${collectionId}/thumbnail`, {
+        sendToken: true
+    }).then(resp => resp.data)
+}

@@ -47,6 +47,7 @@ export const AlbumsCarousel = (props : AlbumsCarouselProps) => {
                             selected={selectedAlbum && !('code' in selectedAlbum) &&((selectedAlbum.id === col.id))}
                             onSelect={() => handleAlbumSelect(index)}
                             album={col}
+                            isCollection
                         />
                     )}
                     </SwiperSlide>

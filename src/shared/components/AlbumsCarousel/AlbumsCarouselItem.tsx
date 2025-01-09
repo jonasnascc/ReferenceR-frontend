@@ -4,18 +4,29 @@ import { Album, UserCollection } from "../../../model/album"
 import { SimplePhoto } from "../../../model/photo"
 import { useQuery } from "react-query"
 import { fetchAlbumThumbnail } from "../../../api/services/Album"
+import { getCollectionThumbnail } from "../../../api/services/Collection"
 
 type AlbumsCarouselItemProps = {
     selected ?: boolean,
     album: Album | UserCollection,
-    onSelect : () => void
+    onSelect : () => void,
+    isCollection ?:boolean
 }
-export const AlbumsCarouselItem = ({album, onSelect, selected=false} : AlbumsCarouselItemProps) => {
+export const AlbumsCarouselItem = ({album, onSelect, isCollection=false, selected=false} : AlbumsCarouselItemProps) => {
     const [thumbnail, setThumbnail] = useState<SimplePhoto | null>(album.thumbnail)
     const [isHovering, setIsHovering] = useState(false)
 
     useQuery<SimplePhoto>([`album-${'code' in album ? album.code : album?.id??-1}|${'author' in album && album.author}-thumbnail`], () => fetchAlbumThumbnail(album.id), {
-        enabled: album.id!==null && !Boolean(thumbnail),
+        enabled: !isCollection && album.id!==null && !Boolean(thumbnail),
+        refetchOnWindowFocus: false,
+        retry: 1,
+        onSuccess: (data) => {
+            setThumbnail(data)
+        }
+    })
+
+    useQuery<SimplePhoto>([`collection-${'code' in album ? album.code : album?.id??-1}|${'author' in album && album.author}-thumbnail`], () => getCollectionThumbnail(album.id), {
+        enabled: isCollection && album.id!==null && !Boolean(thumbnail),
         refetchOnWindowFocus: false,
         retry: 1,
         onSuccess: (data) => {
@@ -53,7 +64,7 @@ export const AlbumsCarouselItem = ({album, onSelect, selected=false} : AlbumsCar
                         </>
                     )}
                 {}
-                <DescriptionAlbumSize>{`${album.size} photos`}</DescriptionAlbumSize>
+                <DescriptionAlbumSize>{album.size ? `${album.size} photos` : ""}</DescriptionAlbumSize>
             </AlbumCarouselItemDescription>
         </AlbumCarouselSlideItem>
     )
