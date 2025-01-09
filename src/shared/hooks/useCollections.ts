@@ -28,6 +28,7 @@ export const useCollections = () => {
 
     const deleteMutation = useMutation(["delete-photo"], (args: {collectionId:number, photoIds:number[]}) => deleteCollectionPhotos(args.collectionId, args.photoIds))
 
+    //List collections
     const {data:userCollections} = useQuery<UserCollection[]>(["user-collections"], () => listUserCollections(), {
         refetchOnWindowFocus: false,
         onSuccess: (data) => {
@@ -43,6 +44,7 @@ export const useCollections = () => {
         }
     )
 
+    //List albums that collection includes
     useQuery<Album[]>([`${currentCollection?.id??-1}-collection-albums`], () => listCollectionAlbums(currentCollection?.id??-1), {
         enabled: Boolean(currentCollection),
         refetchOnWindowFocus: false,
@@ -54,19 +56,40 @@ export const useCollections = () => {
         }
     })
 
+    useEffect(() => {
+        console.log(Boolean(currentCollection),{currentCollection, selCollectionAlbums, loadedAlbums, photos, currentLoadingAlbumIndex})
+    }, [currentCollection, selCollectionAlbums, loadedAlbums, photos, currentLoadingAlbumIndex])
+
+    const checkIfAnyAlbumIsntLoaded = () => {
+        return Boolean(currentCollection) // Any collection is selected
+            && (selCollectionAlbums.length > 0) // Any album is linked to selected collection
+            && (loadedAlbums.length !== selCollectionAlbums.length) // Any album is waiting to load
+    }
+
+    const getCollectionQueryKey = () => {
+        console.log({currentLoadingAlbumIndex, selCollectionAlbums})
+        console.log(`collection-albums-${currentLoadingAlbumIndex&&`${selCollectionAlbums[currentLoadingAlbumIndex]?.id??-1}`}`)
+        return `collection-albums-${currentLoadingAlbumIndex&&`${selCollectionAlbums[currentLoadingAlbumIndex]?.id??-1}`}`
+    }
+    //
     const {
         fetchNextPage,
     } = useInfiniteQuery<Page>({
-        enabled: Boolean(currentCollection) && (selCollectionAlbums.length > 0) && (loadedAlbums.length !== selCollectionAlbums.length),
-        queryKey: [`collection-albums-${currentLoadingAlbumIndex&&`${selCollectionAlbums[currentLoadingAlbumIndex]?.id??-1}`}`],
+        enabled: checkIfAnyAlbumIsntLoaded(),
+        queryKey: [getCollectionQueryKey()],
         refetchOnWindowFocus: false,
         queryFn: async ({pageParam = currentLoadingAlbumIndex}) => {
             console.log({currentCollection, currentLoadingAlbumIndex, sel: selCollectionAlbums[currentLoadingAlbumIndex??-1]??null})
+
             if(!currentCollection || currentLoadingAlbumIndex===undefined) return {data:[], page:pageParam};
+
             const curAlbum = selCollectionAlbums[currentLoadingAlbumIndex]
             if(!curAlbum) return {data:[], page:pageParam};
+
             setLoadingPhotos(true)
+
             const resp : Deviation[] = await listCollectionAlbumPhotos(currentCollection.id, curAlbum.id)
+            setPhotos(prev => [...prev, ...resp])
 
             setLoadedAlbums(prev => [...prev, curAlbum.id])
             
@@ -110,12 +133,14 @@ export const useCollections = () => {
     }
 
     const handleAlbumClick = (index:number) => {
+        console.log({album: index})
         if(currentCollection && (collections[index].id !== currentCollection.id)) {
             setLoadedAlbums([])
             setPhotos([])
             setCurrentLoadingAlbumIndex(0)
         }
         setCurrentCollection(collections[index])
+        console.log({collection: collections[index]})
     }
 
     const handleLoadMorePhotos = () => {

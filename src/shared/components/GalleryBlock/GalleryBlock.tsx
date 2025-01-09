@@ -71,6 +71,7 @@ export const GalleryBlock = ({
 
     useEffect(() => {
         handlePhotosUpdate(photos)
+        console.log({photos})
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [photos])
 
