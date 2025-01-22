@@ -3,12 +3,7 @@ export type Deviation = {
     code: string,
     title: string,
     url: string,
-    author: {
-        id?:number,
-        name:string,
-        profileUrl?:string,
-        provider?:string
-    },
+    authorName : string,
     thumbUrl : string,
     mature: boolean,
     type: string,
@@ -18,7 +13,8 @@ export type Deviation = {
     license: string,
     tags : {name:string, url:string} [],
     favorited ?: boolean,
-    albumCode : string
+    albumCode : string,
+    token : string
 }
 
 export type SimplePhoto = {

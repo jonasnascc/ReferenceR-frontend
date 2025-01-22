@@ -30,7 +30,7 @@ export const PhotoMoreButton = ({photo, album, onDeletePhotos}:PhotoMoreButtonPr
         page,
         albumCode,
         thumbUrl,
-        author
+        authorName
     } = photo
 
     const collectionsPage = location.pathname.startsWith("/user/collections")
@@ -99,7 +99,7 @@ export const PhotoMoreButton = ({photo, album, onDeletePhotos}:PhotoMoreButtonPr
                                             page,
                                             albumCode,
                                             thumbUrl,
-                                            author : author.name
+                                            author : authorName
                                         }],
                                         exceptPhotos: [],
                                         saveAsFavorite: false
