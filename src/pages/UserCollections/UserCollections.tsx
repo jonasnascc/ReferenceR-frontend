@@ -3,6 +3,7 @@ import { GalleryBlock } from "../../shared/components/GalleryBlock/GalleryBlock"
 import { CreateCollectionModal } from "../../shared/components/CollectionsModal/CreateCollectionModal";
 import { OutlinedButton } from "../../shared/components/Buttons/styles";
 import { useCollections } from "../../shared/hooks/useCollections";
+import { CollectionsContainer } from "./styles";
 
 export const UserCollectionsPage = () => {
     const [openModal, setOpenModal] = useState(false)
@@ -11,7 +12,7 @@ export const UserCollectionsPage = () => {
 
 
     return (
-        <>
+        <CollectionsContainer>
         <OutlinedButton color="white" onClick={() => setOpenModal(true)}>Create Collection</OutlinedButton>
         <CreateCollectionModal
             open={openModal}
@@ -23,6 +24,6 @@ export const UserCollectionsPage = () => {
             selectedAlbum={props.currentCollection}
             onDeletePhotos={props.handleDeletePhotos}
         />}
-        </>
+        </CollectionsContainer>
     )
 }

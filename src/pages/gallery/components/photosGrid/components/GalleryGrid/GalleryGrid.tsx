@@ -1,6 +1,6 @@
 import { RefObject, useEffect, useRef, useState } from "react"
 import { Deviation } from "../../../../../../model/photo"
-import { GalleryGridColumn, GalleryGridContainer, GalleryGridImage, GalleryGridImageBlock } from "./styles"
+import { GalleryGridColumn, GalleryGridContainer, GalleryGridImage, GalleryGridImageBlock, GalleryGridImageContainer, GalleryGridImageDescription } from "./styles"
 import { setRef } from "@mui/material"
 import { PhotoMoreButton } from "../PhotoMoreButton/PhotoMoreButton"
 import { Album, UserCollection } from "../../../../../../model/album"
@@ -170,7 +170,7 @@ type GridImageProps = {
 }&Omit<ColumnPhotosProps,"width" | "photos">
 
 const GridImage = ({photo, checkPhotoSelectedFn=() => false, checkPhotoIsPresenting=()=>false, onClick=()=>{}, onDoubleClick=()=>{}} : GridImageProps) => {
-    const ref = useRef<HTMLImageElement>(null)
+    const ref = useRef<HTMLDivElement>(null)
 
     const isElementInViewport = (element: HTMLElement | null) => {
         if (!element) return false;
@@ -193,15 +193,19 @@ const GridImage = ({photo, checkPhotoSelectedFn=() => false, checkPhotoIsPresent
     }
    
     return (
-        <GalleryGridImage
+        <GalleryGridImageContainer
             ref={ref}
             selected={checkPhotoSelectedFn(photo)}
             presenting={handleCheckPresenting()}
-            src={photo.url}
-            alt={photo.title}
-            loading="lazy"
             onClick={() => onClick(photo)}
             onDoubleClick={() => onDoubleClick(photo)}
-        />
+        >
+            <GalleryGridImage
+                src={photo.url}
+                alt={photo.title}
+                loading="lazy"
+            />
+            <GalleryGridImageDescription>{photo.title}</GalleryGridImageDescription>
+        </GalleryGridImageContainer>
     )
 }
