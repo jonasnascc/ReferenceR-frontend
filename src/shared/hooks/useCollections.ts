@@ -1,5 +1,5 @@
 import { QueryFunctionContext, useInfiniteQuery, useMutation, useQuery } from "react-query";
-import { addPhotosToCollection, deleteCollectionPhotos, listCollectionAlbumPhotos, listCollectionAlbums, listCollectionPhotos, listUserCollections } from "../../api/services/Collection";
+import { addPhotosToCollection, deleteCollectionPhotos, getCollectionRandomPhoto, listCollectionAlbumPhotos, listCollectionAlbums, listCollectionPhotos, listUserCollections } from "../../api/services/Collection";
 import { useContext, useEffect, useState } from "react";
 import { Album, CollectionPhotosSelection, UserCollection } from "../../model/album";
 import { AuthContext } from "../../context/AuthContext";
@@ -36,7 +36,7 @@ export const useCollections = () => {
             }
         }
     )
-
+    
     const handleUpdatePhotos = (newValue : Deviation[]) => {
         setPhotos(newValue)
     } 

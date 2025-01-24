@@ -32,6 +32,11 @@ export const listCollectionAlbumPhotos = async (collectionId:number, albumId:num
         .then(resp => resp.data)
 }
 
+export const getCollectionRandomPhoto = async (collectionId:number) => {
+    return await axios.get(`${PREFIX}/${collectionId}/photos/random`, {sendToken: true})
+        .then(resp => resp.data)
+}
+
 export const deleteCollectionPhotos = async (collectionId:number, photosIds : number[]) => {
     return await axios.delete(`${PREFIX}/${collectionId}/photos`, {
         sendToken: true,

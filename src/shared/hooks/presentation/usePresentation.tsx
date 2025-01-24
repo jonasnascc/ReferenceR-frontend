@@ -1,8 +1,9 @@
 import { useInfiniteQuery } from "react-query"
-import { Album } from "../../../model/album"
+import { Album, UserCollection } from "../../../model/album"
 import { fetchAlbumPhotos } from "../../../api/services/Photo"
 import { Deviation, SimplePhoto } from "../../../model/photo"
 import { useEffect, useState } from "react"
+import { getCollectionRandomPhoto } from "../../../api/services/Collection"
 
 export type PresentationPhoto= {
     photo: Deviation | null,
@@ -14,7 +15,7 @@ interface Page {
     page ?: number
 }
 
-export const usePresentation = (albums ?: Album[]) => {
+export const usePresentation = (albums ?: Album[] | UserCollection[]) => {
 
     const [currentPage, setCurrentPage] = useState(albums ? 0 : -1)
     const [currentPhoto, setCurrentPhoto] = useState<Deviation|null>(null)
@@ -34,17 +35,46 @@ export const usePresentation = (albums ?: Album[]) => {
         return getRandomNumberInRange(1, sizesSum - 1)
     }
 
+    const fetchRandomCollectionPhotoFn = async (collections : any[], pageParam:number, emptyResp : Page) : Promise<Page> => {
+        if(collections.length == 0) return emptyResp;
+
+        const randIndex = collections.length === 1 ? 0 : getRandomNumberInRange(0, collections.length);
+
+        const collection = collections[randIndex]
+
+        const resp =  await getCollectionRandomPhoto(collection.id)
+
+        const data = { data: {
+            photo : resp??null,
+            album: null,
+            page : pageParam
+        }, page: pageParam }
+
+        let newCurrentPhotoIndex = currentPage;
+        if(currentPage === photos.length-1)
+            newCurrentPhotoIndex += 1
+
+        const newPhotos = [...photos, data.data]
+        setPhotos(() => newPhotos)
+        setCurrentPhoto(newPhotos[newCurrentPhotoIndex]?.photo??null)
+
+        return data;
+    }
+
     const fetchRandomPhotoFn = async ({pageParam = currentPage+1}) : Promise<Page> => {
-        let selAlbum: Album | undefined;
-        let cumulativeSize = 0;
-    
         const emptyResp = { data: {
             photo : null,
             album : null,
             page : pageParam
         }, page: pageParam };
 
-        if(!albums) return emptyResp
+        if(!albums || albums.length === 0) return emptyResp
+
+        if(!("code" in albums[0])) return fetchRandomCollectionPhotoFn(albums, pageParam, emptyResp)
+
+        let selAlbum: any;
+        let cumulativeSize = 0;
+
 
         for (let album of albums) {
             cumulativeSize += album.size;
