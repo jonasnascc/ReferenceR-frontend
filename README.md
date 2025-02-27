@@ -2,7 +2,7 @@
 
 ReferenceR is an application designed to assist artists who are looking for visual references to start or enhance their creations. Through the platform, users can explore galleries published on specialized websites, such as portfolios of photographers, illustrators, and other professionals in the field.
 
-####API Repository
+#### API Repository
 https://github.com/jonasnascc/ReferenceR-API
 
 The goal of ReferenceR is to allow users to select images from different websites and organize their own reference galleries. The photos are obtained through scraping and displayed directly in the application, enabling the creation of customized collections for artistic use.
